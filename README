@@ -1,13 +1,5 @@
 Dependencies:
-	- django
-	- django-allauth
-	- django-bootstrap-toolkit
-	- South
-	- requestsreq
-	- google-api-python-client
-	- pytz
-	- pyrfc3339
-	pip install --upgrade django django-allauth django-bootstrap-toolkit South requests google-api-python-client pytz pyrfc3339
+	pip install -r requierements.txt
 
 	- local smtp server
 	apt-get install postfix

@@ -1,0 +1,9 @@
+Django
+Django-allauth
+Django-bootstrap-toolkit
+South
+Requests
+Google-api-python-client
+pytz
+pyrfc3339
+Pillow

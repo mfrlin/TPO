@@ -4,7 +4,7 @@ import os.path
 
 DEBUG = True
 TEMPLATE_DEBUG = True
-SOCIAL_LOGIN = True
+SOCIAL_LOGIN = False
 
 ROOT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 
