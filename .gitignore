@@ -1,0 +1,9 @@
+*.pyc
+enarocanje.db
+local_settings.py
+.ropeproject
+enarocanje.sublime-project
+enarocanje.sublime-workspace
+.idea
+.allow-devtools-edit
+storage

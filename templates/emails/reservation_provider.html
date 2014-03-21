@@ -1,0 +1,24 @@
+{% load i18n %}
+{% if reservation.service.service_provider.reservation_confirmation_needed == True %}
+	{% blocktrans %}You have a new reservation for your service. You can confirm or deny this reservation. Look to you unconfirm reservation list please.
+		Here is some information about this reservation:{% endblocktrans %}
+			{% trans "Service" %}: {{ reservation.service.name }}
+			{% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}
+			{% trans "Price" %}: {{ reservation.service.price_with_unit }}{% endif %}
+			{% trans "Date" %}: {{ reservation.date }}
+			{% trans "Time" %}: {{ reservation.time }}
+			{% trans "Customer name" %}: {{ reservation.user_fullname }}
+			{% trans "Customer phone" %}: {{ reservation.user_phone }}
+
+{% else %}
+	{% blocktrans %}You have a new reservation for your service!
+	Here is some information about this reservation:{% endblocktrans %}
+		{% trans "Service" %}: {{ reservation.service.name }}
+		{% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}
+		{% trans "Price" %}: {{ reservation.service.price_with_unit }}{% endif %}
+		{% trans "Date" %}: {{ reservation.date }}
+		{% trans "Time" %}: {{ reservation.time }}
+		{% trans "Customer name" %}: {{ reservation.user_fullname }}
+		{% trans "Customer phone" %}: {{ reservation.user_phone }}
+
+{% endif %}

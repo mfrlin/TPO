@@ -1,0 +1,189 @@
+{% extends 'service/service.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+{% load reservation %}
+
+{% block service_nav_reservation %}active{% endblock %}
+
+{% block service_content %}
+
+{% if minTime and maxTime %}
+	<form method="POST" action="{% url 'reservation' service.id %}">
+		{% csrf_token %}
+
+		<input type="hidden" name="data" value="{{ data|encode_data }}" />
+
+		<div class="row">
+			<div class="span6">
+				{{ form.date|as_bootstrap }}
+			</div>
+			<div class="span6">
+				{{ form.time|as_bootstrap }}
+			</div>
+		</div>
+
+		<div id='calendar'></div>
+
+		<br/>
+		<b>{% trans "If you have a COUPON, then enter the coupon's number" %}:</b><br/>
+		{{ form.number|as_bootstrap }}
+
+		<div class="form-actions">
+			<input type="submit" class="btn btn-primary" value="{% trans "Make a reservation" %}">
+		</div>
+	</form>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	{% if minTime and maxTime %}
+	(function() {
+		var date = new Date(), selectedEvent = null;
+		function updateDate(ndate) {
+			$('#calendar').fullCalendar('removeEventSource', selectedEvent);
+			date = ndate;
+			var dateEnd = new Date(date);
+			dateEnd.setMinutes(dateEnd.getMinutes() + {{ service.duration }});
+			selectedEvent = [{
+				title: '{% trans 'Your reservation' %}',
+				start: date,
+				end: dateEnd
+			}];
+			$('#calendar').fullCalendar('addEventSource', selectedEvent);
+		}
+
+		function changeDate(ev) {
+			date.setFullYear(ev.localDate.getFullYear());
+			date.setMonth(ev.localDate.getMonth());
+			date.setDate(ev.localDate.getDate());
+			updateDate(date);
+			$('#calendar').fullCalendar('gotoDate', date);
+		}
+
+		function changeTime(ev) {
+			date.setHours(ev.localDate.getHours());
+			date.setMinutes(ev.localDate.getMinutes());
+			updateDate(date);
+			$('#calendar').fullCalendar('gotoDate', date);
+		}
+
+		function viewDisplay(view) {
+			if (view.start <= new Date()) {
+				$("#calendar .fc-button-prev").addClass('fc-state-disabled');
+			} else {
+				$("#calendar .fc-button-prev").removeClass('fc-state-disabled');
+			}
+			if (view.name == 'agendaWeek') {
+				if (date < view.start) {
+					date.setDate(date.getDate() + 7);
+				}
+				if (date >= view.end) {
+					date.setDate(date.getDate() - 7);
+				}
+			} else {
+				if (date < view.start) {
+					date.setDate(date.getDate() + 1);
+				}
+				if (date >= view.end) {
+					date.setDate(date.getDate() - 1);
+				}
+			}
+			updateDate(date);
+			datePicker.data('datetimepicker').setLocalDate(date);
+			timePicker.data('datetimepicker').setLocalDate(date);
+		}
+
+		function dayClick(ndate, allDay, jsEvent, view) {
+			updateDate(ndate);
+			$('#calendar').fullCalendar('gotoDate', date);
+			datePicker.data('datetimepicker').setLocalDate(date);
+			timePicker.data('datetimepicker').setLocalDate(date);
+		}
+
+		var now = new Date();
+		now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+		var timePicker = $('.time-field').parent().datetimepicker({pickDate: false, pickSeconds: false, minuteStep: 15, language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeTime);
+		var datePicker = $('.date-field').parent().datetimepicker({pickTime: false, startDate: now, language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
+
+		var dateDate = datePicker.data('datetimepicker').getLocalDate();
+		var dateTime = timePicker.data('datetimepicker').getLocalDate();
+		date.setFullYear(dateDate.getFullYear());
+		date.setMonth(dateDate.getMonth());
+		date.setDate(dateDate.getDate());
+		date.setHours(dateTime.getHours());
+		date.setMinutes(dateTime.getMinutes());
+		date.setSeconds(0);
+
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: '',
+				right: 'agendaWeek,agendaDay'
+			},
+
+			/* sets the current view */
+			defaultView: (document.width >= 800) ? 'agendaWeek' : 'agendaDay',
+
+			/* sets the specific date */
+			year: date.getFullYear(),
+			month: date.getMonth(),
+			date: date.getDate(),
+
+			minTime: '{{ minTime|date:"H:i" }}',
+			maxTime: '{{ maxTime|time:"H:i" }}',
+
+			editable: false,
+			allDayDefault: false,
+			allDaySlot: false,
+			height: 100000,
+			slotMinutes: 15,
+
+			/* callbacks */
+			viewDisplay: viewDisplay,
+			dayClick: dayClick,
+
+			/* translation */
+			buttonText: {
+				today: '{% trans 'today' %}',
+				month: '{% trans 'month' %}',
+				week: '{% trans 'week' %}',
+				day: '{% trans 'day' %}'
+			},
+			monthNames: ['{% trans 'January' %}', '{% trans 'February' %}', '{% trans 'March' %}', '{% trans 'April' %}', '{% trans 'May' %}', '{% trans 'June' %}', '{% trans 'July' %}', '{% trans 'August' %}', '{% trans 'September' %}', '{% trans 'October' %}', '{% trans 'November' %}', '{% trans 'December' %}'],
+			monthNamesSort: ['{% trans 'Jan' %}', '{% trans 'Feb' %}', '{% trans 'Mar' %}', '{% trans 'Apr' %}', '{% trans 'May' %}', '{% trans 'Jun' %}', '{% trans 'Jul' %}', '{% trans 'Aug' %}', '{% trans 'Sep' %}', '{% trans 'Oct' %}', '{% trans 'Nov' %}', '{% trans 'Dec' %}'],
+			dayNames: ['{% trans 'Sunday' %}', '{% trans 'Monday' %}', '{% trans 'Tuesday' %}', '{% trans 'Wednesday' %}', '{% trans 'Thursday' %}', '{% trans 'Friday' %}', '{% trans 'Saturday' %}'],
+			dayNamesShort: ['{% trans 'Sun' %}', '{% trans 'Mon' %}', '{% trans 'Tue' %}', '{% trans 'Wed' %}', '{% trans 'Thu' %}', '{% trans 'Fri' %}', '{% trans 'Sat' %}'],
+			weekNumberTitle: '{% trans 'W' %}',
+			allDayText: '{% trans 'all-day' %}',
+			columnFormat: {
+				month: 'ddd',
+				week: 'ddd d.M.',
+				day: 'dddd d.M.'
+			},
+			firstDay: 1,
+			axisFormat: 'HH:mm',
+			timeFormat: {
+				agenda: 'H:mm{ - H:mm}'
+			},
+
+			/* events data */
+			events: {
+				url: '{% url 'calendarjson' %}',
+				type: 'GET',
+				data: {
+					'service_provider_id': '{{ service.service_provider_id }}'
+				}
+			}
+		});
+
+		$('#calendar-refresh').click(function() {
+			$('#calendar').fullCalendar('refetchEvents');
+		});
+	})();
+	{% endif %}
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'browse/base.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+{% load provider %}
+
+{% block browse_nav_services %}active{% endblock %}
+
+{% block content_browse %}
+	{% if selected_provider %}
+		<h1>{{ selected_provider.name }}</h1>
+		{{ selected_provider.full_address }}<br/>
+		<br/>
+	{% endif %}
+
+	<div class="row twoone-main">
+		<div class="span2">
+			<ul class="nav nav-list">
+				<form action="">
+					{% if prov %}<input type="hidden" name="provider" value="{{ prov }}"/>{% endif %}
+					{% if cat %}<input type="hidden" name="category" value="{{ cat }}"/>{% endif %}
+					{% if disc %}<input type="hidden" name="discount" value="{{ disc }}"/>{% endif %}
+					<input type="text" name="q" placeholder="{% trans "Search" %}" value="{% if q %}{{ q }}{% endif %}" style="width: 100%" />
+					{% if sor != 'dist' %}<input type="hidden" name="sort" value="{{ sor }}"/>{% endif %}
+				</form>
+
+				<li class="nav-header">{% trans "Categories" %}</li>
+				{% for category in categories %}
+					<li class="{% if category.2 %}active{% endif %}"><a href="{{ category.1 }}">{{ category.0 }}</a></li>
+				{% endfor %}
+
+				<li class="nav-header">{% trans "Discounts" %}</li>
+				{% for discount in discounts %}
+					<li class="{% if discount.2 %}active{% endif %}"><a href="{{ discount.1 }}">{{ discount.0 }}</a></li>
+				{% endfor %}
+
+				<li class="nav-header hidden-desktop">{% trans "Order by" %}</li>
+				{% for sort in sort_choices %}
+					<li class="hidden-desktop {% if sort.2 %}active{% endif %}"><a href="{{ sort.1 }}">{{ sort.0 }}</a></li>
+				{% endfor %}
+			</ul>
+			<br/>
+		</div>
+		<div class="span10">
+			{% if services %}
+			    <div class="row">
+				    {% for service in services %}
+					    <div class="span5 twoone">
+							<div class="obrobe">
+								<img src="{{ service.service_provider.logo_url }}" {{ service.service_provider|logowh:"100,150" }} class="logotip" />
+								<div class="obrobe-content">
+									<h3 class="obrobe-title"><a href="{% url 'service' service.id %}" style="color: black">{{ service.name }}</a></h3>
+									<p style="float: right; font-weight: bold">{{ service.duration_with_unit }}</p>
+									{% if service.service_provider.has_location and location %}
+										<p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
+									{% endif %}
+									{% if service.price %}
+										<p class="obrobe-extra">
+											<b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+											{% if service.get_discount %}
+												<b>{% trans "Discounted until" %}:</b> {{ service.get_discount.valid_to }}
+											{% endif %}
+										</p>
+									{% endif %}
+								</div>
+								<br style="clear:left"/>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				{% with services as paginator %}
+					{% include "browse/pagination.html" %}
+				{% endwith %}
+			{% else %}
+				{% trans "No services found." %}
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

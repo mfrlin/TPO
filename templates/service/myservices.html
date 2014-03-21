@@ -1,0 +1,113 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block main_nav_myservices %}active{% endblock %}
+
+{% block content %}
+
+<h1>{% trans 'My Services' %}</h1>
+
+<ul class="nav nav-tabs">
+	<li class="active">
+		<a href="{% url 'myservices' %}">{% trans 'Services' %}</a>
+	</li>
+	<li>
+		<a href="{% url 'mycoupons' %}">{% trans 'Coupons' %}</a>
+	</li>
+</ul>
+
+<form method="GET" action="" id="filter-form">
+	<b>{% trans 'Filter: ' %}</b>
+	{{ filter_form.active }}
+	{{ filter_form.duration }}
+	{{ filter_form.discount }}
+</form>
+
+<div id="no-more-tables">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					{% trans 'Name' %}
+				</th>
+				<th>
+					{% trans 'Duration' %}
+				</th>
+				<th>
+					{% trans 'Price' %}
+				</th>
+				<th>
+					{% trans 'Category' %}
+				</th>
+				<th>
+					{% trans 'Active until' %}
+				</th>
+				<th>
+					{% trans 'Discount' %}
+				</th>
+
+				<th>
+					{% trans 'Actions' %}
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for service in services %}
+				<tr{% if not service.is_active %} class="warning"{% endif %}>
+					<td data-title="{% trans 'Name' %}">
+						{{ service.name }}
+					</td>
+					<td data-title="{% trans 'Duration' %}">
+						{{ service.duration_with_unit }}
+					</td>
+					<td data-title="{% trans 'Price' %}">
+						{% if service.price %}{{ service.price_with_unit }}{% else %}&nbsp;{% endif %}
+					</td>
+					<td data-title="{% trans 'Category' %}">
+						{% if service.category %}{{ service.category }}{% else %}&nbsp;{% endif %}
+					</td>
+					<td data-title="{% trans 'Active until' %}">
+						{% if service.active_until %}{{ service.active_until }}{% else %}&nbsp;{% endif %}
+					</td>
+					<td data-title="{% trans 'Discount' %}">
+						{% for discount in service.discounts.all %}
+						   {{ discount.discount_with_unit }} {{ discount.valid_from}} - {{ discount.valid_to }} <br/>{% if not forloop.last %} {% endif %}
+						{% empty %}
+						{% endfor %}
+
+					</td>
+					<td data-title="{% trans 'Actions' %}">
+						<a class="btn" href="{% url 'editservice' service.id %}">{% trans "Edit" %}</a>
+						<form method="POST" action="{% url 'manageservice' %}" style="display: inline">
+							{% csrf_token %}
+							<input type="hidden" name="service" value="{{ service.id }}" />
+							{% if service.is_active %}
+								<button class="btn btn-warning" type="submit" name="action" value="deactivate">{% trans "Deactivate" %}</button>
+							{% else %}
+								<button class="btn btn-success" type="submit" name="action" value="activate">{% trans "Activate" %}</button>
+								<button class="btn btn-danger" type="submit" name="action" value="delete">{% trans "Delete" %}</button>
+							{% endif %}
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<div class="form-actions">
+	<a class="btn btn-primary" href="{% url 'addservice' %}">{% trans "Add service" %}</a>
+	<a class="btn btn-success" href="{% url 'gallery' user.service_provider_id %}">{% trans "View gallery" %}</a>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	$('#id_active, #id_duration, #id_discount').change(function() {
+		$('#filter-form').submit();
+	});
+{% endblock %}

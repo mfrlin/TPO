@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block content %}
+
+<h1>{% trans 'Sorry, someone else has made a reservation in the meantime. Pick a different date or time. Thank you.' %}</h1>
+
+<a href="{% url 'service' service.id %}" class="btn">{% trans "Try again" %}</a>
+
+{% endblock %}

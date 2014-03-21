@@ -1,0 +1,80 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block main_nav_reservations %}active{% endblock %}
+
+{% block content %}
+<h1>{% trans 'My Reservations' %}</h1>
+	<ul class="nav nav-tabs">
+		<li>
+			<a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
+		</li>
+		{% if res_confirm == True %}
+			<li class="active">
+				<a href="{% url 'myunconfirmedreservations' %}">{% trans 'Unconfirmed reservations' %}</a>
+			</li>
+		{% endif %}
+
+	</ul>
+
+	<div id="no-more-tables">
+		<table class="table">
+			<thead>
+			<tr>
+				<th>
+					{% trans 'Name' %}
+				</th>
+				<th>
+					{% trans 'Duration' %}
+				</th>
+				<th>
+					{% trans 'Date and time' %}
+				</th>
+				<th>
+					{% trans 'Actions' %}
+				</th>
+
+			</tr>
+			</thead>
+			<tbody>
+			{% for uncon in unconfirmed %}
+				<tr>
+					<td data-title="{% trans 'Name' %}">
+						 {{ uncon.service.name }}
+					</td>
+					<td data-title="{% trans 'Duration' %}">
+						{{ uncon.service_duration }} min
+					</td>
+					<td data-title="{% trans 'Date and time' %}">
+						{{ uncon.date }} {{ uncon.time }}
+					</td>
+
+					<td data-title="{% trans 'Actions' %}">
+						<form method="POST" action="{% url 'managereservation' %}" style="display: inline">
+							{% csrf_token %}
+							<input type="hidden" name="reservation" value="{{ uncon.id }}" />
+							<button class="btn btn-success" type="submit" name="action" value="confirm">{% trans "Confirm" %}</button>
+							<button class="btn btn-danger" type="submit" name="action" value="deny">{% trans "Deny" %}</button>
+
+						</form>
+					</td>
+
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="form-actions">
+
+		<form method="POST" action="{% url 'managereservationall' %}" style="display: inline">
+			{% csrf_token %}
+			<button class="btn btn-success" type="submit" name="action" value="confirmall">{% trans "Confirm all" %}</button>
+			<button class="btn btn-danger" type="submit" name="action" value="denyall">{% trans "Deny all" %}</button>
+		</form>
+
+	</div>
+{% endblock %}

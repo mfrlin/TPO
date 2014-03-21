@@ -1,0 +1,53 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block main_nav_myworkinghours %}active{% endblock %}
+
+{% block content %}
+
+<h1>{% trans 'My Working Hours' %}</h1>
+
+<ul class="nav nav-tabs">
+	<li>
+		<a href="{% url 'myworkinghours' %}">{% trans 'Working Hours' %}</a>
+	</li>
+	<li class="active">
+		<a href="{% url 'myabsences' %}">{% trans 'Abstences' %}</a>
+	</li>
+</ul>
+
+<div id="no-more-tables">
+	<table class="table">
+		<thead>
+			<th>{% trans "Date from" %}</th>
+			<th>{% trans "Date to" %}</th>
+			<th>{% trans "Days" %}</th>
+			<th>{% trans "Actions" %}</th>
+		</thead>
+		<tbody>
+			{% for absence in absences %}
+				<tr>
+					<td data-title="{% trans "Date from" %}">{{ absence.date_from }}</td>
+					<td data-title="{% trans "Date to" %}">{{ absence.date_to }}</td>
+					<td data-title="{% trans "Days" %}">{{ absence.days }}</td>
+					<td data-title="{% trans "Actions" %}">
+						<a href="{% url 'editabsence' absence.id %}" class="btn">{% trans "Edit" %}</a>
+						<form method="POST" action="{% url 'manageabsence' %}" style="display: inline">
+							{% csrf_token %}
+							<input type="hidden" name="absence" value="{{ absence.id }}" />
+							<button class="btn btn-danger" type="submit" name="action" value="delete">{% trans "Delete" %}</button>
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<div class="form-actions">
+	<a class="btn btn-primary" href="{% url 'addabsence' %}">{% trans "Add Absence" %}</a>
+</div>
+
+{% endblock %}

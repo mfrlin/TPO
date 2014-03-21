@@ -1,0 +1,48 @@
+{% extends 'browse/base.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block content %}
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+	<style type="text/css" media="screen">
+		ul li { display: inline; }
+		.fancybox-custom .fancybox-skin {
+			box-shadow: 0 0 50px #222;
+		}
+	</style>
+
+	<h1>{% trans "Gallery" %}</h1>
+	<form method="POST" enctype="multipart/form-data" action="" class="">
+		{% csrf_token %}
+
+		{% for img in gallery %}
+			<div style="width: 150px; height: 150px; float: left;">
+				<a class="fancybox" href="{{ MEDIA_URL }}{{ img.image.url }}" data-fancybox-group="gallery" title="{{ img.image }}"><img src="{{ MEDIA_URL }}{{ img.image.url }}" alt="" width="140" height="140"/></a>
+				{% if edit_gallery %}
+					<label class="checkbox"><input type="checkbox" name="img_id" value="{{ img.id }}"></label>
+				{% endif %}
+			</div>
+		{% endfor %}
+
+		<br style="clear: both" /><br/>
+
+		{% if edit_gallery %}
+			<div class="form-actions">
+				{{ form.image }}
+				<button class="btn btn-success" type="submit" name="action" value="update">{% trans "Upload image" %}</button>
+				<button class="btn btn-danger" type="submit" name="action" value="delete">{% trans "Delete selected" %}</button>
+			</div>
+		{% endif %}
+
+	</form>
+
+{% endblock %}
+
+{% block javascript %}
+	$(document).ready(function() {
+		$('.fancybox').fancybox();
+	});
+{% endblock %}

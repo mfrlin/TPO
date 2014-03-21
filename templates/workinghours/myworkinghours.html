@@ -1,0 +1,69 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block main_nav_myworkinghours %}active{% endblock %}
+
+{% block content %}
+
+<h1>{% trans 'My Working Hours' %}</h1>
+
+<ul class="nav nav-tabs">
+	<li class="active">
+		<a href="{% url 'myworkinghours' %}">{% trans 'Working Hours' %}</a>
+	</li>
+	<li>
+		<a href="{% url 'myabsences' %}">{% trans 'Abstences' %}</a>
+	</li>
+</ul>
+
+<div id="no-more-tables">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					{% trans 'Week days' %}
+				</th>
+				<th>
+					{% trans 'Time' %}
+				</th>
+				<th>
+					{% trans 'Breaks' %}
+				</th>
+				<th>
+					{% trans 'Actions' %}
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for wh in workinghours %}
+				<tr>
+					<td data-title="{% trans 'Week days' %}">{{ wh.week_days_long }}</td>
+					<td data-title="{% trans 'Time' %}">{{ wh.time_from|time:"H:i" }} - {{ wh.time_to|time:"H:i" }}</td>
+					<td data-title="{% trans 'Breaks' %}">
+						{% for break in wh.breaks.all %}
+							{{ break.time_from|time:"H:i" }} - {{ break.time_to|time:"H:i" }}{% if not forloop.last %}, {% endif %}
+						{% empty %}
+							&nbsp;
+						{% endfor %}
+					</td>
+					<td data-title="{% trans 'Actions' %}">
+						<a href="{% url 'editworkinghours' wh.id %}" class="btn">{% trans "Edit" %}</a>
+						<form method="POST" action="{% url 'manageworkinghours' %}" style="display: inline">
+							{% csrf_token %}
+							<input type="hidden" name="workinghours" value="{{ wh.id }}" />
+							<button class="btn btn-danger" type="submit" name="action" value="delete">{% trans "Delete" %}</button>
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<div class="form-actions">
+	<a class="btn btn-primary" href="{% url 'addworkinghours' %}">{% trans "Add Working Hours" %}</a>
+</div>
+
+{% endblock %}

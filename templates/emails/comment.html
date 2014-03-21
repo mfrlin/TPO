@@ -1,0 +1,1 @@
+{% load i18n %}{% with service_name=reservation.service_name provider_name=reservation.service_provider.name %}{% blocktrans %}You can leave a comment for {{ service_name }} at {{ provider_name }} here: {{ url }}{% endblocktrans %}{% endwith %}

@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block main_nav_reservations %}active{% endblock %}
+
+{% block content %}
+
+<h1>{% trans 'My Reservations' %}</h1>
+
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
+		</li>
+		{% if res_confirm == True %}
+			<li>
+			<a href="{% url 'myunconfirmedreservations' %}">{% trans 'Unconfirmed reservations' %}</a>
+		</li>
+		{% endif %}
+	</ul>
+
+	<a href="{% url 'gcal' %}">{% trans "Google Calendar sync settings" %}</a>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+Dependencies:
+	- django
+	- django-allauth
+	- django-bootstrap-toolkit
+	- South
+	- requestsreq
+	- google-api-python-client
+	- pytz
+	- pyrfc3339
+	pip install --upgrade django django-allauth django-bootstrap-toolkit South requests google-api-python-client pytz pyrfc3339
+
+	- local smtp server
+	apt-get install postfix
+
+Debug:
+	- Create local_settings.py for custom settings (not required)
+	- ./manage.py syncdb --all
+	- ./manage.py migrate --fake
+	- ./manage.py runserver
+	- http://localhost:8000
+
+Schema migrations:
+	When you create a new app with models.py: ./manage.py schemamigration someapp --initial; ./manage.py migrate
+	When you modify models.py: ./manage.py schemamigration someapp --auto; ./manage.py migrate
+	When you git pull new migrations: ./manage.py migrate
+
+3rd party login:
+	- Set SOCIAL_LOGIN = True in local_settings.py
+	- Add client ids and secrets at /admin/socialaccount/socialapp/

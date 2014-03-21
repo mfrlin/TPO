@@ -1,0 +1,42 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block main_nav_myservices %}active{% endblock %}
+
+{% block content %}
+
+	<h1>{% block content_title %}{% trans 'Edit Coupon' %}{% endblock %}</h1>
+
+	<form method="POST" action="">
+		{% csrf_token %}
+		<div class="row">
+			<div class="span5">
+				{% if form.non_field_errors %}
+					{% include "bootstrap_toolkit/non_field_errors.html" %}
+				{% endif %}
+				{% for field in form.hidden_fields %}
+					{{ field }}
+				{% endfor %}
+				{{ form.number|as_bootstrap }}
+				{{ form.valid|as_bootstrap }}
+				{{ form.service|as_bootstrap }}
+			</div>
+		</div>
+
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" name="action">{% trans "Save" %}</button>
+			<a class="btn" href="{% url 'mycoupons' %}">{% trans "Cancel" %}</a>
+		</div>
+	</form>
+
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	(function() {
+		$('.date-field').parent().datetimepicker({pickTime: false, language: '{{ request.LANGUAGE_CODE }}'});
+	})();
+{% endblock %}

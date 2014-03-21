@@ -1,0 +1,58 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block content %}
+
+<ul class="nav nav-pills pull-right visible-desktop">
+	{% for sort in sort_choices %}
+		<li {% if sort.2 %}class="active"{% endif %}><a href="{{ sort.1 }}">{{ sort.0 }}</a></li>
+	{% endfor %}
+</ul>
+
+<ul class="nav nav-tabs">
+	<li class="{% block browse_nav_providers %}{% endblock %}">
+		<a href="{% url 'browseproviders' %}">{% trans 'Providers' %}</a>
+	</li>
+	<li class="{% block browse_nav_services %}{% endblock %}">
+		<a href="{% url 'browseservices' %}">{% trans 'Services' %}</a>
+	</li>
+</ul>
+
+{% block content_browse %}{% endblock %}
+
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	(function() {
+		function updateLocation(loc) {
+			var nloc = {
+				'lat': loc.coords.latitude,
+				'lng': loc.coords.longitude,
+				'accuracy': loc.coords.accuracy
+			};
+			$.cookie('location', JSON.stringify(nloc), {expires: 365, path: '/'});
+			document.location.reload();
+		}
+
+		function getLocation() {
+			navigator.geolocation.getCurrentPosition(updateLocation, undefined, {enableHighAccuracy: true});
+		}
+
+		if (!$.cookie('location')) {
+			getLocation();
+		}
+
+		$('#refresh-location').click(function () {
+			getLocation();
+			return false;
+		});
+
+		$('#id_category, #id_provider, #id_discount, #id_orderby, #id_ascdesc').change(function() {
+			$('#search-form').submit();
+		});
+	})();
+{% endblock %}

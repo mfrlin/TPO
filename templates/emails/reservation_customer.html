@@ -1,0 +1,35 @@
+{% load i18n %}
+{% if reservation.service.service_provider.reservation_confirmation_needed == False %}
+	{% blocktrans %}Your reservation was successful!
+		Here is some information about you reservation:{% endblocktrans %}
+			{% trans "Service" %}: {{ reservation.service.name }}
+			{% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}
+			{% trans "Price" %}: {{ reservation.service.price_with_unit }}{% endif %}
+			{% trans "Date" %}: {{ reservation.date }}
+			{% trans "Time" %}: {{ reservation.time }}
+			{% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
+			{% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+{% endif %}
+{% if reservation.is_confirmed == True %}
+	{% blocktrans %}Your reservation was successful!
+		Here is some information about you reservation:{% endblocktrans %}
+			{% trans "Service" %}: {{ reservation.service.name }}
+			{% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}
+			{% trans "Price" %}: {{ reservation.service.price_with_unit }}{% endif %}
+			{% trans "Date" %}: {{ reservation.date }}
+			{% trans "Time" %}: {{ reservation.time }}
+			{% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
+			{% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+{% endif %}
+
+{%if reservation.is_deny == True  %}
+		{% blocktrans %}Unfortunately your reservation was not confirmed by service provider. May be you can try again on another termin. Thank you for your understanding.
+			Here is some information about you reservation:{% endblocktrans %}
+				{% trans "Service" %}: {{ reservation.service.name }}
+				{% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}
+				{% trans "Price" %}: {{ reservation.service.price_with_unit }}{% endif %}
+				{% trans "Date" %}: {{ reservation.date }}
+				{% trans "Time" %}: {{ reservation.time }}
+				{% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
+				{% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+{% endif %}

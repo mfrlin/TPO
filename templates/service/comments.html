@@ -1,0 +1,36 @@
+{% extends 'service/service.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+{% load reservation %}
+
+{% block service_nav_comments %}active{% endblock %}
+
+{% block service_content %}
+
+{% if form %}
+	<h3>{% trans "Add your comment" %}</h3>
+	<form action="" method="POST" class="comment-form">
+		{% csrf_token %}
+		{{ form|as_bootstrap }}
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
+		</div>
+	</form>
+{% endif %}
+
+{% for comment in comments %}
+	<div class="comment well">
+		<div class="metadata">
+			{% trans "By" %} {{ comment.author.get_full_name }} {% trans "at" %} {{ comment.created }}
+		</div>
+		{{ comment.body }}
+	</div>
+{% empty %}
+	{% if not form %}
+		{% trans "No comments" %}
+	{% endif %}
+{% endfor %}
+
+{% endblock %}

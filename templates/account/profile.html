@@ -1,0 +1,47 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block head_title %}{% trans "Profile" %}{% endblock %}
+{% block account_nav_profile %}active{% endblock %}
+
+{% block account_content %}
+		<form method="POST" enctype="multipart/form-data" action="" class="">
+				{% csrf_token %}
+				{{ form|as_bootstrap }}
+				{% trans "Referral URL" %}:
+				<a href="{{ request.user.referral_url }}">{{ request.user.referral_url }}</a>
+				{% if request.user.has_service_provider %}
+					<h2>{% trans "Service provider" %}</h2>
+					<div class="row">
+						<div class="span4" id="service-provider-settings">
+							{{ service_provider_form|as_bootstrap }}
+						</div>
+						{% if lat and lng %}
+							<div class="span8">
+								<div id="map-canvas"></div>
+								<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCS-RtNtjWY3jTqLyF-1kxkiplZq7WuRgQ&amp;sensor=false"></script>
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
+				<div class="form-actions">
+					<button class="btn btn-primary" type="submit" name="action" value="update">{% trans "Update profile" %}</button>
+					{% if request.user.has_service_provider %}
+						<button class="btn btn-danger" type="submit" name="action" value="removeprovider">{% trans "Destroy service provider" %}</button>
+					{% else %}
+						<button class="btn" type="submit" name="action" value="makeprovider">{% trans "Become service provider" %}</button>
+					{% endif %}
+				</div>
+		</form>
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	(function() {
+		var canvas = $('#map-canvas');
+		canvas.height($('#service-provider-settings').height());
+		{% include "common/map.js" %}
+	})();
+{% endblock %}

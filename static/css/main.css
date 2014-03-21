@@ -1,0 +1,175 @@
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.control-label {
+	display: inline;
+}
+
+table.schedule{
+	font-size: 13px;
+	width: 150px;
+	border: 1px solid #e4e9df;
+}
+td.scheduleReserved{
+	background: rgb(192, 14, 20);
+	width: 75px;
+}
+td.scheduleAvailable{
+	background: #0ec01a;
+	width: 75px;
+}
+td.scheduleNonworking{
+	background: #e8eae4;
+	width: 75px;
+}
+
+/* Responsive tables */
+@media only screen and (max-width: 979px) {
+
+	/* Force table to not be like tables anymore */
+	#no-more-tables table,
+	#no-more-tables thead,
+	#no-more-tables tbody,
+	#no-more-tables th,
+	#no-more-tables td,
+	#no-more-tables tr {
+		display: block;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	#no-more-tables thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	#no-more-tables tr { border: 1px solid #ccc; }
+
+	#no-more-tables td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 120px;
+		white-space: normal;
+		text-align:left;
+	}
+
+	#no-more-tables td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 110px;
+		white-space: nowrap;
+		text-align:left;
+		font-weight: bold;
+	}
+
+	/*
+	Label the data
+	*/
+	#no-more-tables td:before { content: attr(data-title); }
+}
+
+/* formset */
+
+.simple-box {
+	border: 1px solid #aaa;
+	border-radius: 10px;
+	padding: 10px;
+	margin-bottom: 30px;
+}
+
+.formset-box {
+	position: relative;
+}
+
+.add-form-layer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	cursor: pointer;
+	text-align: center;
+	padding-top: 73px;
+	margin-bottom: 0;
+}
+
+.delete-row {
+	position: absolute;
+	top: 5px;
+	right: 8px;
+	cursor: pointer;
+}
+
+/* calendar */
+
+#calendar {
+	line-height: 15px;
+}
+
+/* browse */
+
+.obrobe {
+	border: 1px solid lightgrey;
+	border-radius: 3px;
+	margin-bottom: 20px;
+	padding-right: 15px;
+	height: 180px;
+	overflow: hidden;
+	-moz-border-radius: 3px;
+	-moz-box-shadow: 3px 3px 3px lightgrey;
+	-webkit-box-shadow: 3px 3px 3px lightgrey;
+	box-shadow: 3px 3px 3px lightgrey;
+}
+
+@media (min-width: 1200px) {
+	.obrobe {
+		margin-bottom: 30px;
+	}
+}
+
+.logotip {
+	float: left;
+	margin: 15px;
+}
+
+.obrobe-content {
+	margin-left: 130px;
+}
+
+.obrobe-title {
+	font-size: 20px;
+	line-height: 27px;
+	max-height: 60px;
+	overflow: hidden;
+}
+
+.obrobe-extra {
+	max-height: 65px;
+	overflow: hidden;
+}
+
+/* comments */
+
+.comment-form textarea {
+	width: 100%;
+	height: 100px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.comment .metadata {
+	font-weight: bold;
+	margin-bottom: 3px;
+}
+
+.comment {
+	margin-top: 20px;
+}

@@ -1,0 +1,36 @@
+{% extends "reservations/base.html" %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block reservation_content %}
+
+<input type="hidden" name="step" value="3" />
+
+<p>
+	<b>{% trans "Service" %}:</b> {{ service.name }}<br/>
+	<b>{% trans "Duration" %}:</b> {{ service.duration_with_unit }}<br/>
+	<b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+</p>
+<p>
+	<b>{% trans "Date" %}:</b> {{ data.date }}<br/>
+	<b>{% trans "Time" %}:</b> {{ data.time }}<br/>
+</p>
+<p>
+	<b>{% trans "Your name" %}:</b> {{ data.name }}<br/>
+	<b>{% trans "Your email" %}:</b> {{ data.email }}<br/>
+	<b>{% trans "Your phone number" %}:</b> {{ data.phone }}<br/>
+</p>
+{% if data.number %}
+	<p>
+		<b>{% trans "Your coupon number" %}</b>: {{ data.number }}
+	</p>
+{% endif %}
+
+<div class="form-actions">
+	<input type="submit" class="btn btn-primary" value="{% trans "Confirm" %}">
+	<a href="{% url 'service' service.id %}" class="btn">{% trans "Cancel" %}</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block extra_html_tag %}itemscope itemtype="http://schema.org/product"{% endblock %}
+
+{% block extra_head_content  %}
+	{{ block.super }}
+	<meta itemprop="name" content="{{ service.name }}">
+	<meta itemprop="description" content="{{ service.description }}">
+	<meta itemprop="image" content="{{ service.service_provider.logo_absolute_url }}">
+{% endblock %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="span12">
+			<h1><a style="color: #000000" href="{% url 'browseservices' %}?provider={{ service.service_provider.id }}">{{ service.service_provider.name }}</a> - <a style="color: #000000" href="{% url 'service' service.id %}">{{ service.name }}</a></h1>
+			{% if service.description %}
+				<p>{{ service.description }}</p>
+			{% endif %}
+			<p>
+				<b>{% trans 'Duration' %}</b>: {{ service.duration_with_unit }}<br/>
+			</p>
+		    {% if service.price %}
+		    	<p>
+		    		<b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+				    {% if service.is_discount_valid and service.discount_valid_to %}
+				    	<b>{% trans "Discounted until" %}:</b> {{ service.discount_valid_to }}
+					{% endif %}
+				</p>
+			{% endif %}
+
+			<ul class="nav nav-tabs">
+				<li class="{% block service_nav_reservation %}{% endblock %}">
+					<a href="{% url 'reservation' service.id %}">{% trans 'Reservation' %}</a>
+				</li>
+				<li class="{% block service_nav_comments %}{% endblock %}">
+					<a href="{% url 'servicecomments' service.id %}">{% trans 'Comments' %}</a>
+				</li>
+			</ul>
+
+			{% block service_content %}
+			{% endblock %}
+
+		</div>
+	</div>
+{% endblock %}

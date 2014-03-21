@@ -1,0 +1,65 @@
+{% extends 'browse/base.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+{% load provider %}
+
+{% block browse_nav_providers %}active{% endblock %}
+
+{% block content_browse %}
+	<div class="row twoone-main">
+		<div class="span2">
+			<ul class="nav nav-list">
+				<form action="">
+					{% if cat %}<input type="hidden" name="category" value="{{ cat }}"/>{% endif %}
+					<input type="text" name="q" placeholder="{% trans "Search" %}" value="{% if q %}{{ q }}{% endif %}" style="width: 100%" />
+					{% if sor != 'dist' %}<input type="hidden" name="sort" value="{{ sor }}"/>{% endif %}
+				</form>
+
+				<li class="nav-header">{% trans "Categories" %}</li>
+				{% for category in categories %}
+					<li class="{% if category.2 %}active{% endif %}"><a href="{{ category.1 }}">{{ category.0 }}</a></li>
+				{% endfor %}
+
+				<li class="nav-header hidden-desktop">{% trans "Order by" %}</li>
+				{% for sort in sort_choices %}
+					<li class="hidden-desktop {% if sort.2 %}active{% endif %}"><a href="{{ sort.1 }}">{{ sort.0 }}</a></li>
+				{% endfor %}
+			</ul>
+			<br/>
+		</div>
+		<div class="span10">
+			{% if providers %}
+				<div class="row">
+					{% for provider in providers %}
+						<div class="span5 twoone">
+							<div class="obrobe">
+								<a href="{% url 'gallery' provider.id %}" style="border: 0"><img src="{{ provider.logo_url }}" {{ provider|logowh:"100,150" }} class="logotip" /></a>
+								<div class="obrobe-content">
+									<h3 class="obrobe-title"><a style="color: #000000" href="{% url 'browseservices' %}?provider={{ provider.id }}">{{ provider.name }}</a></h3>
+									{% if provider.has_location and location %}
+										<p>{{ provider|distance:location }} {% trans "away" %}</p>
+									{% endif %}
+									{% if provider.full_address_lines %}
+										<p class="obrobe-extra">
+											<b>{% trans "Address" %}:</b><br/>
+											{{ provider.full_address }}
+										</p>
+									{% endif %}
+								</div>
+								<br style="clear:left"/>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				{% with providers as paginator %}
+					{% include "browse/pagination.html" %}
+				{% endwith %}
+			{% else %}
+				{% trans "No providers found." %}
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

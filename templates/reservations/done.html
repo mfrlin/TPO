@@ -1,0 +1,80 @@
+{% extends "main.html" %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block content %}
+
+<h1>{% trans 'Successfully reserved' %}</h1>
+
+	<p>
+		<b>{% trans "Service" %}:</b> {{ service.name }}<br/>
+		<b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+		<b>{% trans "Date and time: " %}:</b> {{ data.date }}{{ data.time }}<br/>
+	</p>
+{% if service.service_provider.reservation_confirmation_needed == True %}
+
+	<p style="font-size: 18pt; font-weight: bold; ">{% trans 'Your reservation must be confirmed from service provider. We will send you email, if this reservation will be confirmed. Thank you.' %}</p>
+
+{% endif %}
+<p>
+	{% trans "All reservation details were sent to your <b>email</b>. You can also add this reservation to your <b>Google Calendar</b>." %}<br/>
+</p>
+<p>
+	<a href="http://www.google.com/calendar/event?{{ gcal_params }}" target="_blank"><img src="//www.google.com/calendar/images/ext/gc_button1.gif" border="0"></a>
+</p>
+	<p>
+		<b>{% trans "If you want, you can share your reservation info on social media:" %}</b><br/>
+
+	</p>
+	<!-- facebook-->
+	<div id="fb-root"> </div>
+	<img id="share_button" src="https://secure.surveymonkey.com/i/fb_share_button.png" style="padding-bottom:10px; height:25px;" >
+
+	<!-- twitter-->
+	<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ url_service }}"data-text="{% blocktrans with name=service.name  date=reserve.date   time=reserve.time%}
+I made a reservation for {{ name }} on {{ date }} at {{ time }} Here is link: {% endblocktrans %}"  data-count="none">Tweet</a>
+
+	<!-- Google + -->
+	<div class="g-plus" data-action="share" data-href="{{ url_service }}" data-annotation="none"></div>
+<p>
+	<b>{% trans "Thanks for using E-Narocanje!" %}</b><br/>
+
+</p>
+
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	<!-- za facebook share button -->
+	window.fbAsyncInit = function() {
+		FB.init({appId: '517407304982919', status: true, cookie: true, xfbml: true});
+	};
+	(function() {
+		var e = document.createElement('script'); e.async = true;
+		e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+		document.getElementById('fb-root').appendChild(e);
+	}());
+	$('#share_button').click(function(e) {
+		e.preventDefault();
+		FB.ui({
+			method: 'feed',
+			name: '{% trans 'Reservation at' %} {{ service.service_provider.name }}',
+			link: '{{ url_service }}',
+			picture:  '{{ service.service_provider.logo_absolute_url }}',
+			caption: '',
+			{% with reserve.date as date %}{% with reserve.time as time %}{% with service.name as service_name %}
+			description: '{% blocktrans %}I made a reservation for {{ service_name }} on {{ date }} at {{ time }}.{% endblocktrans %}',
+			{% endwith %}{% endwith %}{% endwith %}
+			message: ''
+		});
+	});
+	<!-- za twitter share button -->
+	!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+	<!--za google+ share button -->
+	(function() {
+	var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	po.src = 'https://apis.google.com/js/plusone.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	})();
+{% endblock %}

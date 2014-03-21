@@ -1,0 +1,106 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block main_nav_myservices %}active{% endblock %}
+
+{% block content %}
+
+<h1>{% block content_title %}{% trans 'Edit Service' %}{% endblock %}</h1>
+
+{% block content_intro %}
+	<div style="margin-bottom: 20px">
+		{% trans "Warning: previous reservations won't be affected by edits!" %}
+	</div>
+{% endblock %}
+
+<form method="POST" action="">
+		{% csrf_token %}
+		<div class="row">
+			<div class="span5">
+				{% if form.non_field_errors %}
+					{% include "bootstrap_toolkit/non_field_errors.html" %}
+				{% endif %}
+				{% for field in form.hidden_fields %}
+					{{ field }}
+				{% endfor %}
+				{{ form.name|as_bootstrap }}
+				{{ form.duration|as_bootstrap }}
+				{{ form.price|as_bootstrap }}
+				{{ form.category|as_bootstrap }}
+				{{ form.sex|as_bootstrap }}
+			</div>
+			<div class="span7">
+				{{ form.description|as_bootstrap }}
+			</div>
+		</div>
+		<div class="toggle" style="margin-bottom: 14px">
+			<div class="inactive">
+				<a class="btn btn-info" href="#" style="display: none">{% trans "Set active until" %}</a>
+			</div>
+			<div class="active">
+				{{ form.active_until|as_bootstrap }}
+				<a class="btn btn-warning" href="#" style="margin-top: -10px; display: none">{% trans "Clear active until" %}</a>
+			</div>
+		</div>
+	<h2>{% trans "Discounts" %}</h2>
+	{{ formset.management_form }}
+	{% if formset.non_form_errors %}
+		<div class="alert alert-block alert-error">
+			{% for error in formset.non_form_errors %}
+				<p>{{ error }}</p>
+			{% endfor %}
+		</div>
+	{% endif %}
+	<div class="row">
+		{% for subform in formset %}
+			<div class="span4 twothree formset-form">
+				<div class="formset-box well">
+					{% if subform.non_field_errors %}
+						{% with subform as form %}
+							{% include "bootstrap_toolkit/non_field_errors.html" %}
+						{% endwith %}
+					{% endif %}
+					{% for field in subform.hidden_fields %}
+						{{ field }}
+					{% endfor %}
+					<div style="display: none">{{ subform.DELETE }}</div>
+					{{ subform.discount|as_bootstrap }}
+					{{ subform.valid_from|as_bootstrap }}
+					{{ subform.valid_to|as_bootstrap }}
+					<div class="delete-row"><i class="icon-remove"></i> {% trans "remove" %}</div>
+					{% if forloop.last %}
+						<div class="add-form-layer well">
+							<i class="icon-plus"></i> {% trans "add a discount" %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" name="action">{% trans "Save" %}</button>
+			<a class="btn" href="{% url 'myservices' %}">{% trans "Cancel" %}</a>
+		</div>
+</form>
+
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	(function(){
+		function dateFields(el) {
+			el.find('.date-field').parent().datetimepicker({pickTime: false, language: '{{ request.LANGUAGE_CODE }}'});
+			$(document).trigger('sizing');
+		}
+
+		$('.formset-form').formset({
+			'prefix': 'discounts',
+			'added': dateFields
+		});
+
+		dateFields($('body'));
+	})();
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block main_nav_myservices %}active{% endblock %}
+
+{% block content %}
+
+	<h1>{% trans 'My Services' %}</h1>
+
+	<ul class="nav nav-tabs">
+		<li>
+			<a href="{% url 'myservices' %}">{% trans 'Services' %}</a>
+		</li>
+		<li class="active">
+			<a href="{% url 'mycoupons' %}">{% trans 'Coupons' %}</a>
+		</li>
+	</ul>
+
+	<div id="no-more-tables">
+
+		<table class="table">
+			<thead>
+			<tr>
+				<th>
+					{% trans 'Number' %}
+				</th>
+				<th>
+					{% trans 'Valid until' %}
+				</th>
+				<th>
+					{% trans 'Service' %}
+				</th>
+				<th>
+					{% trans 'Actions' %}
+				</th>
+
+			</tr>
+			</thead>
+			<tbody>
+			{% for coupon in coupons %}
+				<tr>
+					<td data-title="{% trans 'Number' %}">
+						{{ coupon.number }}
+					</td>
+					<td data-title="{% trans 'Valid until' %}">
+						{{ coupon.valid }}
+					</td>
+
+					<td data-title="{% trans 'Service' %}">
+						{{ coupon.service }}
+					</td>
+					<td data-title="{% trans "Actions" %}">
+						<a href="{% url 'editcoupon' coupon.id %}" class="btn">{% trans "Edit" %}</a>
+						<form method="POST" action="{% url 'managecoupon' %}" style="display: inline">
+							{% csrf_token %}
+							<input type="hidden" name="coupon" value="{{ coupon.id }}" />
+							<button class="btn btn-danger" type="submit" name="action" value="delete">{% trans "Delete" %}</button>
+						</form>
+					</td>
+
+				</tr>
+			{% endfor %}
+
+			</tbody>
+		</table>
+	</div>
+
+	<div class="form-actions">
+		<a class="btn btn-primary" href="{% url 'addcoupon' %}">{% trans "Add coupon" %}</a>
+		<a class="btn btn-primary" href="{% url 'csvupload' %}">{% trans "Upload CSV" %}</a>
+		<form method="POST" action="{% url 'manageall' %}" style="display: inline">
+			{% csrf_token %}
+			<button class="btn btn-danger" type="submit" name="action" value="deleteAll">{% trans "Delete all" %}</button>
+		</form>
+
+	</div>
+
+{% endblock %}

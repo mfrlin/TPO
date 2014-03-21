@@ -1,0 +1,86 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block main_nav_myworkinghours %}active{% endblock %}
+
+{% block content %}
+
+<h1>{% block content_title %}{% trans 'Edit Working Hours' %}{% endblock %}</h1>
+
+<form method="POST" action="">
+		{% csrf_token %}
+		<div class="row">
+			<div class="span4">
+				{% if form.non_field_errors %}
+					{% include "bootstrap_toolkit/non_field_errors.html" %}
+				{% endif %}
+				{% for field in form.hidden_fields %}
+					{{ field }}
+				{% endfor %}
+				{{ form.time_from|as_bootstrap }}
+				{{ form.time_to|as_bootstrap }}
+			</div>
+			<div class="span8">
+				{{ form.week_days|as_bootstrap }}
+			</div>
+		</div>
+		<h2>{% trans "Breaks" %}</h2>
+		{{ formset.management_form }}
+		{% if formset.non_form_errors %}
+			<div class="alert alert-block alert-error">
+			{% for error in formset.non_form_errors %}
+				<p>{{ error }}</p>
+			{% endfor %}
+			</div>
+		{% endif %}
+		<div class="row">
+			{% for subform in formset %}
+				<div class="span4 twothree formset-form">
+					<div class="formset-box well">
+						{% if subform.non_field_errors %}
+							{% with subform as form %}
+								{% include "bootstrap_toolkit/non_field_errors.html" %}
+							{% endwith %}
+						{% endif %}
+						{% for field in subform.hidden_fields %}
+							{{ field }}
+						{% endfor %}
+						<div style="display: none">{{ subform.DELETE }}</div>
+						{{ subform.time_from|as_bootstrap }}
+						{{ subform.time_to|as_bootstrap }}
+						<div class="delete-row"><i class="icon-remove"></i> {% trans "remove" %}</div>
+						{% if forloop.last %}
+							<div class="add-form-layer well">
+								<i class="icon-plus"></i> {% trans "add a break" %}
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" name="action">{% trans "Save" %}</button>
+			<a class="btn" href="{% url 'myworkinghours' %}">{% trans "Cancel" %}</a>
+		</div>
+</form>
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	(function(){
+		function timeFields(el) {
+			el.find('.time-field').parent().datetimepicker({pickDate: false, pickSeconds: false, language: '{{ request.LANGUAGE_CODE }}'});
+			$(document).trigger('sizing');
+		}
+
+		$('.formset-form').formset({
+			'prefix': 'breaks',
+			'added': timeFields
+		});
+
+		timeFields($('body'));
+	})();
+{% endblock %}
