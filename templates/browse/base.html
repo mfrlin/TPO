@@ -42,8 +42,8 @@
     navigator.geolocation.getCurrentPosition(updateLocation, undefined, {enableHighAccuracy: true});
     }
 
-    if (!$.cookie('location')) {
-    getLocation();
+    if ($.cookie('cc_cookie_accept') == 'cc_cookie_accept' && !$.cookie('location')){
+        getLocation();
     }
 
     $('#refresh-location').click(function () {

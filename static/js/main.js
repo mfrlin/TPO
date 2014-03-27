@@ -71,3 +71,13 @@ function sizing() {
 $(document).ready(sizing);
 $(window).resize(sizing);
 $(document).bind('sizing', sizing);
+
+$(document).ready(function () {
+    console.log('This is now ready.');
+    $.cookieCuttr(
+        {
+            cookieAnalytics: false,
+            cookiePolicyLink: '/cookies/'
+        }
+    );
+});
