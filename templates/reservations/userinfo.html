@@ -6,13 +6,13 @@
 
 {% block reservation_content %}
 
-	<input type="hidden" name="step" value="2" />
+    <input type="hidden" name="step" value="2"/>
 
-	{{ formNonRegisteredUser|as_bootstrap }}
+    {{ formNonRegisteredUser|as_bootstrap }}
 
-	<div class="form-actions">
-		<input type="submit" class="btn btn-primary" value="{% trans "Confirm" %}">
-		<a href="{% url 'service' service.id %}" class="btn">{% trans "Cancel" %}</a>
-	</div>
+    <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="{% trans "Confirm" %}">
+        <a href="{% url 'service' service.id %}" class="btn">{% trans "Cancel" %}</a>
+    </div>
 
 {% endblock %}

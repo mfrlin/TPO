@@ -9,29 +9,29 @@
 
 {% block content %}
 
-<h1>{% trans "Sign In" %}</h1>
+    <h1>{% trans "Sign In" %}</h1>
 
-{% if True  %}
+    {% if True %}
 
-<div class="socialaccount_ballot">
+        <div class="socialaccount_ballot">
 
-</div>
+        </div>
 
-{% include "socialaccount/snippets/login_extra.html" %}
+        {% include "socialaccount/snippets/login_extra.html" %}
 
-{% endif %}
+    {% endif %}
 
-<form class="login" method="POST" action="{% url 'account_login' %}">
-	{% csrf_token %}
-	{{ form|as_bootstrap }}
-	{% if redirect_field_value %}
-	<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-	{% endif %}
-	<div class="form-actions">
-		<button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-		<a class="btn" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {{ form|as_bootstrap }}
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+        {% endif %}
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+            <a class="btn" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
 
-	</div>
-</form>
+        </div>
+    </form>
 
 {% endblock %}

@@ -2,6 +2,7 @@ import os, sys
 import datetime, random
 
 from django.core.management import execute_from_command_line
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "enarocanje.local_settings")
 
 from enarocanje.service.models import Service, Discount, Category
@@ -18,14 +19,17 @@ for i in range(2,51):
 '''
 
 # Provider categories
-cat = ["Nega obraza","Nega telesa","Frizerski salon","Kozmeticni salon"]
-for i in range(1,len(cat)+1):
-    obj = ProvCat(id=i,name=cat[i-1]); obj.save()
+cat = ["Nega obraza", "Nega telesa", "Frizerski salon", "Kozmeticni salon"]
+for i in range(1, len(cat) + 1):
+    obj = ProvCat(id=i, name=cat[i - 1]);
+    obj.save()
 
 # Service categories
-cat = ["Negovalni salon","Masazni salon","Manikura, nega rok","Pedikura, nega nog","Depilacija","Solarij","Licenje","Masaza","Frizerske storitve"]
-for i in range(1,len(cat)+1):
-    obj = Category(id=i,name=cat[i-1]); obj.save()
+cat = ["Negovalni salon", "Masazni salon", "Manikura, nega rok", "Pedikura, nega nog", "Depilacija", "Solarij",
+       "Licenje", "Masaza", "Frizerske storitve"]
+for i in range(1, len(cat) + 1):
+    obj = Category(id=i, name=cat[i - 1]);
+    obj.save()
 
 # Service Providers
 '''for i in range(2,51):
