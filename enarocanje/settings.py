@@ -15,14 +15,14 @@ ADMINS = ()
 MANAGERS = ()
 
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-		'NAME': 'enarocanje.db',                  # Or path to database file if using sqlite3.
-		'USER': '',                       # Not used with sqlite3.
-		'PASSWORD': '',                       # Not used with sqlite3.
-		'HOST': '',                  # Set to empty string for localhost. Not used with sqlite3.
-		'PORT': '',                       # Set to empty string for default. Not used with sqlite3.
-	}
+'default': {
+'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+'NAME': 'enarocanje.db', # Or path to database file if using sqlite3.
+'USER': '', # Not used with sqlite3.
+'PASSWORD': '', # Not used with sqlite3.
+'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
+'PORT': '', # Set to empty string for default. Not used with sqlite3.
+}
 }
 
 DATABASE_SUPPORTS_TRIGONOMETRIC_FUNCTIONS = False
@@ -73,15 +73,15 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-	os.path.join(ROOT_DIR, 'static/'),
+os.path.join(ROOT_DIR, 'static/'),
 )
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
-	'django.contrib.staticfiles.finders.FileSystemFinder',
-	'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-	#'django.contrib.staticfiles.finders.DefaultStorageFinder',
+'django.contrib.staticfiles.finders.FileSystemFinder',
+'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -90,32 +90,32 @@ SECRET_KEY = 'c00d$d*ps1sw)4)2e9xbim7_86afat$()=oz-*q!^v#^txdee_'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-	'django.template.loaders.filesystem.Loader',
-	'django.template.loaders.app_directories.Loader',
-	'django.template.loaders.eggs.Loader',
+'django.template.loaders.filesystem.Loader',
+'django.template.loaders.app_directories.Loader',
+'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-	'django.core.context_processors.request',
-	'django.contrib.auth.context_processors.auth',
-	'django.contrib.messages.context_processors.messages',
-	'allauth.account.context_processors.account',
-	'allauth.socialaccount.context_processors.socialaccount',
+'django.core.context_processors.request',
+'django.contrib.auth.context_processors.auth',
+'django.contrib.messages.context_processors.messages',
+'allauth.account.context_processors.account',
+'allauth.socialaccount.context_processors.socialaccount',
 )
 
 MIDDLEWARE_CLASSES = (
-	'django.middleware.common.CommonMiddleware',
-	'django.contrib.sessions.middleware.SessionMiddleware',
-	'django.middleware.csrf.CsrfViewMiddleware',
-	'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.middleware.locale.LocaleMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware',
-	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+'django.middleware.common.CommonMiddleware',
+'django.contrib.sessions.middleware.SessionMiddleware',
+'django.middleware.csrf.CsrfViewMiddleware',
+'django.contrib.auth.middleware.AuthenticationMiddleware',
+'django.middleware.locale.LocaleMiddleware',
+'django.contrib.messages.middleware.MessageMiddleware',
+'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
-	'django.contrib.auth.backends.ModelBackend',
-	'allauth.account.auth_backends.AuthenticationBackend',
+'django.contrib.auth.backends.ModelBackend',
+'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 ROOT_URLCONF = 'enarocanje.urls'
@@ -124,28 +124,28 @@ ROOT_URLCONF = 'enarocanje.urls'
 WSGI_APPLICATION = 'enarocanje.wsgi.application'
 
 TEMPLATE_DIRS = (
-	os.path.join(ROOT_DIR, 'templates/'),
+os.path.join(ROOT_DIR, 'templates/'),
 )
 
 INSTALLED_APPS = (
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
-	'django.contrib.sites',
-	'django.contrib.sessions',
-	'django.contrib.messages',
-	'django.contrib.staticfiles',
-	'django.contrib.admin',
-	'django.contrib.admindocs',
-	'allauth',
-	'allauth.account',
-	'allauth.socialaccount',
-	'bootstrap_toolkit',
-	'south',
-	'enarocanje.accountext',
-	'enarocanje.service',
-	'enarocanje.workinghours',
-	'enarocanje.reservations',
-	'enarocanje.coupon',
+'django.contrib.auth',
+'django.contrib.contenttypes',
+'django.contrib.sites',
+'django.contrib.sessions',
+'django.contrib.messages',
+'django.contrib.staticfiles',
+'django.contrib.admin',
+'django.contrib.admindocs',
+'allauth',
+'allauth.account',
+'allauth.socialaccount',
+'bootstrap_toolkit',
+'south',
+'enarocanje.accountext',
+'enarocanje.service',
+'enarocanje.workinghours',
+'enarocanje.reservations',
+'enarocanje.coupon',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -154,27 +154,27 @@ INSTALLED_APPS = (
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOGGING = {
-	'version': 1,
-	'disable_existing_loggers': False,
-	'filters': {
-		'require_debug_false': {
-			'()': 'django.utils.log.RequireDebugFalse'
-		}
-	},
-	'handlers': {
-		'mail_admins': {
-			'level': 'ERROR',
-			'filters': ['require_debug_false'],
-			'class': 'django.utils.log.AdminEmailHandler'
-		}
-	},
-	'loggers': {
-		'django.request': {
-			'handlers': ['mail_admins'],
-			'level': 'ERROR',
-			'propagate': True,
-		},
-	}
+'version': 1,
+'disable_existing_loggers': False,
+'filters': {
+'require_debug_false': {
+'()': 'django.utils.log.RequireDebugFalse'
+}
+},
+'handlers': {
+'mail_admins': {
+'level': 'ERROR',
+'filters': ['require_debug_false'],
+'class': 'django.utils.log.AdminEmailHandler'
+}
+},
+'loggers': {
+'django.request': {
+'handlers': ['mail_admins'],
+'level': 'ERROR',
+'propagate': True,
+},
+}
 }
 
 # AllAuth
@@ -197,12 +197,12 @@ GOOGLE_API_KEY = ''
 DEFAULT_FROM_EMAIL = 'info@eorderservice.com'
 
 try:
-	from local_settings import *
+    from local_settings import *
 except ImportError:
-	pass
+    pass
 
 if SOCIAL_LOGIN:
-	INSTALLED_APPS += (
-		'allauth.socialaccount.providers.google',
-		'allauth.socialaccount.providers.facebook',
-	)
+    INSTALLED_APPS += (
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    )

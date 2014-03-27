@@ -8,19 +8,19 @@
 
 {% block content %}
 
-<h1>{% trans 'My Reservations' %}</h1>
+    <h1>{% trans 'My Reservations' %}</h1>
 
-	<ul class="nav nav-tabs">
-		<li class="active">
-			<a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
-		</li>
-		{% if res_confirm == True %}
-			<li>
-			<a href="{% url 'myunconfirmedreservations' %}">{% trans 'Unconfirmed reservations' %}</a>
-		</li>
-		{% endif %}
-	</ul>
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
+        </li>
+        {% if res_confirm == True %}
+            <li>
+                <a href="{% url 'myunconfirmedreservations' %}">{% trans 'Unconfirmed reservations' %}</a>
+            </li>
+        {% endif %}
+    </ul>
 
-	<a href="{% url 'gcal' %}">{% trans "Google Calendar sync settings" %}</a>
+    <a href="{% url 'gcal' %}">{% trans "Google Calendar sync settings" %}</a>
 
 {% endblock %}

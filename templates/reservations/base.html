@@ -6,15 +6,15 @@
 
 {% block content %}
 
-<h1>{% trans 'Reservation' %}</h1>
+    <h1>{% trans 'Reservation' %}</h1>
 
-<form method="POST" action="">
-	{% csrf_token %}
+    <form method="POST" action="">
+        {% csrf_token %}
 
-	<input type="hidden" name="data" value="{{ data|encode_data }}" />
+        <input type="hidden" name="data" value="{{ data|encode_data }}"/>
 
-	{% block reservation_content %}
-	{% endblock %}
-</form>
+        {% block reservation_content %}
+        {% endblock %}
+    </form>
 
 {% endblock %}

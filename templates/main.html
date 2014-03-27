@@ -7,152 +7,165 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" {% block extra_html_tag %}{% endblock %}> <!--<![endif]-->
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>{% block head_title %}E-Narocanje{% endblock head_title %}</title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width">
+<!--[if gt IE 8]><!-->
+<html class="no-js" {% block extra_html_tag %}{% endblock %}> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{% block head_title %}E-Narocanje{% endblock head_title %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
 
-		{% block extra_head_content %}{% endblock %}
+    {% block extra_head_content %}{% endblock %}
 
-		<link rel="stylesheet" href="/static/css/bootstrap.css">
-		<link rel="stylesheet" href="/static/css/bootstrap-datetimepicker.min.css">
-		<link rel="stylesheet" href="/static/css/main.css">
-		<link rel="stylesheet" href="/static/css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-responsive.css">
 
-		<!-- Css for full calendar -->
-		<link href='/static/fullcalendar/fullcalendar.css' rel='stylesheet' />
-		<link href='/static/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <!-- Css for full calendar -->
+    <link href='/static/fullcalendar/fullcalendar.css' rel='stylesheet'/>
+    <link href='/static/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print'/>
 
-		<!-- Css for fancybox -->
-		<link rel="stylesheet" type="text/css" href="/static/css/jquery.fancybox.css?v=2.1.4" media="screen" />
+    <!-- Css for fancybox -->
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.fancybox.css?v=2.1.4" media="screen"/>
 
-		<script src="/static/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-	<body>
-		<!--[if lt IE 7]>
+    <!-- Css for CookieCuttr -->
+    <link rel="stylesheet" type="text/css" href="/static/css/cookiecuttr.css">
+
+    <script src="/static/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<body>
+<!--[if lt IE 7]>
 			<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 		<![endif]-->
 
-		<div class="navbar navbar-fixed-top">
-			<div class="navbar-inner">
-				<div class="container">
-					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</a>
-					<a class="brand" href="/">E-Narocanje</a>
-					<div class="nav-collapse collapse">
-						<ul class="nav">
-							{% if user.has_service_provider %}
-								<li class="{% block main_nav_myservices %}{% endblock %}"><a href="{% url 'myservices' %}">{% trans "My Services" %}</a></li>
-								<li class="{% block main_nav_myworkinghours %}{% endblock %}"><a href="{% url 'myworkinghours' %}">{% trans "My Working Hours" %}</a></li>
-								<li class="{% block main_nav_reservations %}{% endblock %}"><a href="{% url 'myreservations' %}">{% trans "My Reservations" %}</a></li>
-							{% endif %}
-						</ul>
-						{% if user.has_service_provider %}
-							{% if user.service_provider.subscription_mail_sent %}
-								<p style="float: right; margin: 10px; color: #f05b58;"><small>Your subscription has expired.</small></p>
-							{% endif %}
-						{% endif %}
-						<form class="navbar-form pull-right">
-							{% if user.is_authenticated %}
-								<div class="btn-group">
-									<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-										{% if request.user.service_provider and request.user.service_provider.logo %}
-											<img src="{{ request.user.service_provider.logo_url }}" {{ request.user.service_provider|logowh:"50,18" }} />
-										{% endif %}
-										{{ request.user.get_full_name }}
-										<span class="caret"></span>
-									</a>
-									<ul class="dropdown-menu">
-										<li><a href="/accounts/profile/">{% trans "My Account" %}</a></li>
-										<li><a href="/accounts/logout/">{% trans "Sign Out" %}</a></li>
-									</ul>
-								</div>
-							{% else %}
-								<a href="/accounts/facebook/login" >
-									<img src="/static/img/facebook.png" style="height: 30px; margin-top: 5px;">
-								</a>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">E-Narocanje</a>
 
-								<a href="/accounts/google/login" >
-									<img src="/static/img/google.png" style="height: 29px; margin-top: 6px;">
-								</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    {% if user.has_service_provider %}
+                        <li class="{% block main_nav_myservices %}{% endblock %}"><a
+                                href="{% url 'myservices' %}">{% trans "My Services" %}</a></li>
+                        <li class="{% block main_nav_myworkinghours %}{% endblock %}"><a
+                                href="{% url 'myworkinghours' %}">{% trans "My Working Hours" %}</a></li>
+                        <li class="{% block main_nav_reservations %}{% endblock %}"><a
+                                href="{% url 'myreservations' %}">{% trans "My Reservations" %}</a></li>
+                    {% endif %}
+                </ul>
+                {% if user.has_service_provider %}
+                    {% if user.service_provider.subscription_mail_sent %}
+                        <p style="float: right; margin: 10px; color: #f05b58;">
+                            <small>Your subscription has expired.</small>
+                        </p>
+                    {% endif %}
+                {% endif %}
+                <form class="navbar-form pull-right">
+                    {% if user.is_authenticated %}
+                        <div class="btn-group">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                {% if request.user.service_provider and request.user.service_provider.logo %}
+                                    <img src="{{ request.user.service_provider.logo_url }}" {{ request.user.service_provider|logowh:"50,18" }} />
+                                {% endif %}
+                                {{ request.user.get_full_name }}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/accounts/profile/">{% trans "My Account" %}</a></li>
+                                <li><a href="/accounts/logout/">{% trans "Sign Out" %}</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="/accounts/facebook/login">
+                            <img src="/static/img/facebook.png" style="height: 30px; margin-top: 5px;">
+                        </a>
 
-								<a class="btn" href="/accounts/login/">{% trans "Sign In" %}</a>
-								<a class="btn" href="/accounts/signup/">{% trans "Sign Up" %}</a>
-							{% endif %}
-						</form>
-					</div><!--/.nav-collapse -->
-				</div>
-			</div>
-		</div>
+                        <a href="/accounts/google/login">
+                            <img src="/static/img/google.png" style="height: 29px; margin-top: 6px;">
+                        </a>
 
-		<div class="container">
-			{% include "bootstrap_toolkit/messages.html" %}
+                        <a class="btn" href="/accounts/login/">{% trans "Sign In" %}</a>
+                        <a class="btn" href="/accounts/signup/">{% trans "Sign Up" %}</a>
+                    {% endif %}
+                </form>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
 
-			{% block content %}
-			{% endblock %}
+<div class="container">
+    {% include "bootstrap_toolkit/messages.html" %}
 
-			<hr>
+    {% block content %}
+    {% endblock %}
 
-			<footer>
-				<p>&copy;</p>
-			</footer>
-		</div> <!-- /container -->
+    <hr>
 
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script src="/static/js/bootstrap.js"></script>
-		<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
-		<script src="/static/js/bootstrap-datetimepicker.sl.js"></script>
-		<script src="/static/js/jquery.formset.js"></script>
-		<script src="/static/js/jquery.ba-serializeobject.min.js"></script>
-		<script src="/static/js/jquery.cookie.js"></script>
-		<script src="/static/js/jquery.autoellipsis-1.0.10.js"></script>
-		<script src="/static/fullcalendar/fullcalendar.js"></script>
-		<script src="/static/js/mailcheck.js"></script>
-		<!-- Add fancyBox main JS and CSS files -->
-		<script type="text/javascript" src="/static/js/jquery.fancybox.js?v=2.1.4"></script>
+    <footer>
+        <p>&copy;&nbsp;<a href="/cookies">About cookies</a></p>
+    </footer>
+</div>
+<!-- /container -->
 
-		<script>
-			{% block javascript %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/static/js/bootstrap-datetimepicker.sl.js"></script>
+<script src="/static/js/jquery.formset.js"></script>
+<script src="/static/js/jquery.ba-serializeobject.min.js"></script>
+<script src="/static/js/jquery.cookie.js"></script>
+<script src="/static/js/jquery.autoellipsis-1.0.10.js"></script>
+<script src="/static/fullcalendar/fullcalendar.js"></script>
+<script src="/static/js/mailcheck.js"></script>
+<!-- Add fancyBox main JS and CSS files -->
+<script type="text/javascript" src="/static/js/jquery.fancybox.js?v=2.1.4"></script>
+<script type="text/javascript" src="/static/js/jquery.cookiecuttr.js"></script>
 
-				var domains = ['hotmail.com', 'gmail.com'];
-				var topLevelDomains = ["com", "net", "org", "si"];
+<script>
+    {% block javascript %}
 
-				$('#id_login, #id_email').change(function() {
-					$(this).mailcheck({
-						domains: domains,                       // optional
-						topLevelDomains: topLevelDomains,       // optional
-						suggested: function(element, suggestion) {
-							var email_suggestion = '<div class="email_suggestion" style="display: block;">{% trans "Did you mean" %} <a href="#" class="accept_suggested"><span class="email_address">' + suggestion.full + '</span><span class="domain"></span></a>?';
-							if ($(".email_suggestion").length == 0){
-								$('#id_login, #id_email').parent().append(email_suggestion).show('slow');
-							}
-							$('.accept_suggested').click(function() {
-								$('#id_login, #id_email').val(suggestion.full);
-								$('.email_suggestion').remove();
-							});
-						},
-						empty: function(element) {
+        var domains = ['hotmail.com', 'gmail.com'];
+        var topLevelDomains = ["com", "net", "org", "si"];
 
-						}
-					});
-				});
-			{% endblock %}
-		</script>
-		<script src="/static/js/main.js"></script>
-		<script>
-			/*
-			var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-			(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-			g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-			s.parentNode.insertBefore(g,s)}(document,'script'));
-			*/
-		</script>
+        $('#id_login, #id_email').change(function () {
+            $(this).mailcheck({
+                domains: domains,                       // optional
+                topLevelDomains: topLevelDomains,       // optional
+                suggested: function (element, suggestion) {
+                    var email_suggestion = '<div class="email_suggestion" style="display: block;">{% trans "Did you mean" %} <a href="#" class="accept_suggested"><span class="email_address">' + suggestion.full + '</span><span class="domain"></span></a>?';
+                    if ($(".email_suggestion").length == 0) {
+                        $('#id_login, #id_email').parent().append(email_suggestion).show('slow');
+                    }
+                    $('.accept_suggested').click(function () {
+                        $('#id_login, #id_email').val(suggestion.full);
+                        $('.email_suggestion').remove();
+                    });
+                },
+                empty: function (element) {
 
-		{% block extra_body %}{% endblock %}
-	</body>
+                }
+            });
+        });
+    {% endblock %}
+</script>
+<script src="/static/js/main.js"></script>
+<script>
+    /*
+     var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+     (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+     g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+     s.parentNode.insertBefore(g,s)}(document,'script'));
+     */
+</script>
+
+{% block extra_body %}{% endblock %}
+</body>
 </html>
