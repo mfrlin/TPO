@@ -1,5 +1,5 @@
-Django
-Django-allauth
+Django==1.5.5
+Django-allauth==0.10.0
 Django-bootstrap-toolkit
 South
 Requests
