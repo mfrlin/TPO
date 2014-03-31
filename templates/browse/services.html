@@ -63,7 +63,7 @@
                                     {% if service.service_provider.has_location and location %}
                                         <p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
                                     {% endif %}
-                                    {% if service.price %}
+                                    {% comment %}{% if service.price %}{% endcomment %}
                                         <p class="obrobe-extra">
                                             <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
                                             {% if service.get_discount %}
@@ -71,7 +71,7 @@
                                                 {{ service.get_discount.valid_to }}
                                             {% endif %}
                                         </p>
-                                    {% endif %}
+                                    {% comment %}{% endif %}{% endcomment %}
                                 </div>
                                 <br style="clear:left"/>
                             </div>
