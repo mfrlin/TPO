@@ -64,7 +64,10 @@
                         {{ service.duration_with_unit }}
                     </td>
                     <td data-title="{% trans 'Price' %}">
-                        {% if service.price %}{{ service.price_with_unit }}{% else %}&nbsp;{% endif %}
+                        {% comment %}
+                            {% if service.price %}{{ service.price_with_unit }}{% else %}&nbsp;{% endif %}
+                        {% endcomment %}
+                        {{ service.price_with_unit }}
                     </td>
                     <td data-title="{% trans 'Category' %}">
                         {% if service.category %}{{ service.category }}{% else %}&nbsp;{% endif %}

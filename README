@@ -1,5 +1,5 @@
 Dependencies:
-	pip install -r requierements.txt
+	pip install -r requirements.txt
 
 	- local smtp server
 	apt-get install postfix
