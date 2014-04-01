@@ -19,6 +19,11 @@
         </li>
     </ul>
 
+    <div class="form-actions cleanForm">
+        <a class="btn btn-primary" href="{% url 'addservice' %}">{% trans "Add service" %}</a>
+        <a class="btn btn-success" href="{% url 'gallery' user.service_provider_id %}">{% trans "View gallery" %}</a>
+    </div>
+
     <form method="GET" action="" id="filter-form">
         <b>{% trans 'Filter: ' %}</b>
         {{ filter_form.active }}
@@ -104,11 +109,6 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-
-    <div class="form-actions">
-        <a class="btn btn-primary" href="{% url 'addservice' %}">{% trans "Add service" %}</a>
-        <a class="btn btn-success" href="{% url 'gallery' user.service_provider_id %}">{% trans "View gallery" %}</a>
     </div>
 
 {% endblock %}

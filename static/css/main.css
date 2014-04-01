@@ -180,3 +180,12 @@ td.scheduleNonworking {
 .comment {
     margin-top: 20px;
 }
+
+.textContent{
+    padding: 0 15% 0 15%;
+}
+
+/* for myservices, because bootstrap draws a slight top border */
+.cleanForm{
+    border-top: none;
+}

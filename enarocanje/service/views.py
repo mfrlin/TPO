@@ -24,6 +24,7 @@ from models import Service, Category, Discount, Comment
 
 # List of services for editing
 
+
 def view_gallery(request, id):
     gallery = ServiceProviderImage.objects.filter(service_provider_id=id)
     # ServiceProviderImage.objects.all().delete()
@@ -75,6 +76,7 @@ def myservices(request):
 
 # Add a new service
 
+
 @for_service_providers
 def add(request):
     if request.method == 'POST':
@@ -102,6 +104,7 @@ def add(request):
 
 # Edit existing service
 
+
 @for_service_providers
 def edit(request, id):
     service = get_object_or_404(Service, service_provider=request.user.service_provider, id=id)
@@ -122,6 +125,7 @@ def edit(request, id):
 
 # Activate/deactivate service
 
+
 @for_service_providers
 def manage(request):
     if request.method == 'POST':
@@ -138,6 +142,7 @@ def manage(request):
     return HttpResponseRedirect(reverse(myservices))
 
 # Individual service
+
 
 def service_comments(request, id):
     service = get_object_or_404(Service, id=id)
@@ -171,6 +176,7 @@ def service_comments(request, id):
     return render_to_response('service/comments.html', locals(), context_instance=RequestContext(request))
 
 # Browse
+
 
 def int_get(d, k):
     try:
