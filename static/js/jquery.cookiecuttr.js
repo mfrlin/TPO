@@ -256,7 +256,8 @@
             }
             $(".cc-cookies").fadeOut(function () {
                 // reload page to activate cookies
-                location.reload();
+                //disabled to prevent postback - t20jm
+                //location.reload();
             });
         });
         //reset cookies

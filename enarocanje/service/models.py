@@ -55,7 +55,10 @@ class Service(models.Model):
         if discount:
             return u'%s\u20ac (%s -%d%%)' % (self.discounted_price(), ugettext(_('with')), discount.discount)
         else:
-            return u'%s\u20ac' % self.price
+            if not self.price:
+                return "Free"
+            else:
+                return u'%s\u20ac' % self.price
 
     def is_active(self):
         return self.active_until is None or self.active_until >= datetime.date.today()

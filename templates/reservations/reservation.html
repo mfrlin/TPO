@@ -109,8 +109,7 @@
 
         var timePicker = $('.time-field').parent().datetimepicker({pickDate: false, pickSeconds: false, minuteStep: 15,
         language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeTime);
-        var datePicker = $('.date-field').parent().datetimepicker({pickTime: false, startDate: now, language: '
-        {{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
+        var datePicker = $('.date-field').parent().datetimepicker({pickTime: false, startDate: now, language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
 
         var dateDate = datePicker.data('datetimepicker').getLocalDate();
         var dateTime = timePicker.data('datetimepicker').getLocalDate();
@@ -156,16 +155,17 @@
         week: '{% trans 'week' %}',
         day: '{% trans 'day' %}'
         },
-        monthNames: ['{% trans 'January' %}', '{% trans 'February' %}', '{% trans 'March' %}', '{% trans 'April' %}', '
-        {% trans 'May' %}', '{% trans 'June' %}', '{% trans 'July' %}', '{% trans 'August' %}', '{% trans 'September' %}
-        ', '{% trans 'October' %}', '{% trans 'November' %}', '{% trans 'December' %}'],
-        monthNamesSort: ['{% trans 'Jan' %}', '{% trans 'Feb' %}', '{% trans 'Mar' %}', '{% trans 'Apr' %}', '
-        {% trans 'May' %}', '{% trans 'Jun' %}', '{% trans 'Jul' %}', '{% trans 'Aug' %}', '{% trans 'Sep' %}', '
-        {% trans 'Oct' %}', '{% trans 'Nov' %}', '{% trans 'Dec' %}'],
-        dayNames: ['{% trans 'Sunday' %}', '{% trans 'Monday' %}', '{% trans 'Tuesday' %}', '{% trans 'Wednesday' %}', '
-        {% trans 'Thursday' %}', '{% trans 'Friday' %}', '{% trans 'Saturday' %}'],
-        dayNamesShort: ['{% trans 'Sun' %}', '{% trans 'Mon' %}', '{% trans 'Tue' %}', '{% trans 'Wed' %}', '
-        {% trans 'Thu' %}', '{% trans 'Fri' %}', '{% trans 'Sat' %}'],
+        monthNames: ['{% trans 'January' %}', '{% trans 'February' %}', '{% trans 'March' %}',
+        '{% trans 'April' %}', '{% trans 'May' %}', '{% trans 'June' %}', '{% trans 'July' %}',
+        '{% trans 'August' %}', '{% trans 'September' %}', '{% trans 'October' %}', '{% trans 'November' %}',
+        '{% trans 'December' %}'],
+        monthNamesSort: ['{% trans 'Jan' %}', '{% trans 'Feb' %}', '{% trans 'Mar' %}', '{% trans 'Apr' %}',
+        '{% trans 'May' %}', '{% trans 'Jun' %}', '{% trans 'Jul' %}', '{% trans 'Aug' %}', '{% trans 'Sep' %}',
+        '{% trans 'Oct' %}', '{% trans 'Nov' %}', '{% trans 'Dec' %}'],
+        dayNames: ['{% trans 'Sunday' %}', '{% trans 'Monday' %}', '{% trans 'Tuesday' %}', '{% trans 'Wednesday' %}',
+        '{% trans 'Thursday' %}', '{% trans 'Friday' %}', '{% trans 'Saturday' %}'],
+        dayNamesShort: ['{% trans 'Sun' %}', '{% trans 'Mon' %}', '{% trans 'Tue' %}', '{% trans 'Wed' %}',
+        '{% trans 'Thu' %}', '{% trans 'Fri' %}', '{% trans 'Sat' %}'],
         weekNumberTitle: '{% trans 'W' %}',
         allDayText: '{% trans 'all-day' %}',
         columnFormat: {

@@ -26,15 +26,14 @@
             <p>
                 <b>{% trans 'Duration' %}</b>: {{ service.duration_with_unit }}<br/>
             </p>
-            {% if service.price %}
+            {% comment %}{% if service.price %}{% endcomment %}
                 <p>
                     <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
                     {% if service.is_discount_valid and service.discount_valid_to %}
                         <b>{% trans "Discounted until" %}:</b> {{ service.discount_valid_to }}
                     {% endif %}
                 </p>
-            {% endif %}
-
+            {% comment %}{% endif %}{% endcomment %}
             <ul class="nav nav-tabs">
                 <li class="{% block service_nav_reservation %}{% endblock %}">
                     <a href="{% url 'reservation' service.id %}">{% trans 'Reservation' %}</a>

@@ -103,5 +103,6 @@ class ServiceProviderImage(models.Model):
                               blank=False)
     image_width = models.PositiveIntegerField(null=True)
     image_height = models.PositiveIntegerField(null=True)
-    delete_image = models.BooleanField()
+    #delete_image = models.BooleanField()
+    delete_image = models.BooleanField(default=False)  # temporary fix
     service_provider = models.ForeignKey(ServiceProvider, null=False)
