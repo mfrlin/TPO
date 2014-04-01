@@ -3,6 +3,8 @@ Dependencies:
 
 	- local smtp server
 	apt-get install postfix
+	- broker for celery (RabbitMQ)
+	apt-get install rabbitmq-server
 
 Debug:
 	- Create local_settings.py for custom settings (not required)
@@ -19,3 +21,7 @@ Schema migrations:
 3rd party login:
 	- Set SOCIAL_LOGIN = True in local_settings.py
 	- Add client ids and secrets at /admin/socialaccount/socialapp/
+
+Celery task queue:
+	Start rabbitmq: sudo rabbitmq-server -detached
+	Stop rabbitmq: sudo rabbitmqctl stop
