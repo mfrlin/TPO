@@ -13,7 +13,7 @@ add_introspection_rules([], ['^oauth2client\.django_orm\.CredentialsField'])
 class Reservation(models.Model):
     """Reservation model - who made a reservation and when"""
     user = models.ForeignKey(User, null=True)  # null for gcal imported reservations
-    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL)  # service can be deleted
+    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL, related_name='service')  # service can be deleted
     date = models.DateField(null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
     gcalid = models.CharField(max_length=255, null=True)

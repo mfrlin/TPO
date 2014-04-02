@@ -283,6 +283,8 @@ SORT_CHOICES_SERVICE = (
 (_('Order by price'), 'price'),
 (_('Order by discount level'), 'disc'),
 (_('Order lexicographically'), 'lexi'),
+(_('Order by last ordered'), 'reserv'),
+(_('Order by my last ordered'), 'myres'),
 )
 
 
@@ -303,7 +305,6 @@ def construct_url_services(prov, cat, disc, q, sor, page):
     if parts:
         return '?' + '&'.join(parts)
     return reverse(browse_services)
-
 
 def browse_services(request):
     location = get_location(request)
@@ -357,6 +358,38 @@ def browse_services(request):
                           reverse=True)
     elif sor == 'lexi':
         services = services.order_by('name')
+        
+    elif sor == 'reserv':
+        services = []
+        if cat:
+            for x in Category.objects.filter(id=cat): # iz vsake kategorije
+                [services.append(y.service)
+                    for y in Reservation.objects.filter(service__category=x)
+                    .order_by('-date', '-time')
+                ] # 3 nazadnje rezerviranih storitev
+        else:
+            for x in Category.objects.all(): # iz vsake kategorije
+                [services.append(y.service)
+                    for y in Reservation.objects.filter(service__category=x)
+                    .order_by('-date', '-time')
+                ] # 3 nazadnje rezerviranih storitev
+        services = services[:3]
+
+    elif sor == 'myres':
+        services = []
+        if cat and request.user.is_authenticated():
+            for x in Category.objects.filter(id=cat): # iz vsake kategorije
+                [services.append(y.service)
+                    for y in Reservation.objects.filter(service__category=x, user=request.user)
+                    .order_by('-date', '-time')
+                ] # 3 nazadnje rezerviranih storitev
+        elif request.user.is_authenticated():
+            for x in Category.objects.all(): # iz vsake kategorije
+                [services.append(y.service)
+                    for y in Reservation.objects.filter(service__category=x, user=request.user)
+                    .order_by('-date', '-time')
+                ] # 3 nazadnje rezerviranih storitev
+        services = services[:3]
 
     if disc:
         services = [service for service in services if
