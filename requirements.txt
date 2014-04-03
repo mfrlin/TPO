@@ -7,3 +7,4 @@ Google-api-python-client
 pytz
 pyrfc3339
 Pillow
+celery
