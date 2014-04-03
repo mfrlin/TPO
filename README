@@ -25,3 +25,7 @@ Schema migrations:
 Celery task queue:
 	Start rabbitmq: sudo rabbitmq-server -detached
 	Stop rabbitmq: sudo rabbitmqctl stop
+	Start celery worker: celery -A enarocanje worker -l info
+
+	First start rabbitmq and then celery worker.
+
