@@ -32,6 +32,7 @@ def account_profile(request):
     'last_name': request.user.last_name,
     'phone': request.user.phone,
     'language': request.user.language,
+    'notification_type': request.user.notification_type,
 
     }
 

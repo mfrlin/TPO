@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from enarocanje.common.widgets import ClearableImageInput
 from enarocanje.reservations.gcal import reset_sync, sync
-from models import ServiceProvider, ServiceProviderImage
+from models import ServiceProvider, ServiceProviderImage, User
 
 
 class UserChangeForm(DefaultUserChangeForm):
@@ -18,12 +18,14 @@ class SignupForm(forms.Form):
     last_name = forms.CharField(max_length=30, label=_('Last Name'))
     phone = forms.CharField(max_length=100, label=_('Phone Number'))
     language = forms.ChoiceField(choices=settings.LANGUAGES, label=_('Language'))
+    notification_type = forms.ChoiceField(choices=User.NOTIFICATION_TYPES_CHOICES)
 
     def save(self, user):
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.phone = self.cleaned_data['phone']
         user.language = self.cleaned_data['language']
+        user.notification_type = self.cleaned_data['notification_type']
         user.save()
 
     def __init__(self, *args, **kwargs):
