@@ -16,11 +16,14 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from enarocanje.accountext.decorators import for_service_providers
-from enarocanje.accountext.forms import ServiceProviderImageForm
+from enarocanje.accountext.forms import ServiceProviderImageForm,ServiceProviderMultiImageHelperForm
 from enarocanje.accountext.models import ServiceProvider, ServiceProviderImage, Category as SPCategory
 from enarocanje.reservations.models import Reservation
 from forms import ServiceForm, FilterForm, DiscountFormSet, CommentForm
 from models import Service, Category, Discount, Comment
+
+#TODO: MOVE!
+from django.forms.formsets import BaseFormSet, formset_factory
 
 # List of services for editing
 
@@ -35,7 +38,7 @@ def view_gallery(request, id):
 
     if request.method == 'POST':
         if request.POST.get('action') == 'delete':
-            form = ServiceProviderImageForm()
+            form = ServiceProviderMultiImageHelperForm()
             if request.POST.getlist('img_id'):
                 for img_id in request.POST.getlist('img_id'):
                     print "iiid", img_id
@@ -43,13 +46,30 @@ def view_gallery(request, id):
                     img.delete()
 
         if request.POST.get('action') == 'update':
-            form = ServiceProviderImageForm(request.POST, request.FILES)
-            if form.is_valid():
-                image = form.save(commit=False)
-                image.service_provider_id = request.user.service_provider_id
-                image.save()
+            form = ServiceProviderMultiImageHelperForm(request.POST, request.FILES)
+            
+            print form.service_provider_forms
+            for uploaded_file_form in form.service_provider_forms:
+                if uploaded_file_form.is_valid():
+                    image = uploaded_file_form.save(commit=False)
+                    image.service_provider_id = request.user.service_provider_id
+                    image.save()
+                else:
+                    print "INVALID!",  uploaded_file_form.errors
+            
+            #print request.FILES
+            #print request
+            
+            
+            #ImageFormSet = formset_factory(ServiceProviderImageForm)
+            #form = ImageFormSet(request.POST, request.FILES)
+            #if form.is_valid():
+            #    print "IS VALID"
+                #image = form.save(commit=False)
+                #image.service_provider_id = request.user.service_provider_id
+                #image.save()
     else:
-        form = ServiceProviderImageForm()
+        form = ServiceProviderMultiImageHelperForm()
 
     return render_to_response('browse/gallery.html', locals(), context_instance=RequestContext(request))
 
