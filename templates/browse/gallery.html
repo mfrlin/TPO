@@ -55,9 +55,10 @@
 
 		
 		{% if edit_gallery %}
-			<button class="btn btn-danger" type="submit" name="action"
-			value="delete">{% trans "Delete selected" %}</button>
-			
+			{% if gallery %}
+				<button class="btn btn-danger" type="submit" name="action"
+				value="delete">{% trans "Delete selected" %}</button>
+			{% endif %}
 			
 			{% if generic_gallery %}
 				{% with title=generic_gallery.title image_list=generic_gallery.values %}
@@ -92,57 +93,7 @@
 			{% endif %}
 			<hr/>
 			
-			<div class="row-fluid">
-			  <div class="span6 ">
-				<h3>{% trans "Basic instructions" %}</h3>
-				<p>{% trans "Please follow these tips" %}</p>
-				<ul style="list-style: initial;">
-					<li style="display:block;margin-bottom:5px;">{% trans "We recommend that you use professional photo services for best photos. We picked cheapest and the best service from our database." %}</li>
-					<li style="display:block;margin-bottom:5px;">{% trans "Photos should be taken in well lit room." %}</li>
-					<li style="display:block;margin-bottom:5px;">{% trans "Reduce image resolution in image program." %}</li>
-					<li style="display:block;margin-bottom:5px;">{% trans "Remove unnecessary alpha channel." %}</li>
-					<li style="display:block;margin-bottom:5px;">{% trans "Upload photos using regular upload or via folder upload(only supported in chrome)." %}</li>
-				</ul>
-				
-			  </div>
-			  <div class="span2 "></div>
-			  <div class="span4 " style="padding-left:30px">
-				<h3>{% trans "Foto services" %}</h3>
-				{% if foto_services %}
-                    {% for service in foto_services %}
-						<div class="row">
-							<div class="span12">
-								<div class="span12 obrobe" style="margin-bottom:10px;height:100px">
-									<img src="{{ service.service_provider.logo_url }}" {{ service.service_provider|logowh:"32,48" }}
-										 class="logotip"/>
 
-									<div class="obrobe-content" style="margin-left:50px">
-										<h3 class="obrobe-title"><a href="{% url 'service' service.id %}"
-																	style="color: black">{{ service.name }}</a></h3>
-
-										{% if service.service_provider.has_location and location %}
-											<p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
-										{% endif %}
-										{% if service.price %}
-											<p class="obrobe-extra">
-												<b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
-												{% if service.get_discount %}
-													<b>{% trans "Discounted until" %}:</b>
-													{{ service.get_discount.valid_to }}
-												{% endif %}
-											</p>
-										{% endif %}
-									</div>
-									<br style="clear:left"/>
-								</div>
-							</div>
-						</div>
-                    {% endfor %}
-				{% else %}
-					{% trans "No services available" %}
-				{% endif %}
-			  </div>
-			</div>
 			
 		{% endif %}
 
@@ -205,6 +156,7 @@
 
 					$("#take_photo_camera").on('click', function(e){
 						$("#camera_display").toggle();
+						$("#take_photo_camera").toggleClass('active');
 					
 						e.stopPropagation();
 						
@@ -275,9 +227,7 @@
 
 
 				<div style="font-weight:bold">
-					{{ form.errors }}
-				
-					
+
 					{% if form.error_list %}
 						{% for error in form.error_list %}
 							{{ error }}
@@ -300,7 +250,57 @@
 			<canvas id="canvastt" width="500" height="500" style="display:none" ></canvas>
 
 			
-						
+			<div class="row-fluid">
+			  <div class="span6 ">
+				<h3>{% trans "Basic instructions" %}</h3>
+				<p>{% trans "Please follow these tips" %}</p>
+				<ul style="list-style: initial;">
+					<li style="display:block;margin-bottom:5px;">{% trans "We recommend that you use professional photo services for best photos. We picked cheapest and the best service from our database." %}</li>
+					<li style="display:block;margin-bottom:5px;">{% trans "Photos should be taken in well lit room." %}</li>
+					<li style="display:block;margin-bottom:5px;">{% trans "Reduce image resolution in image program." %}</li>
+					<li style="display:block;margin-bottom:5px;">{% trans "Remove unnecessary alpha channel." %}</li>
+					<li style="display:block;margin-bottom:5px;">{% trans "Upload photos using regular upload or via folder upload(only supported in chrome)." %}</li>
+				</ul>
+				
+			  </div>
+			  <div class="span2 "></div>
+			  <div class="span4 " style="padding-left:30px">
+				<h3>{% trans "Photo services" %}</h3>
+				{% if foto_services %}
+                    {% for service in foto_services %}
+						<div class="row">
+							<div class="span12">
+								<div class="span12 obrobe" style="margin-bottom:10px;height:100px">
+									<img src="{{ service.service_provider.logo_url }}" {{ service.service_provider|logowh:"32,48" }}
+										 class="logotip"/>
+
+									<div class="obrobe-content" style="margin-left:50px">
+										<h3 class="obrobe-title"><a href="{% url 'service' service.id %}"
+																	style="color: black">{{ service.name }}</a></h3>
+
+										{% if service.service_provider.has_location and location %}
+											<p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
+										{% endif %}
+										{% if service.price %}
+											<p class="obrobe-extra">
+												<b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+												{% if service.get_discount %}
+													<b>{% trans "Discounted until" %}:</b>
+													{{ service.get_discount.valid_to }}
+												{% endif %}
+											</p>
+										{% endif %}
+									</div>
+									<br style="clear:left"/>
+								</div>
+							</div>
+						</div>
+                    {% endfor %}
+				{% else %}
+					{% trans "No services available" %}
+				{% endif %}
+			  </div>
+			</div>
 
 			
         {% endif %}
