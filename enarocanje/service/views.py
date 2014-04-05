@@ -1,6 +1,8 @@
 import datetime
 import json
 import urllib
+import re
+import base64
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -14,20 +16,60 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.images import ImageFile
+from django.core.files.base import ContentFile
+
+from cStringIO import StringIO
 
 from enarocanje.accountext.decorators import for_service_providers
 from enarocanje.accountext.forms import ServiceProviderImageForm,ServiceProviderMultiImageHelperForm
 from enarocanje.accountext.models import ServiceProvider, ServiceProviderImage, Category as SPCategory
+from enarocanje.service.models import Category as ServiceCategory, Service
 from enarocanje.reservations.models import Reservation
 from forms import ServiceForm, FilterForm, DiscountFormSet, CommentForm
 from models import Service, Category, Discount, Comment
 
-#TODO: MOVE!
-from django.forms.formsets import BaseFormSet, formset_factory
-
+import enarocanje.common.config as config
 # List of services for editing
 
 def view_gallery(request, id):
+    GENERIC_GALLERY_URL = config.GENERIC_GALLERY_URL
+    
+    service_provider = ServiceProvider.objects.get(id=id)
+    service_provider_category = service_provider.category
+    
+    generic_gallery = None
+    generic_gallery_id_name = None
+    if(service_provider_category):
+        generic_gallery_id_name = service_provider_category.generic_gallery
+        if(generic_gallery_id_name):
+            generic_gallery = config.GENERIC_GALLERY_IMAGES[generic_gallery_id_name] \
+                if generic_gallery_id_name in config.GENERIC_GALLERY_IMAGES \
+                else {'title':service_provider_category.name, 'values':[]}
+ 
+    service_categories = ServiceCategory.objects.filter(show_in_gallery=True)
+    cheapest_service = None
+    best_service = None
+    for service_category in service_categories:
+        services = Service.objects.filter(category=service_category)
+        for service in services:            
+            if cheapest_service:
+                if cheapest_service.discounted_price() > service.discounted_price():
+                    cheapest_service = service
+            
+            if best_service:
+                if best_service.discounted_price() < service.discounted_price():
+                    best_service = service
+                    
+            if cheapest_service is None:
+                cheapest_service = service
+
+            if best_service is None:
+                best_service = service
+ 
+    foto_services = [best_service, cheapest_service]
+ 
     gallery = ServiceProviderImage.objects.filter(service_provider_id=id)
     # ServiceProviderImage.objects.all().delete()
     edit_gallery = False
@@ -45,6 +87,52 @@ def view_gallery(request, id):
                     img = ServiceProviderImage.objects.get(id=int(img_id))
                     img.delete()
 
+        if request.POST.get('action') == 'enable_generic_gallery':
+            form = ServiceProviderMultiImageHelperForm()
+            service_provider.display_generic_gallery = True
+            service_provider.save()
+            
+        if request.POST.get('action') == 'disable_generic_gallery':
+            form = ServiceProviderMultiImageHelperForm()
+            service_provider.display_generic_gallery = False
+            service_provider.save()
+
+        if request.POST.get('action') == 'upload_photo':
+            form = ServiceProviderMultiImageHelperForm()
+
+            error_msg = None
+
+            dataUrlPattern = re.compile('data:image/(png|jpeg);base64,(.*)$')
+            ImageData = request.POST.get('captured_photo')
+            if ImageData:
+                ImageData = dataUrlPattern.match(ImageData).group(2)
+
+                if not (ImageData == None or len(ImageData) == 0):
+                    ImageData = base64.b64decode(ImageData)
+                    
+                    buf = StringIO(ImageData)
+                    buf.seek(0, 2)
+                    
+                    from time import time
+                    
+                    file = InMemoryUploadedFile(buf, None, 'captured_image_'+str(time())+'.jpg', 'image/jpeg', buf.tell(), None)
+                    buf.seek(0)
+
+                    file.seek(0)
+                    helper_form = ServiceProviderImageForm(request.POST, {'image':[file]})
+                    if helper_form.is_valid():
+                        image = helper_form.save(commit=False)
+                        image.service_provider_id = request.user.service_provider_id
+                        image.save()
+                    else:
+                        form.error_list.append(helper_form.errors)
+
+                else:
+                    error_msg = _("Error during decoding")
+            else:
+                error_msg = _("No image was submited")
+                
+
         if request.POST.get('action') == 'update':
             form = ServiceProviderMultiImageHelperForm(request.POST, request.FILES)
             
@@ -55,19 +143,9 @@ def view_gallery(request, id):
                     image.service_provider_id = request.user.service_provider_id
                     image.save()
                 else:
-                    print "INVALID!",  uploaded_file_form.errors
-            
-            #print request.FILES
-            #print request
-            
-            
-            #ImageFormSet = formset_factory(ServiceProviderImageForm)
-            #form = ImageFormSet(request.POST, request.FILES)
-            #if form.is_valid():
-            #    print "IS VALID"
-                #image = form.save(commit=False)
-                #image.service_provider_id = request.user.service_provider_id
-                #image.save()
+                    form.error_list.append(uploaded_file_form.errors)
+
+
     else:
         form = ServiceProviderMultiImageHelperForm()
 
