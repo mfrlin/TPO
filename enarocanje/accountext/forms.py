@@ -38,7 +38,7 @@ class ServiceProviderForm(ModelForm):
     class Meta:
         model = ServiceProvider
         exclude = ('lat', 'lng', 'gcal_id', 'gcal_updated', 'logo_width', 'logo_height', 'subscription_end_date',
-                   'subscription_mail_sent', 'subscription_end_date')
+                   'subscription_mail_sent', 'subscription_end_date','display_generic_gallery')
 
     def save(self, *args, **kwargs):
         if self.instance and self.instance.timezone != self.old_timezone:
@@ -92,10 +92,12 @@ class ServiceProviderImageForm(ModelForm):
 
 class ServiceProviderMultiImageHelperForm(Form):
     images = MultiImageField(required=True, label=_('Upload images'))
-        
+       
+    
     def __init__(self, *args, **kwargs):
         super(ServiceProviderMultiImageHelperForm, self).__init__(*args, **kwargs)
         self.service_provider_forms = []
+        self.error_list = []
         
         FIELDS = args[0] if args else None
         FILES = args[1] if args else None
