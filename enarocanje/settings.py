@@ -166,7 +166,11 @@ LOGGING = {
 'level': 'ERROR',
 'filters': ['require_debug_false'],
 'class': 'django.utils.log.AdminEmailHandler'
-}
+},
+'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
 },
 'loggers': {
 'django.request': {
@@ -174,6 +178,10 @@ LOGGING = {
 'level': 'ERROR',
 'propagate': True,
 },
+'enarocanje': {
+'handlers': ['console'],
+'level': 'INFO',
+}
 }
 }
 
@@ -194,6 +202,8 @@ GOOGLE_CLIENT_ID = ''
 GOOGLE_CLIENT_SECRET = ''
 GOOGLE_API_KEY = ''
 
+# Notifications
+TIME_BEFORE_REMINDER = 24  # in hours
 DEFAULT_FROM_EMAIL = 'info@eorderservice.com'
 
 try:

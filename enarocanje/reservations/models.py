@@ -1,8 +1,15 @@
+import datetime
+
+import celery
 from oauth2client.django_orm import CredentialsField
 from south.modelsinspector import add_introspection_rules
 
+from django.conf import settings
 from django.db import models
+from django.db.models.signals import pre_save
 from django.utils.translation import ugettext_lazy as _
+
+from tasks import send_reminder
 
 from enarocanje.accountext.models import User, ServiceProvider
 from enarocanje.service.models import Service
@@ -13,7 +20,7 @@ add_introspection_rules([], ['^oauth2client\.django_orm\.CredentialsField'])
 class Reservation(models.Model):
     """Reservation model - who made a reservation and when"""
     user = models.ForeignKey(User, null=True)  # null for gcal imported reservations
-    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL)  # service can be deleted
+    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL, related_name='service')  # service can be deleted
     date = models.DateField(null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
     gcalid = models.CharField(max_length=255, null=True)
@@ -39,6 +46,7 @@ class Reservation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, db_index=True)
     gcalimported = models.DateTimeField(null=True)
+    task_id = models.CharField(max_length=256, blank=True, null=True)
 
     def __unicode__(self):
         return str(self.date) + " User: " + str(self.user) + " Service: " + str(self.service)
@@ -49,6 +57,29 @@ class Reservation(models.Model):
 
     class Meta:
         unique_together = ('service_provider', 'gcalid')
+
+def reservation_handler(sender, instance, **kwargs):
+    dt = datetime.datetime.combine(instance.date, instance.time)
+    reminder = False
+    try:
+        obj = Reservation.objects.get(pk=instance.pk)
+        if datetime.datetime.combine(obj.date, obj.time) != dt:
+            reminder = True
+    except Reservation.DoesNotExist:
+        obj = instance
+        reminder = True
+
+    if reminder:
+        # look to see if we have a task_id for this task already.
+        if obj.task_id:
+            # If we do, lets get rid of this scheduled task
+            celery.task.control.revoke(obj.task_id)
+
+        time_before = datetime.timedelta(hours=settings.TIME_BEFORE_REMINDER)
+        result = send_reminder.apply_async(eta=dt - datetime.timedelta(days=1), kwargs={'reservation': instance})
+        instance.task_id = result.task_id
+
+pre_save.connect(reservation_handler, sender=Reservation)
 
 
 class GCal(models.Model):

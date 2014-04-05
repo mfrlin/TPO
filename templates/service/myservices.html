@@ -19,6 +19,11 @@
         </li>
     </ul>
 
+    <div class="form-actions cleanForm">
+        <a class="btn btn-primary" href="{% url 'addservice' %}">{% trans "Add service" %}</a>
+        <a class="btn btn-success" href="{% url 'gallery' user.service_provider_id %}">{% trans "View gallery" %}</a>
+    </div>
+
     <form method="GET" action="" id="filter-form">
         <b>{% trans 'Filter: ' %}</b>
         {{ filter_form.active }}
@@ -64,7 +69,10 @@
                         {{ service.duration_with_unit }}
                     </td>
                     <td data-title="{% trans 'Price' %}">
-                        {% if service.price %}{{ service.price_with_unit }}{% else %}&nbsp;{% endif %}
+                        {% comment %}
+                            {% if service.price %}{{ service.price_with_unit }}{% else %}&nbsp;{% endif %}
+                        {% endcomment %}
+                        {{ service.price_with_unit }}
                     </td>
                     <td data-title="{% trans 'Category' %}">
                         {% if service.category %}{{ service.category }}{% else %}&nbsp;{% endif %}
@@ -101,11 +109,6 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-
-    <div class="form-actions">
-        <a class="btn btn-primary" href="{% url 'addservice' %}">{% trans "Add service" %}</a>
-        <a class="btn btn-success" href="{% url 'gallery' user.service_provider_id %}">{% trans "View gallery" %}</a>
     </div>
 
 {% endblock %}

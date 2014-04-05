@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import base64
 import datetime
 import pickle
@@ -27,6 +28,7 @@ from rcalendar import getMinMaxTime
 
 # Service reservations
 
+
 def reservation(request, id):
     service = get_object_or_404(Service, id=id)
     if not service.is_active():
@@ -34,6 +36,7 @@ def reservation(request, id):
     minTime, maxTime = getMinMaxTime(service.service_provider)
 
     if request.method != 'POST':
+        print "herro!"
         form = ReservationForm(request, workingHours=None, service=None)
         data = {'service_provider_id': service.service_provider_id, 'service_id': service.id}
         return render_to_response('reservations/reservation.html', locals(), context_instance=RequestContext(request))
@@ -115,11 +118,13 @@ def reservation(request, id):
             reserve.save()
             # saving coupon is_valid
             coupons = Coupon.objects.filter(service=service.id)
+            coupon_is_used = False
             for coup in coupons:
                 if (data['number'] == coup.number):
                     coup.is_used = True
                     coup.save()
-                # Validation checking in form
+                    coupon_is_used = True
+                    # Validation checking in form
 
             email_to1 = data.get('email')
             email_to2 = service.service_provider.user.email
@@ -137,19 +142,24 @@ def reservation(request, id):
 
             start = datetime.datetime.combine(reserve.date, reserve.time)
             gcal_params = urllib.urlencode({
-            'action': 'TEMPLATE',
-            'text': reserve.service_name.encode('utf8'),
-            'dates': '%s/%s' % (datetime_to_url_format(start),
-                                datetime_to_url_format(start + datetime.timedelta(minutes=reserve.service_duration))),
-            'details': reserve.service.description.encode('utf8'),
-            'location': reserve.service_provider.full_address().encode('utf8'),
-            'trp': 'true',
-            'sprop': 'E-Narocanje',
-            'sprop': 'name:%s' % settings.BASE_URL,
+                'action': 'TEMPLATE',
+                'text': reserve.service_name.encode('utf8'),
+                'dates': '%s/%s' % (datetime_to_url_format(start),
+                                    datetime_to_url_format(
+                                        start + datetime.timedelta(minutes=reserve.service_duration))),
+                'details': reserve.service.description.encode('utf8'),
+                'location': reserve.service_provider.full_address().encode('utf8'),
+                'trp': 'true',
+                'sprop': 'E-Narocanje',
+                'sprop': 'name:%s' % settings.BASE_URL,
             })
             url_service = settings.BASE_URL + reverse('service', args=(service.id,))
 
             sync(service.service_provider)
+
+            """ Preveri, če je uporabnik dobil/obdržal/ali izgubil premium pravice """
+            premium = request.user.calculate_premium(new_reservation=True, coupon=coupon_is_used)
+
             return render_to_response('reservations/done.html', locals(), context_instance=RequestContext(request))
 
         # Someone else has made a reservation in the meantime
