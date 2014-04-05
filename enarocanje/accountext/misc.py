@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserChangeForm as DefaultUserChangeForm
 from enarocanje.common.widgets import ClearableImageInput
 from models import ServiceProvider, ServiceProviderImage
 
-#TODO: MOVE THIS TO RIGHT FILE!
+
 class MultiImageField(forms.ImageField):
     widget = ClearableImageInput(attrs={'multiple': 'multiple'})
 
