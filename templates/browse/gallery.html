@@ -21,27 +21,115 @@
     <form method="POST" enctype="multipart/form-data" action="" class="">
         {% csrf_token %}
 
+		<div class="row">
         {% for img in gallery %}
-            <div style="width: 150px; height: 150px; float: left;">
-                <a class="fancybox" href="{{ MEDIA_URL }}{{ img.image.url }}" data-fancybox-group="gallery"
-                   title="{{ img.image }}"><img src="{{ MEDIA_URL }}{{ img.image.url }}" alt="" width="140"
-                                                height="140"/></a>
-                {% if edit_gallery %}
-                    <label class="checkbox"><input type="checkbox" name="img_id" value="{{ img.id }}"></label>
-                {% endif %}
-            </div>
-        {% endfor %}
+			<div class="col-lg-3 col-md-4 col-xs-6" style="margin-bottom: 30px; margin-right:20px;width:150px;height:150px;float:left">
+                <a class="fancybox thumbnail" href="{{ MEDIA_URL }}{{ img.image.url }}" data-fancybox-group="gallery" title="{{ img.image }}">
+				   <img src="{{ MEDIA_URL }}{{ img.image.url }}" class="img-responsive" alt="" width="140"
+                                                height="140" style="max-height:140px; max-width:140px; width:auto; height:auto;"/>
 
+
+
+				</a>	
+				{% if edit_gallery %}
+					<label class="checkbox" style="margin:0 0 0 0;z-index:100;position:relative;top:-20px;left:5px;"><input type="checkbox" class="img-selected" name="img_id" value="{{ img.id }}"></label>
+				{% endif %}		
+			</div>
+        {% endfor %}
+		</div>
         <br style="clear: both"/><br/>
 
         {% if edit_gallery %}
+			<script type="text/javascript">
+				$(document).ready(function(){
+					//directory="" webkitdirectory="" mozdirectory=""
+					
+					$("body").on('click',".img-selected", function(e){
+						e.stopPropagation();
+						//e.preventDefault();
+					});
+					
+					$(".form-actions").on('click',"#select_files_mode > .btn", function(e){
+						e.stopPropagation();
+						
+						$("#select_files_mode > button").removeClass("active");
+						$(this).addClass("active");
+						
+						var state = $("#select_files_mode").find(".active").val();
+						if(state === "files"){
+							$("#{{form.images.auto_id}}").removeAttr("directory");
+							$("#{{form.images.auto_id}}").removeAttr("webkitdirectory");
+							$("#{{form.images.auto_id}}").removeAttr("mozdirectory");
+							$("#{{form.images.auto_id}}").removeAttr("capture");
+							
+							console.log("files");
+						}else
+						if(state === "folder"){
+							$("#{{form.images.auto_id}}").removeAttr("directory");
+							$("#{{form.images.auto_id}}").removeAttr("webkitdirectory");
+							$("#{{form.images.auto_id}}").removeAttr("mozdirectory");
+							$("#{{form.images.auto_id}}").removeAttr("capture");
+						
+							$("#{{form.images.auto_id}}").attr({"directory":"","webkitdirectory":"","mozdirectory":""});
+							
+							console.log("folder");
+						}else
+						if(state === "camera"){
+							$("#{{form.images.auto_id}}").removeAttr("directory");
+							$("#{{form.images.auto_id}}").removeAttr("webkitdirectory");
+							$("#{{form.images.auto_id}}").removeAttr("mozdirectory");
+							$("#{{form.images.auto_id}}").removeAttr("capture");
+						
+							$("#{{form.images.auto_id}}").attr({"capture":"camera","accept":"image/*"});
+							
+							console.log("camera");
+						}
+					});
+					
+					$(".form-actions").on('click',"#toggle_mode_button > .btn", function(e){
+						//e.stopImmediatePropagation();
+						//$(this).button('toggle');
+						
+						var status = $(this).hasClass( 'active' );
+						if(status){
+							$("#{{form.images.auto_id}}").attr({"directory":"","webkitdirectory":"","mozdirectory":""});
+							$(this).text('{% trans "Directory mode" %}: {% trans "ON" %}');
+						}else{
+							$("#{{form.images.auto_id}}").removeAttr("directory");
+							$("#{{form.images.auto_id}}").removeAttr("webkitdirectory");
+							$("#{{form.images.auto_id}}").removeAttr("mozdirectory");
+							$(this).text('{% trans "Directory mode" %}: {% trans "OFF" %}');
+						}
+						
+						
+						console.log(status)
+					});
+
+				});
+			</script>
+		
             <div class="form-actions">
-                {{ form.image }}
+				<div class="btn-group" data-toggle="buttons-radio" id="select_files_mode">
+				  <button type="button" class="btn btn-primary active" value="files">Files</button>
+				  <button type="button" class="btn btn-primary" value="folder">Folder</button>
+				  <!--<button type="button" class="btn btn-primary" value="camera">Camera</button>-->
+				</div>
+				
+                {{ form.images }}
+				
                 <button class="btn btn-success" type="submit" name="action"
-                        value="update">{% trans "Upload image" %}</button>
+						value="update">{% trans "Upload files" %}</button>
+
                 <button class="btn btn-danger" type="submit" name="action"
                         value="delete">{% trans "Delete selected" %}</button>
             </div>
+						
+			{% if form.images.errors %}
+				{% for image, error in form.detailed_images_errors %}
+					Your image {{ image }} has an error: {{ error }}
+				{% endfor %}
+			{% endif %}
+			
         {% endif %}
 
     </form>
