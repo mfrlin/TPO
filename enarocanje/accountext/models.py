@@ -11,9 +11,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 # from enarocanje.service.views import service_comments
 
+import enarocanje.common.config as config
 
 class Category(models.Model):
     name = models.CharField(_('name'), max_length=100)
+
+    generic_gallery = models.CharField(_('Generic gallery'), choices=config.GENERIC_GALLERY_CHOICES, max_length=64, null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -38,6 +41,8 @@ class ServiceProvider(models.Model):
         default=datetime.datetime.now() + datetime.timedelta(days=30, hours=0, minutes=0, seconds=0))
     subscription_mail_sent = models.BooleanField()
 
+    display_generic_gallery = models.BooleanField(_('Display generic gallery'))
+    
     reservation_confirmation_needed = models.BooleanField()
 
     lat = models.FloatField(null=True)
