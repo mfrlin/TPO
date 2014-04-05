@@ -9,6 +9,8 @@ from enarocanje.accountext.models import ServiceProvider, User
 
 class Category(models.Model):
     name = models.CharField(_('name'), max_length=100)
+    
+    show_in_gallery = models.BooleanField(_('Show in gallery'))
 
     def __unicode__(self):
         return "%s" % (self.name)
