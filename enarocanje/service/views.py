@@ -69,7 +69,7 @@ def view_gallery(request, id):
             if best_service is None:
                 best_service = service
  
-    foto_services = [best_service, cheapest_service]
+    foto_services = filter(lambda x: x is not None,[best_service, cheapest_service])
  
     gallery = ServiceProviderImage.objects.filter(service_provider_id=id)
     # ServiceProviderImage.objects.all().delete()
