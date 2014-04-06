@@ -16,6 +16,13 @@ def fillDatabase():
     # Password is defined as: admin
 
     password = 'pbkdf2_sha256$10000$2SnkDp4Ao8iu$Y3bGOt1yByqmNcKgNPhk/aTB2AfGQSSy12ur/j6nx7k='
+    name = 'admin'
+    obj = User(id=666, password=password, is_superuser=1, username=name, first_name='Admin',
+               email=name + '@gmail.com', is_staff=1, is_active=1,
+               phone='435345', language='en')
+    obj.save()
+
+    password = 'pbkdf2_sha256$10000$2SnkDp4Ao8iu$Y3bGOt1yByqmNcKgNPhk/aTB2AfGQSSy12ur/j6nx7k='
     name = 'user'
     for i in range(1, 11):
         obj = User(id=i, password=password, is_superuser=0, username=name + str(i), first_name='John',
@@ -35,16 +42,19 @@ def fillDatabase():
 
     # Service categories
     cat = ["Negovalni salon", "Masazni salon", "Manikura, nega rok", "Pedikura, nega nog", "Depilacija", "Solarij",
-           "Licenje", "Masaza", "Frizerske storitve"]
+           "Licenje", "Masaza", "Frizerske storitve", "Fotografske storitve"]
     for i in range(1, len(cat) + 1):
-        obj = Category(id=i, name=cat[i - 1], show_in_gallery=True)
+        obj = Category(id=i, name=cat[i - 1], show_in_gallery=False)
+        if obj.name == "Fotografske storitve":
+            obj.show_in_gallery = True
         obj.save()
 
     # Service Providers
     int_list = "1,2,3,4,5"
     for i in range(2, 10):
-        obj = ServiceProvider(id=i, name="Provider" + str(i - 1), street="Strasse" + str(i-1), zipcode='100' + str(i-1),
-                              city="City" + str(i-1), country="Country" + str(i-1),
+        obj = ServiceProvider(id=i, name="Provider" + str(i - 1), street="Strasse" + str(i - 1),
+                              zipcode='100' + str(i - 1),
+                              city="City" + str(i - 1), country="Country" + str(i - 1),
                               category_id=random.randint(1, len(ProvCat.objects.all())), subscription_mail_sent=0,
                               reservation_confirmation_needed=0, display_generic_gallery=True)
         obj.save()
@@ -61,10 +71,9 @@ def fillDatabase():
         h.save()
 
     # Services
-    # 50 services for each provider
+    # 10 services for each provider
     durations = [15, 30, 45, 60, 75, 90, 105, 120]
     discounts = [10, 15, 30, 50, 70, 90, 100]
-    description = "Lorem ipsum, brown fox has just had a lift off..."
     gender = ['m', 'f']
     id = 1
     for p in ServiceProvider.objects.all():
@@ -73,6 +82,7 @@ def fillDatabase():
                           duration=durations[random.randint(0, len(durations) - 1)], description=description,
                           price=round(random.uniform(10, 250), 2), sex=gender[random.randint(0, len(gender) - 1)],
                           category_id=random.randint(1, len(Category.objects.all())))
+            obj.description = str(Category.objects.get(id=obj.category_id))
             if random.uniform(1, 100):
                 disc = Discount(discount=discounts[random.randint(0, len(discounts) - 1)], service=obj,
                                 valid_from=datetime.date.today(),
@@ -85,6 +95,8 @@ def fillDatabase():
 fillDatabase()
 # user1 is a customer
 # users 2-9 are service providers
+# admin is staff and superuser
+# pass is admin
 
 execute_from_command_line(sys.argv)
 
