@@ -189,3 +189,44 @@ td.scheduleNonworking {
 .cleanForm{
     border-top: none;
 }
+
+/* for gallery, 6.4.14 by t20jm */
+
+.col-lg-3.col-md-4.col-xs-6{
+    margin: 0 20px 30px;
+    width: 150px;
+    height: 150px;
+    float: left;
+}
+
+.generic{
+    padding: 20px 0 0 20px;
+}
+
+.fancybox.thumbnail > img{
+    max-height: 140px;
+    max-width: 140px;
+    width: auto;
+    height: auto;
+}
+
+.checkbox{
+    margin: 0;
+    z-index: 100;
+    position: relative;
+    top: -20px;
+    left: 5px;
+}
+
+.set_generic{
+    padding: 5px 0 0 10px;
+}
+
+.basic_ins{
+    list-style-type: initial;
+}
+
+.basic_ins > li{
+    display: block;
+    margin-bottom: 5px;
+}

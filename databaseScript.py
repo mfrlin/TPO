@@ -7,6 +7,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "enarocanje.settings")
 
 from enarocanje.service.models import Service, Discount, Category
 from enarocanje.accountext.models import User, ServiceProvider, Category as ProvCat
+from enarocanje.workinghours.models import WorkingHours
 
 
 # Users
@@ -22,8 +23,9 @@ for i in range(2, 51):
 
 # Provider categories
 cat = ["Nega obraza", "Nega telesa", "Frizerski salon", "Kozmeticni salon"]
+generic = ["", "massage_salon", "hairdresser_salon", "cosmetic_salon"]
 for i in range(1, len(cat) + 1):
-    obj = ProvCat(id=i, name=cat[i - 1])
+    obj = ProvCat(id=i, name=cat[i - 1], generic_gallery=generic[i-1])
     obj.save()
 
 # Service categories
@@ -34,6 +36,7 @@ for i in range(1, len(cat) + 1):
     obj.save()
 
 # Service Providers
+int_list = "1,2,3,4,5"
 for i in range(2, 51):
     obj = ServiceProvider(id=i, name="Provider" + str(i), street="Strasse" + str(i), zipcode='100' + str(i),
                           city="Cidade" + str(i), country="Cunt-ri" + str(i),
@@ -43,6 +46,14 @@ for i in range(2, 51):
     user = User.objects.get(id=i)
     user.service_provider_id = i
     user.save()
+
+    #Add working hours on weekdays (9h-21h)
+    h = WorkingHours()
+    h.service_provider = obj
+    h.time_from = datetime.time(9)
+    h.time_to = datetime.time(21)
+    h.week_days = int_list
+    h.save()
 
 # Services
 # 50 services for each provider

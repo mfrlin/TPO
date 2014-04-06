@@ -17,6 +17,7 @@ class MultiImageField(forms.ImageField):
 
         return ret
 
+
 class CustomImageField(forms.ImageField):
     def to_python(self, data):
         return super(CustomImageField, self).to_python(data[0])

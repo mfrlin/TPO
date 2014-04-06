@@ -13,15 +13,15 @@ class Category(models.Model):
     show_in_gallery = models.BooleanField(_('Show in gallery'))
 
     def __unicode__(self):
-        return "%s" % (self.name)
+        return "%s" % self.name
 
 
 class Service(models.Model):
     MALE = 'm'
     FEMALE = 'f'
     SEX_SERVICE_CHOICES = (
-    (MALE, _('Male')),
-    (FEMALE, _('Female')),
+        (MALE, _('Male')),
+        (FEMALE, _('Female')),
     )
 
     service_provider = models.ForeignKey(ServiceProvider, related_name='services')
@@ -48,14 +48,19 @@ class Service(models.Model):
     def discounted_price(self):
         discount = self.get_discount()
         if discount:
-            return self.price - discount.discount * self.price / 100
+            #so 99% and similar discounts don't return too many decimal places
+            return round(self.price - discount.discount * self.price / 100, 2)
         else:
             return self.price
 
     def price_with_unit(self):
         discount = self.get_discount()
         if discount:
-            return u'%s\u20ac (%s -%d%%)' % (self.discounted_price(), ugettext(_('with')), discount.discount)
+            if self.discounted_price() == 0.00:
+                #return u'Free (%s -%d%%)' % (ugettext(_('with')), discount.discount)
+                return "Free"
+            else:
+                return u'%s\u20ac (%s -%d%%)' % (self.discounted_price(), ugettext(_('with')), discount.discount)
         else:
             if not self.price:
                 return "Free"
