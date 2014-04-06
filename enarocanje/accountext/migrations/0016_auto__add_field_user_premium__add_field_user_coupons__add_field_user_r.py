@@ -13,10 +13,26 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
+        # Adding field 'User.coupons'
+        db.add_column(u'accountext_user', 'coupons',
+                      self.gf('django.db.models.fields.IntegerField')(default=0),
+                      keep_default=False)
+
+        # Adding field 'User.reservations'
+        db.add_column(u'accountext_user', 'reservations',
+                      self.gf('django.db.models.fields.IntegerField')(default=0),
+                      keep_default=False)
+
 
     def backwards(self, orm):
         # Deleting field 'User.premium'
         db.delete_column(u'accountext_user', 'premium')
+
+        # Deleting field 'User.coupons'
+        db.delete_column(u'accountext_user', 'coupons')
+
+        # Deleting field 'User.reservations'
+        db.delete_column(u'accountext_user', 'reservations')
 
 
     models = {
@@ -41,9 +57,9 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'reservation_confirmation_needed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'street': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'subscription_end_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 5, 3, 0, 0)'}),
+            'subscription_end_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 5, 6, 0, 0)'}),
             'subscription_mail_sent': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'timezone': ('django.db.models.fields.CharField', [], {'default': "'UTC'", 'max_length': '30'}),
+            'timezone': ('django.db.models.fields.CharField', [], {'default': "u'UTC'", 'max_length': '30'}),
             'zipcode': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'})
         },
         u'accountext.serviceproviderimage': {
@@ -57,6 +73,7 @@ class Migration(SchemaMigration):
         },
         u'accountext.user': {
             'Meta': {'object_name': 'User'},
+            'coupons': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
@@ -65,13 +82,15 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'language': ('django.db.models.fields.CharField', [], {'default': "'en'", 'max_length': '5'}),
+            'language': ('django.db.models.fields.CharField', [], {'default': "u'en'", 'max_length': '5'}),
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
+            'notification_type': ('django.db.models.fields.SmallIntegerField', [], {'default': '1'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'phone': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'premium': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'referral': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.User']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
+            'reservations': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'service_provider': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['accountext.ServiceProvider']", 'unique': 'True', 'null': 'True'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
