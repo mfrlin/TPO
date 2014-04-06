@@ -23,7 +23,7 @@ from django.core.files.base import ContentFile
 from cStringIO import StringIO
 
 from enarocanje.accountext.decorators import for_service_providers
-from enarocanje.accountext.forms import ServiceProviderImageForm,ServiceProviderMultiImageHelperForm
+from enarocanje.accountext.forms import ServiceProviderImageForm, ServiceProviderMultiImageHelperForm
 from enarocanje.accountext.models import ServiceProvider, ServiceProviderImage, Category as SPCategory
 from enarocanje.service.models import Category as ServiceCategory, Service
 from enarocanje.reservations.models import Reservation
@@ -36,41 +36,41 @@ import enarocanje.common.config as config
 
 def view_gallery(request, id):
     GENERIC_GALLERY_URL = config.GENERIC_GALLERY_URL
-    
+
     service_provider = ServiceProvider.objects.get(id=id)
     service_provider_category = service_provider.category
-    
+
     generic_gallery = None
     generic_gallery_id_name = None
-    if(service_provider_category):
+    if service_provider_category:
         generic_gallery_id_name = service_provider_category.generic_gallery
-        if(generic_gallery_id_name):
+        if generic_gallery_id_name:
             generic_gallery = config.GENERIC_GALLERY_IMAGES[generic_gallery_id_name] \
                 if generic_gallery_id_name in config.GENERIC_GALLERY_IMAGES \
-                else {'title':service_provider_category.name, 'values':[]}
- 
+                else {'title': service_provider_category.name, 'values': []}
+
     service_categories = ServiceCategory.objects.filter(show_in_gallery=True)
     cheapest_service = None
     best_service = None
     for service_category in service_categories:
         services = Service.objects.filter(category=service_category)
-        for service in services:            
+        for service in services:
             if cheapest_service:
                 if cheapest_service.discounted_price() > service.discounted_price():
                     cheapest_service = service
-            
+
             if best_service:
                 if best_service.discounted_price() < service.discounted_price():
                     best_service = service
-                    
+
             if cheapest_service is None:
                 cheapest_service = service
 
             if best_service is None:
                 best_service = service
- 
-    foto_services = filter(lambda x: x is not None,[best_service, cheapest_service])
- 
+
+    foto_services = filter(lambda x: x is not None, [best_service, cheapest_service])
+
     gallery = ServiceProviderImage.objects.filter(service_provider_id=id)
     # ServiceProviderImage.objects.all().delete()
     edit_gallery = False
@@ -92,7 +92,7 @@ def view_gallery(request, id):
             form = ServiceProviderMultiImageHelperForm()
             service_provider.display_generic_gallery = True
             service_provider.save()
-            
+
         if request.POST.get('action') == 'disable_generic_gallery':
             form = ServiceProviderMultiImageHelperForm()
             service_provider.display_generic_gallery = False
@@ -108,19 +108,20 @@ def view_gallery(request, id):
             if ImageData:
                 ImageData = dataUrlPattern.match(ImageData).group(2)
 
-                if not (ImageData == None or len(ImageData) == 0):
+                if not (ImageData is None or len(ImageData) == 0):
                     ImageData = base64.b64decode(ImageData)
-                    
+
                     buf = StringIO(ImageData)
                     buf.seek(0, 2)
-                    
+
                     from time import time
-                    
-                    file = InMemoryUploadedFile(buf, None, 'captured_image_'+str(time())+'.jpg', 'image/jpeg', buf.tell(), None)
+
+                    file = InMemoryUploadedFile(buf, None, 'captured_image_' + str(time()) + '.jpg', 'image/jpeg',
+                                                buf.tell(), None)
                     buf.seek(0)
 
                     file.seek(0)
-                    helper_form = ServiceProviderImageForm(request.POST, {'image':[file]})
+                    helper_form = ServiceProviderImageForm(request.POST, {'image': [file]})
                     if helper_form.is_valid():
                         image = helper_form.save(commit=False)
                         image.service_provider_id = request.user.service_provider_id
@@ -132,11 +133,10 @@ def view_gallery(request, id):
                     error_msg = _("Error during decoding")
             else:
                 error_msg = _("No image was submited")
-                
 
         if request.POST.get('action') == 'update':
             form = ServiceProviderMultiImageHelperForm(request.POST, request.FILES)
-            
+
             print form.service_provider_forms
             for uploaded_file_form in form.service_provider_forms:
                 if uploaded_file_form.is_valid():
@@ -145,8 +145,6 @@ def view_gallery(request, id):
                     image.save()
                 else:
                     form.error_list.append(uploaded_file_form.errors)
-
-
     else:
         form = ServiceProviderMultiImageHelperForm()
 
@@ -169,7 +167,7 @@ def myservices(request):
             services = [service for service in services if service.is_active()]
         elif filter_form.cleaned_data['active'] == 'inactive':
             services = [service for service in services if not service.is_active()]
-    # locals() returns a dictionary of variables in the local scope (request and services in this case)
+        # locals() returns a dictionary of variables in the local scope (request and services in this case)
     return render_to_response('service/myservices.html', locals(), context_instance=RequestContext(request))
 
 # Add a new service
@@ -197,7 +195,7 @@ def add(request):
         # on get request create empty form
         form = ServiceForm()
         formset = DiscountFormSet()
-    # render form - new (get request) or invalid with error messages (post request)
+        # render form - new (get request) or invalid with error messages (post request)
     return render_to_response('service/add.html', locals(), context_instance=RequestContext(request))
 
 # Edit existing service
@@ -251,7 +249,7 @@ def service_comments(request, id):
     if request.user.is_authenticated():
         now = datetime.datetime.now()
         reservations = Reservation.objects.filter(Q(user=request.user, service=service) & (
-        Q(date__lt=now.date()) | Q(date=now.date(), time__lt=now.time()))).order_by('-date', '-time')
+            Q(date__lt=now.date()) | Q(date=now.date(), time__lt=now.time()))).order_by('-date', '-time')
         if len(reservations) and not Comment.objects.filter(author=request.user, service=service,
                                                             created__gt=datetime.datetime.combine(reservations[0].date,
                                                                                                   reservations[
@@ -297,8 +295,8 @@ def get_location(request):
 
 
 ORDER_CHOICES_PROVIDER = (
-(_('Order by distance'), 'dist'),
-(_('Order lexicographically'), 'lexi'),
+    (_('Order by distance'), 'dist'),
+    (_('Order lexicographically'), 'lexi'),
 )
 
 
@@ -377,12 +375,12 @@ def browse_providers(request):
 
 
 SORT_CHOICES_SERVICE = (
-(_('Order by distance'), 'dist'),
-(_('Order by price'), 'price'),
-(_('Order by discount level'), 'disc'),
-(_('Order lexicographically'), 'lexi'),
-(_('Last ordered'), 'reserv'),
-(_('My last ordered'), 'myres'),
+    (_('Order by distance'), 'dist'),
+    (_('Order by price'), 'price'),
+    (_('Order by discount level'), 'disc'),
+    (_('Order lexicographically'), 'lexi'),
+    (_('Last ordered'), 'reserv'),
+    (_('My last ordered'), 'myres'),
 )
 
 
@@ -403,6 +401,7 @@ def construct_url_services(prov, cat, disc, q, sor, page):
     if parts:
         return '?' + '&'.join(parts)
     return reverse(browse_services)
+
 
 def browse_services(request):
     location = get_location(request)
@@ -448,7 +447,8 @@ def browse_services(request):
     elif sor == 'price':
         # TODO: sort in database
         services = sorted(services,
-                          lambda a, b: cmp(a.discounted_price() or float('inf'), b.discounted_price() or float('inf')))
+                          #lambda a, b: cmp(a.discounted_price() or float('inf'), b.discounted_price() or float('inf')))
+                          lambda a, b: cmp(a.discounted_price(), b.discounted_price()))
     elif sor == 'disc':
         # TODO: sort in database
         services = sorted(services, lambda a, b: cmp(a.get_discount().discount if a.get_discount() else 0,
@@ -456,20 +456,20 @@ def browse_services(request):
                           reverse=True)
     elif sor == 'lexi':
         services = services.order_by('name')
-        
+
     elif sor == 'reserv':
         services = []
         if cat:
             for x in Category.objects.filter(id=cat): # iz vsake kategorije
                 [services.append(y.service)
-                    for y in Reservation.objects.filter(service__category=x)
-                    .order_by('-date', '-time')
+                 for y in Reservation.objects.filter(service__category=x)
+                .order_by('-date', '-time')
                 ] # 3 nazadnje rezerviranih storitev
         else:
             for x in Category.objects.all(): # iz vsake kategorije
                 [services.append(y.service)
-                    for y in Reservation.objects.filter(service__category=x)
-                    .order_by('-date', '-time')
+                 for y in Reservation.objects.filter(service__category=x)
+                .order_by('-date', '-time')
                 ] # 3 nazadnje rezerviranih storitev
         services = services[:3]
 
@@ -478,14 +478,14 @@ def browse_services(request):
         if cat and request.user.is_authenticated():
             for x in Category.objects.filter(id=cat): # iz vsake kategorije
                 [services.append(y.service)
-                    for y in Reservation.objects.filter(service__category=x, user=request.user)
-                    .order_by('-date', '-time')
+                 for y in Reservation.objects.filter(service__category=x, user=request.user)
+                .order_by('-date', '-time')
                 ] # 3 nazadnje rezerviranih storitev
         elif request.user.is_authenticated():
             for x in Category.objects.all(): # iz vsake kategorije
                 [services.append(y.service)
-                    for y in Reservation.objects.filter(service__category=x, user=request.user)
-                    .order_by('-date', '-time')
+                 for y in Reservation.objects.filter(service__category=x, user=request.user)
+                .order_by('-date', '-time')
                 ] # 3 nazadnje rezerviranih storitev
         services = services[:3]
 

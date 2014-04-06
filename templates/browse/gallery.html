@@ -22,295 +22,199 @@
     <form method="POST" enctype="multipart/form-data" action="" class="">
         {% csrf_token %}
 
+        <div class="row" style="margin-left:0px">
+            {% for img in gallery %}
+                <div class="col-lg-3 col-md-4 col-xs-6">
+                    <a class="fancybox thumbnail" href="{{ MEDIA_URL }}{{ img.image.url }}"
+                       data-fancybox-group="gallery" title="{{ img.image }}">
+                        <img src="{{ MEDIA_URL }}{{ img.image.url }}" class="img-responsive" alt="" width="140"
+                             height="140"/>
+                    </a>
+                    {% if edit_gallery %}
+                        <label class="checkbox">
+                            <input type="checkbox" class="img-selected" name="img_id" value="{{ img.id }}">
+                        </label>
+                    {% endif %}
+                </div>
+            {% endfor %}
 
-		<div class="row" style="margin-left:0px">
-        {% for img in gallery %}
-			<div class="col-lg-3 col-md-4 col-xs-6" style="margin-bottom: 30px; margin-right:20px;width:150px;height:150px;float:left">
-                <a class="fancybox thumbnail" href="{{ MEDIA_URL }}{{ img.image.url }}" data-fancybox-group="gallery" title="{{ img.image }}">
-				   <img src="{{ MEDIA_URL }}{{ img.image.url }}" class="img-responsive" alt="" width="140"
-                                                height="140" style="max-height:140px; max-width:140px; width:auto; height:auto;"/>
-				</a>	
-				{% if edit_gallery %}
-					<label class="checkbox" style="margin:0 0 0 0;z-index:100;position:relative;top:-20px;left:5px;"><input type="checkbox" class="img-selected" name="img_id" value="{{ img.id }}"></label>
-				{% endif %}		
-			</div>
-        {% endfor %}
-				
-		{% if service_provider.display_generic_gallery %}
-			{% if generic_gallery %}
-				{% with title=generic_gallery.title image_list=generic_gallery.values %}
-					{% for image_link in image_list %}
-						<div class="col-lg-3 col-md-4 col-xs-6" style="margin-bottom: 30px; margin-right:20px;width:150px;height:150px;float:left;padding-top:20px;padding-left:20px">
-							<a class="fancybox thumbnail" href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{image_link}}" data-fancybox-group="gallery" title="{{ generic_gallery_id_name }}/{{ image_link }}">
-							   <img src="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{image_link}}" class="img-responsive" alt="" width="140"
-															height="140" style="max-height:110px; max-width:140px; width:auto; height:auto;"/>
-							</a>		
-						</div>
-					{% endfor %}
-				{% endwith %}
-			{% endif %}
-		{% endif %}
-		</div>
-		
+            {% if service_provider.display_generic_gallery %}
+                {% if generic_gallery %}
+                    {% with title=generic_gallery.title image_list=generic_gallery.values %}
+                        {% for image_link in image_list %}
+                            <div class="col-lg-3 col-md-4 col-xs-6 generic">
+                                <a class="fancybox thumbnail"
+                                   href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
+                                   data-fancybox-group="gallery" title="{{ generic_gallery_id_name }}/{{ image_link }}">
+                                    <img src="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
+                                         class="img-responsive" alt="" width="140" height="140"/>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                {% endif %}
+            {% endif %}
+        </div>
 
-		
-		{% if edit_gallery %}
-			{% if gallery %}
-				<button class="btn btn-danger" type="submit" name="action"
-				value="delete">{% trans "Delete selected" %}</button>
-			{% endif %}
-			
-			{% if generic_gallery %}
-				{% with title=generic_gallery.title image_list=generic_gallery.values %}
-				<hr/>
-				<h3>{% trans "Generic gallery fotos" %}</h3>
-				<div class="row-fluid">
-				  <div class="span12">
 
-					{% for image_link in image_list %}
-						<div class="col-lg-3 col-md-4 col-xs-6" style="margin-bottom: 30px; margin-right:20px;width:150px;height:150px;float:left;padding-top:20px;padding-left:20px">
-							<a class="fancybox thumbnail" href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{image_link}}" data-fancybox-group="gallery" title="{{ generic_gallery_id_name }}/{{ image_link }}">
-							   <img src="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{image_link}}" class="img-responsive" alt="" width="140"
-															height="140" style="max-height:110px; max-width:140px; width:auto; height:auto;"/>
-							</a>		
-						</div>
-					{% endfor %}
 
-				  </div>
-				  
-					<div style="padding-left:10px;padding-top:5px">
-					{% if not service_provider.display_generic_gallery %}
-						<button class="btn btn-success" type="submit" name="action"
-								value="enable_generic_gallery">{% trans "Enable" %} {{title}} {% trans "generic gallery" %}</button>
-					{% else %}
-						<button class="btn btn-danger" type="submit" name="action"
-								value="disable_generic_gallery">{% trans "Disable" %} {{title}} {% trans "generic gallery" %}</button>
-					{% endif %}
-					
-					</div>
-				</div>
-				{% endwith %}
-			{% endif %}
-			<hr/>
-			
+        {% if edit_gallery %}
+            {% if gallery %}
+                <button class="btn btn-danger" type="submit" name="action"
+                        value="delete">{% trans "Delete selected" %}</button>
+            {% endif %}
 
-			
-		{% endif %}
+            {% if generic_gallery %}
+                {% with title=generic_gallery.title image_list=generic_gallery.values %}
+                    <hr/>
+                    <h3>{% trans "Generic gallery photos" %}</h3>
+                    <div class="row-fluid">
+                        <div class="span12">
 
-		
-		
+                            {% for image_link in image_list %}
+                                <div class="col-lg-3 col-md-4 col-xs-6 generic">
+                                    <a class="fancybox thumbnail"
+                                       href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
+                                       data-fancybox-group="gallery"
+                                       title="{{ generic_gallery_id_name }}/{{ image_link }}">
+                                        <img src="
+                                                {{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
+                                             class="img-responsive" alt="" width="140" height="140"/>
+                                    </a>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="set_generic">
+                            {% if not service_provider.display_generic_gallery %}
+                                <button class="btn btn-success" type="submit" name="action"
+                                        value="enable_generic_gallery">{% trans "Enable" %} {{ title }} {% trans "generic gallery" %}</button>
+                            {% else %}
+                                <button class="btn btn-danger" type="submit" name="action"
+                                        value="disable_generic_gallery">{% trans "Disable" %} {{ title }} {% trans "generic gallery" %}</button>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+            <hr/>
+        {% endif %}
+
+
         <br style="clear: both"/><br/>
 
         {% if edit_gallery %}
-			<script type="text/javascript">
-				$(document).ready(function(){
 
-					$("body").on('click',".img-selected", function(e){
-						e.stopPropagation();
-					});
-					
-					$(".form-actions").on('click',"#select_files_mode > .btn", function(e){
-						e.stopPropagation();
-						
-						$("#select_files_mode > button").removeClass("active");
-						$(this).addClass("active");
-						
-						var state = $("#select_files_mode").find(".active").val();
-						if(state === "files"){
-							$("#{{form.images.auto_id}}").removeAttr("directory");
-							$("#{{form.images.auto_id}}").removeAttr("webkitdirectory");
-							$("#{{form.images.auto_id}}").removeAttr("mozdirectory");
-							$("#{{form.images.auto_id}}").removeAttr("capture");
-							
-							console.log("files");
-						}else
-						if(state === "folder"){
-							$("#{{form.images.auto_id}}").removeAttr("directory");
-							$("#{{form.images.auto_id}}").removeAttr("webkitdirectory");
-							$("#{{form.images.auto_id}}").removeAttr("mozdirectory");
-							$("#{{form.images.auto_id}}").removeAttr("capture");
-						
-							$("#{{form.images.auto_id}}").attr({"directory":"","webkitdirectory":"","mozdirectory":""});
-							
-							console.log("folder");
-						}else
-						if(state === "camera"){
-							$("#{{form.images.auto_id}}").removeAttr("directory");
-							$("#{{form.images.auto_id}}").removeAttr("webkitdirectory");
-							$("#{{form.images.auto_id}}").removeAttr("mozdirectory");
-							$("#{{form.images.auto_id}}").removeAttr("capture");
-						
-							$("#{{form.images.auto_id}}").attr({"capture":"camera","accept":"image/*"});
-							
-							console.log("camera");
-						}
-					});
+            <script type="text/javascript">
+                var images_id = $("#{{form.images.auto_id}}");
+            </script>
 
-					if( navigator.getUserMedia ) {
-						$("#take_photo_camera").show();
-						console.log("Camera supported");
-					} else {
-						$("#take_photo_camera").hide();
-						console.log("Camera unsupported");
-					}
-
-					$("#take_photo_camera").on('click', function(e){
-						$("#camera_display").toggle();
-						$("#take_photo_camera").toggleClass('active');
-					
-						e.stopPropagation();
-						
-						if($("#camera_display").is(":visible") ){
-						
-							var video  = document.getElementById('video');
-							if( navigator.getUserMedia ) {
-								video.onclick = function () {
-									if(!video.paused){
-									
-										var canvas = document.getElementById("canvastt");
-										canvas.width = video.videoWidth;
-										canvas.height = video.videoHeight;
-										
-										var context = canvas.getContext("2d");
-										context.drawImage(video, 0, 0);
-										
-										$("#upload_photo").show();
-										
-										setTimeout(function(){video.pause();},200);
-										
-										
-										
-										//console.log("pause");
-										
-										$("#captured_photo").val(canvas.toDataURL("image/jpeg"));
-									}else{
-										//console.log("play");
-										$("#upload_photo").hide();
-									
-										video.play();
-									}
-								};
-								var success = function ( stream ) {
-									video.src = stream;
-								};
-
-								var error = function ( err ) {
-									console.log("Error: " + err.code, err);
-								};
-
-								navigator.getUserMedia('video', success, error);
-
-							}
-							
-						}else{
-							var video  = document.getElementById('video');
-							video.pause();
-						}
-					});
-				});
-			</script>
-		
             <div class="form-actions">
-				<div class="btn-group" data-toggle="buttons-radio" id="select_files_mode">
-				  <button type="button" class="btn btn-primary active" value="files">{% trans "Files" %}</button>
-				  <button type="button" class="btn btn-primary" value="folder">{% trans "Folder" %}</button>
-				</div>
-				
-				<button type="button" id="take_photo_camera" class="btn btn-primary" style="display:none" value="camera">{% trans "Camera" %}</button>
-				
+                <div class="btn-group" data-toggle="buttons-radio" id="select_files_mode">
+                    <button type="button" class="btn btn-primary active" value="files">{% trans "Files" %}</button>
+                    <button type="button" class="btn btn-primary" value="folder">{% trans "Folder" %}</button>
+                </div>
+
+                <button type="button" id="take_photo_camera" class="btn btn-primary" style="display:none"
+                        value="camera">{% trans "Camera" %}</button>
+
                 {{ form.images }}
-				
+
                 <button class="btn btn-success" type="submit" name="action"
-						value="update">{% trans "Upload files" %}</button>
+                        value="update">{% trans "Upload files" %}</button>
 
-				<input name="captured_photo" id="captured_photo" type="hidden" />
+                <input name="captured_photo" id="captured_photo" type="hidden"/>
 
 
-				<div style="font-weight:bold">
+                <div style="font-weight:bold">
 
-					{% if form.error_list %}
-						{% for error in form.error_list %}
-							{{ error }}
-						{% endfor %}
-					{% endif %}
-				</div>
-				<div id="camera_display" style="display:none">
-					<p>{% trans "Click on video to capture image and then click upload photo" %}</p>
-					<div class="row-fluid">
-						<button type="submit" id="upload_photo" style="display:none" class="btn btn-primary"  name="action" value="upload_photo">{% trans "Upload photo" %}</button>
-					</div>
-					<div class="row-fluid">
-						<div class="btn-block">
-							<video id="video" width="240" height="240" autoplay> </video>
-						</div>
-					</div>
-				</div>
+                    {% if form.error_list %}
+                        {% for error in form.error_list %}
+                            {{ error }}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div id="camera_display" style="display:none">
+                    <p>{% trans "Click on video to capture image and then click upload photo" %}</p>
+
+                    <div class="row-fluid">
+                        <button type="submit" id="upload_photo" style="display:none" class="btn btn-primary"
+                                name="action" value="upload_photo">{% trans "Upload photo" %}</button>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="btn-block">
+                            <video id="video" width="240" height="240" autoplay></video>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-			<canvas id="canvastt" width="500" height="500" style="display:none" ></canvas>
+            <canvas id="canvastt" width="500" height="500" style="display:none"></canvas>
 
-			
-			<div class="row-fluid">
-			  <div class="span6 ">
-				<h3>{% trans "Basic instructions" %}</h3>
-				<p>{% trans "Please follow these tips" %}</p>
-				<ul style="list-style: initial;">
-					<li style="display:block;margin-bottom:5px;">{% trans "We recommend that you use professional photo services for best photos. We picked cheapest and the best service from our database." %}</li>
-					<li style="display:block;margin-bottom:5px;">{% trans "Photos should be taken in well lit room." %}</li>
-					<li style="display:block;margin-bottom:5px;">{% trans "Reduce image resolution in image program." %}</li>
-					<li style="display:block;margin-bottom:5px;">{% trans "Remove unnecessary alpha channel." %}</li>
-					<li style="display:block;margin-bottom:5px;">{% trans "Upload photos using regular upload or via folder upload(only supported in chrome)." %}</li>
-				</ul>
-				
-			  </div>
-			  <div class="span2 "></div>
-			  <div class="span4 " style="padding-left:30px">
-				<h3>{% trans "Photo services" %}</h3>
-				{% if foto_services %}
-                    {% for service in foto_services %}
-						<div class="row">
-							<div class="span12">
-								<div class="span12 obrobe" style="margin-bottom:10px;height:100px">
-									<img src="{{ service.service_provider.logo_url }}" {{ service.service_provider|logowh:"32,48" }}
-										 class="logotip"/>
 
-									<div class="obrobe-content" style="margin-left:50px">
-										<h3 class="obrobe-title"><a href="{% url 'service' service.id %}"
-																	style="color: black">{{ service.name }}</a></h3>
+            <div class="row-fluid">
+                <div class="span6 ">
+                    <h3>{% trans "Basic instructions" %}</h3>
 
-										{% if service.service_provider.has_location and location %}
-											<p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
-										{% endif %}
-										{% if service.price %}
-											<p class="obrobe-extra">
-												<b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
-												{% if service.get_discount %}
-													<b>{% trans "Discounted until" %}:</b>
-													{{ service.get_discount.valid_to }}
-												{% endif %}
-											</p>
-										{% endif %}
-									</div>
-									<br style="clear:left"/>
-								</div>
-							</div>
-						</div>
-                    {% endfor %}
-				{% else %}
-					{% trans "No services available" %}
-				{% endif %}
-			  </div>
-			</div>
+                    <p>{% trans "Please follow these tips" %}</p>
+                    <ul class="basic_ins">
+                        <li>{% trans "We recommend that you use professional photo services for best photos. We picked cheapest and the best service from our database." %}</li>
+                        <li>{% trans "Photos should be taken in well lit room." %}</li>
+                        <li>{% trans "Reduce image resolution in image program." %}</li>
+                        <li>{% trans "Remove unnecessary alpha channel." %}</li>
+                        <li>{% trans "Upload photos using regular upload or via folder upload(only supported in chrome)." %}</li>
+                    </ul>
 
-			
+                </div>
+                <div class="span2 "></div>
+                <div class="span4 " style="padding-left:30px">
+                    <h3>{% trans "Photo services" %}</h3>
+                    {% if foto_services %}
+                        {% for service in foto_services %}
+                            <div class="row">
+                                <div class="span12">
+                                    <div class="span12 obrobe" style="margin-bottom:10px;height:100px">
+                                        <img src="{{ service.service_provider.logo_url }}" {{ service.service_provider|logowh:"32,48" }}
+                                             class="logotip"/>
+
+                                        <div class="obrobe-content" style="margin-left:50px">
+                                            <h3 class="obrobe-title"><a href="{% url 'service' service.id %}"
+                                                                        style="color: black">{{ service.name }}</a></h3>
+
+                                            {% if service.service_provider.has_location and location %}
+                                                <p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
+                                            {% endif %}
+                                            {% if service.price %}
+                                                <p class="obrobe-extra">
+                                                    <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+                                                    {% if service.get_discount %}
+                                                        <b>{% trans "Discounted until" %}:</b>
+                                                        {{ service.get_discount.valid_to }}
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+                                        <br style="clear:left"/>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% trans "No services available" %}
+                    {% endif %}
+                </div>
+            </div>
         {% endif %}
-
     </form>
 
+    <script src="/static/js/gallery.js"></script>
 {% endblock %}
+
 
 {% block javascript %}
     $(document).ready(function() {
-        $('.fancybox').fancybox();
+    $('.fancybox').fancybox();
     });
 {% endblock %}

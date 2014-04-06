@@ -15,6 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 
 import enarocanje.common.config as config
 
+
 class Category(models.Model):
     name = models.CharField(_('name'), max_length=100)
 
@@ -125,9 +126,9 @@ class User(AbstractUser):
     """
     def calculate_premium(self, new_reservation=False, coupon=False):
         if new_reservation:
-            self.reservations = self.reservations + 1
+            self.reservations += 1
             if coupon:
-                self.coupons = self.coupons + 1
+                self.coupons += 1
         if self.coupons / self.reservations > 0.1:
             self.premium = False
         else:
