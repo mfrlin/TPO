@@ -117,10 +117,12 @@ def reservation(request, id):
             reserve.save()
             # saving coupon is_valid
             coupons = Coupon.objects.filter(service=service.id)
+            coupon_is_used = False
             for coup in coupons:
                 if (data['number'] == coup.number):
                     coup.is_used = True
                     coup.save()
+                    coupon_is_used = True
                     # Validation checking in form
 
             email_to1 = data.get('email')
@@ -153,6 +155,9 @@ def reservation(request, id):
             url_service = settings.BASE_URL + reverse('service', args=(service.id,))
 
             sync(service.service_provider)
+
+            premium = request.user.calculate_premium(new_reservation=True, coupon=coupon_is_used)
+
             return render_to_response('reservations/done.html', locals(), context_instance=RequestContext(request))
 
         # Someone else has made a reservation in the meantime
