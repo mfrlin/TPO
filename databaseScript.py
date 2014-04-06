@@ -79,7 +79,7 @@ def fillDatabase():
     for p in ServiceProvider.objects.all():
         for s in range(1, 11):
             obj = Service(id=id, service_provider_id=p.id, name="Service" + str(s),
-                          duration=durations[random.randint(0, len(durations) - 1)], description=description,
+                          duration=durations[random.randint(0, len(durations) - 1)],
                           price=round(random.uniform(10, 250), 2), sex=gender[random.randint(0, len(gender) - 1)],
                           category_id=random.randint(1, len(Category.objects.all())))
             obj.description = str(Category.objects.get(id=obj.category_id))
