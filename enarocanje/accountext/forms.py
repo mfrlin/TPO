@@ -11,6 +11,9 @@ from models import ServiceProvider, ServiceProviderImage, User
 
 class UserChangeForm(DefaultUserChangeForm):
     phone = forms.CharField(max_length=100, label=_('Phone Number'))
+    premium = forms.BooleanField(label=_('Premium User'))
+    coupons = forms.IntegerField(label=_('Coupons'))
+    reservations = forms.IntegerField(label=_('Reservations'))
 
 
 class SignupForm(forms.Form):
