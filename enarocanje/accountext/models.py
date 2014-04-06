@@ -91,6 +91,12 @@ class ServiceProvider(models.Model):
 
 
 class User(AbstractUser):
+    NOTIFICATION_TYPE_SMS = 0
+    NOTIFICATION_TYPE_EMAIL = 1
+    NOTIFICATION_TYPES_CHOICES = (
+        (NOTIFICATION_TYPE_SMS, _("SMS")),
+        (NOTIFICATION_TYPE_EMAIL, _("Email")),
+    )
     phone = models.CharField(_('phone number'), max_length=100)
     language = models.CharField(_('language'), max_length=5, choices=settings.LANGUAGES, default='en')
     premium = models.BooleanField(default=False)
@@ -98,6 +104,8 @@ class User(AbstractUser):
     reservations = models.IntegerField(default=0)
     service_provider = models.OneToOneField(ServiceProvider, null=True)
     referral = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
+    notification_type = models.SmallIntegerField(_('notification type'),
+                                                 choices=NOTIFICATION_TYPES_CHOICES, default=NOTIFICATION_TYPE_EMAIL)
 
     def has_service_provider(self):
         return bool(self.service_provider_id)
