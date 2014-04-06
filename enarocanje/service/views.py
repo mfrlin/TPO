@@ -447,7 +447,8 @@ def browse_services(request):
     elif sor == 'price':
         # TODO: sort in database
         services = sorted(services,
-                          lambda a, b: cmp(a.discounted_price() or float('inf'), b.discounted_price() or float('inf')))
+                          #lambda a, b: cmp(a.discounted_price() or float('inf'), b.discounted_price() or float('inf')))
+                          lambda a, b: cmp(a.discounted_price(), b.discounted_price()))
     elif sor == 'disc':
         # TODO: sort in database
         services = sorted(services, lambda a, b: cmp(a.get_discount().discount if a.get_discount() else 0,
