@@ -27,7 +27,7 @@ def fillDatabase():
     for i in range(1, 11):
         obj = User(id=i, password=password, is_superuser=0, username=name + str(i), first_name='John',
                    last_name='Doe ' + str(i), email=name + str(i) + '@gmail.com', is_staff=0, is_active=1,
-                   phone='435345', language='en')
+                   phone='435345', language='en', notification_type=1)
         obj.save()
 
 

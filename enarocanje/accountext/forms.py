@@ -10,6 +10,7 @@ from models import ServiceProvider, ServiceProviderImage, User
 
 from misc import MultiImageField, CustomImageField
 
+
 class UserChangeForm(DefaultUserChangeForm):
     phone = forms.CharField(max_length=100, label=_('Phone Number'))
     premium = forms.BooleanField(label=_('Premium User'))
@@ -43,7 +44,7 @@ class ServiceProviderForm(ModelForm):
     class Meta:
         model = ServiceProvider
         exclude = ('lat', 'lng', 'gcal_id', 'gcal_updated', 'logo_width', 'logo_height', 'subscription_end_date',
-                   'subscription_mail_sent', 'subscription_end_date','display_generic_gallery')
+                   'subscription_mail_sent', 'subscription_end_date', 'display_generic_gallery')
 
     def save(self, *args, **kwargs):
         if self.instance and self.instance.timezone != self.old_timezone:
@@ -60,11 +61,9 @@ class ServiceProviderForm(ModelForm):
         self.old_timezone = self.instance.timezone
 
 
-            
-
 class ServiceProviderImageForm(ModelForm):
     image = CustomImageField(required=True, label=_('Upload images'))
-        
+
     class Meta:
         model = ServiceProviderImage
         exclude = ('image_width', 'image_height', 'service_provider', 'delete_image')
@@ -76,40 +75,40 @@ class ServiceProviderImageForm(ModelForm):
     def is_valid(self):
         if not super(ServiceProviderImageForm, self).is_valid():
             return False
-        
+
         images = self.files['image']
-        
+
         if not images:
             self.error = _("No files")
             return False
-        
+
         image = images[0]
-        
+
         if image:
-            if image._size > 15*1024*1024:
+            if image._size > 15 * 1024 * 1024:
                 self.error = _("Image bigger than 15MB!")
                 return False
-            
+
             return True
         else:
             self.error = _("Image is null!")
             return False
 
+
 class ServiceProviderMultiImageHelperForm(Form):
     images = MultiImageField(required=True, label=_('Upload images'))
-       
-    
+
     def __init__(self, *args, **kwargs):
         super(ServiceProviderMultiImageHelperForm, self).__init__(*args, **kwargs)
         self.service_provider_forms = []
         self.error_list = []
-        
+
         FIELDS = args[0] if args else None
         FILES = args[1] if args else None
 
         if FILES:
-            if('images' in FILES):
-                for i,img in enumerate(FILES.getlist('images')):
-                    self.service_provider_forms.append(ServiceProviderImageForm(FIELDS,{'image':[img]}, file_id=i))
+            if 'images' in FILES:
+                for i, img in enumerate(FILES.getlist('images')):
+                    self.service_provider_forms.append(ServiceProviderImageForm(FIELDS, {'image': [img]}, file_id=i))
 
 
