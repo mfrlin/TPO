@@ -28,12 +28,11 @@ def account_profile(request):
         return HttpResponseRedirect('')
 
     initial = {
-    'first_name': request.user.first_name,
-    'last_name': request.user.last_name,
-    'phone': request.user.phone,
-    'language': request.user.language,
-    'notification_type': request.user.notification_type,
-
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'phone': request.user.phone,
+        'language': request.user.language,
+        'notification_type': request.user.notification_type,
     }
 
     if request.user.service_provider:
@@ -43,11 +42,17 @@ def account_profile(request):
     if request.method == "POST":
         form = SignupForm(request.POST, initial=initial)
         service_provider_form = ServiceProviderForm(request.POST, request.FILES, instance=request.user.service_provider)
-        if form.is_valid() and service_provider_form.is_valid():
-            form.save(request.user)
-            service_provider_form.save()
-            request.session['django_language'] = request.user.language
-            return HttpResponseRedirect('')
+        if not request.user.service_provider:
+            if form.is_valid():
+                form.save(request.user)
+                request.session['django_language'] = request.user.language
+                return HttpResponseRedirect('')
+        elif request.user.service_provider:
+            if form.is_valid() and service_provider_form.is_valid():
+                form.save(request.user)
+                service_provider_form.save()
+                request.session['django_language'] = request.user.language
+                return HttpResponseRedirect('')
     else:
         form = SignupForm(initial=initial)
         service_provider_form = ServiceProviderForm(instance=request.user.service_provider)

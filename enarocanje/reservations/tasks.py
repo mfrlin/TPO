@@ -12,8 +12,8 @@ def send_reminder(reservation):
     send_email = reservation.user.notification_type == User.NOTIFICATION_TYPE_EMAIL
     if send_email:
         #TODO replace this with real body and subject of the email
-        body = _("Test text")
-        subject = _("Reservation reminder")
+        body = unicode(_("Test text"))
+        subject = unicode(_("Reservation reminder"))
         to = [reservation.user_email, ]
         frm = settings.DEFAULT_FROM_EMAIL
         send_mail(subject, body, frm, to, fail_silently=False)
