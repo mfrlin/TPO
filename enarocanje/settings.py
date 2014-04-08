@@ -205,7 +205,6 @@ GOOGLE_CLIENT_SECRET = ''
 GOOGLE_API_KEY = ''
 
 # Notifications
-TIME_BEFORE_REMINDER = 24  # in hours
 DEFAULT_FROM_EMAIL = 'info@eorderservice.com'
 
 try:
