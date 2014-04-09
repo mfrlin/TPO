@@ -16,6 +16,9 @@ MANAGERS = ()
 
 ALLOWED_HOSTS = '*'
 
+#CELERY_ENABLE_UTC = True
+#CELERY_TIMEZONE = 'Europe/Ljubljana'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -205,7 +208,6 @@ GOOGLE_CLIENT_SECRET = ''
 GOOGLE_API_KEY = ''
 
 # Notifications
-TIME_BEFORE_REMINDER = 24  # in hours
 DEFAULT_FROM_EMAIL = 'info@eorderservice.com'
 
 try:

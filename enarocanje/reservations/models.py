@@ -4,7 +4,8 @@ import celery
 from oauth2client.django_orm import CredentialsField
 from south.modelsinspector import add_introspection_rules
 
-from django.conf import settings
+import pytz
+from django.utils import timezone as tz
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.translation import ugettext_lazy as _
@@ -75,8 +76,14 @@ def reservation_handler(sender, instance, **kwargs):
             # If we do, lets get rid of this scheduled task
             celery.task.control.revoke(obj.task_id)
 
-        time_before = datetime.timedelta(hours=settings.TIME_BEFORE_REMINDER)
-        result = send_reminder.apply_async(eta=dt - datetime.timedelta(days=1), kwargs={'reservation': instance})
+        dt = dt.replace(tzinfo=pytz.utc)
+        diff = dt - tz.now()
+        if diff > datetime.timedelta(days=2):
+            diff /= 2
+        else:
+            diff = datetime.timedelta(days=1)
+
+        result = send_reminder.apply_async(eta=dt - diff, kwargs={'reservation': instance})
         instance.task_id = result.task_id
 
 pre_save.connect(reservation_handler, sender=Reservation)
