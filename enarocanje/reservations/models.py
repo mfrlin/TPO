@@ -77,8 +77,9 @@ def reservation_handler(sender, instance, **kwargs):
             # If we do, lets get rid of this scheduled task
             celery.task.control.revoke(obj.task_id)
 
-        dt = dt.replace(tzinfo=pytz.utc)
-        diff = dt - tz.now()
+        time_zone = tz.get_current_timezone()
+        diff = tz.make_aware(dt, time_zone) - tz.now()
+
         if diff > datetime.timedelta(days=2):
             diff /= 2
         else:
