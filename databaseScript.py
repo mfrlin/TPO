@@ -34,15 +34,15 @@ def fillDatabase():
     # Provider categories
     #cat = ["Nega obraza", "Nega telesa", "Frizerski salon", "Kozmeticni salon"]
     #generic = ["", "massage_salon", "hairdresser_salon", "cosmetic_salon"]
-    cat = ["Nega telesa", "Frizerski salon", "Kozmeticni salon"]
+    cat = ["Nega telesa", "Frizerski salon", "Kozmetični salon"]
     generic = ["massage_salon", "hairdresser_salon", "cosmetic_salon"]
     for i in range(1, len(cat) + 1):
         obj = ProvCat(id=i, name=cat[i - 1], generic_gallery=generic[i - 1])
         obj.save()
 
     # Service categories
-    cat = ["Negovalni salon", "Masazni salon", "Manikura, nega rok", "Pedikura, nega nog", "Depilacija", "Solarij",
-           "Licenje", "Masaza", "Frizerske storitve", "Fotografske storitve"]
+    cat = ["Negovalni salon", "Masažni salon", "Manikura, nega rok", "Pedikura, nega nog", "Depilacija", "Solarij",
+           "Ličenje", "Masaža", "Frizerske storitve", "Fotografske storitve"]
     for i in range(1, len(cat) + 1):
         obj = Category(id=i, name=cat[i - 1], show_in_gallery=False)
         if obj.name == "Fotografske storitve":

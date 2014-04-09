@@ -59,6 +59,7 @@ class Reservation(models.Model):
     class Meta:
         unique_together = ('service_provider', 'gcalid')
 
+
 def reservation_handler(sender, instance, **kwargs):
     dt = datetime.datetime.combine(instance.date, instance.time)
     reminder = False

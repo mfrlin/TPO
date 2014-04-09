@@ -230,3 +230,9 @@ td.scheduleNonworking {
     display: block;
     margin-bottom: 5px;
 }
+
+.obrobe.last_reserved{
+    height: 130px;
+    margin-bottom: 15px;
+    word-wrap: break-word;
+}

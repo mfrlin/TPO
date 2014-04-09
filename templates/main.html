@@ -110,7 +110,7 @@
     <hr>
 
     <footer>
-        <p>&copy;&nbsp;<a href="/cookies">About cookies</a></p>
+        <p>&copy;&nbsp;<a href="/cookies">{% trans "About cookies" %}</a></p>
     </footer>
 </div>
 <!-- /container -->
@@ -153,6 +153,16 @@
 
                 }
             });
+        });
+
+        $(document).ready(function () {
+            $.cookieCuttr(
+                    {
+                        cookieMessage: {% blocktrans %} 'We use cookies on this website, you can <a href="{{cookiePolicyLink}}" title="read about our cookies">read about them here</a>. To use the website as intended please...'{% endblocktrans %},
+                        cookieAnalytics: false,
+                        cookiePolicyLink: '/cookies/'
+                    }
+            );
         });
     {% endblock %}
 </script>
