@@ -26,8 +26,13 @@
 
                 <li class="nav-header">{% trans "Last ordered" %}</li>
                 {% for reservation in last_reserved %}
-                    <li>
-                        <a href="{% url 'service' reservation.service.id %}">{{ reservation.service.name }}</a>
+                    <li style="padding-left: 10px" class="obrobe last_reserved">
+                        <a href="{% url 'service' reservation.service.id %}">
+                            {{ reservation.service.name }}
+                            <img src="{{ reservation.service.service_provider.logo_url }}"
+                                    {{ reservation.service.service_provider|logowh:"80,130" }}
+                                class="logotip"/>
+                        </a>
                     </li>
                 {% endfor %}
 
