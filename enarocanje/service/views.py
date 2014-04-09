@@ -343,6 +343,7 @@ def browse_providers(request):
         (sort[0], construct_url_providers(cat, q, sort[1], page), sort[1] == sor)
         for sort in ORDER_CHOICES_PROVIDER
     ]
+    last_reserved = Reservation.objects.order_by('-date', '-time')[:3]
 
     if cat:
         providers = providers.filter(category_id=cat)
