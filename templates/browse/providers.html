@@ -24,6 +24,18 @@
                     </li>
                 {% endfor %}
 
+                <li class="nav-header">{% trans "Last ordered" %}</li>
+                {% for reservation in last_reserved %}
+                    <li style="padding-left: 10px" class="obrobe last_reserved">
+                        <a href="{% url 'service' reservation.service.id %}">
+                            {{ reservation.service.name }}
+                            <img src="{{ reservation.service.service_provider.logo_url }}"
+                                    {{ reservation.service.service_provider|logowh:"80,130" }}
+                                class="logotip"/>
+                        </a>
+                    </li>
+                {% endfor %}
+
                 <li class="nav-header hidden-desktop">{% trans "Order by" %}</li>
                 {% for sort in sort_choices %}
                     <li class="hidden-desktop {% if sort.2 %}active{% endif %}"><a href="{{ sort.1 }}">{{ sort.0 }}</a>

@@ -4,6 +4,7 @@ import celery
 from oauth2client.django_orm import CredentialsField
 from south.modelsinspector import add_introspection_rules
 
+import pytz
 from django.utils import timezone as tz
 from django.db import models
 from django.db.models.signals import pre_save
@@ -58,6 +59,7 @@ class Reservation(models.Model):
     class Meta:
         unique_together = ('service_provider', 'gcalid')
 
+
 def reservation_handler(sender, instance, **kwargs):
     dt = datetime.datetime.combine(instance.date, instance.time)
     reminder = False
@@ -74,8 +76,10 @@ def reservation_handler(sender, instance, **kwargs):
         if obj.task_id:
             # If we do, lets get rid of this scheduled task
             celery.task.control.revoke(obj.task_id)
+
         time_zone = tz.get_current_timezone()
         diff = tz.make_aware(dt, time_zone) - tz.now()
+
         if diff > datetime.timedelta(days=2):
             diff /= 2
         else:

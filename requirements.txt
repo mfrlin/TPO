@@ -8,4 +8,4 @@ pytz
 pyrfc3339
 Pillow
 celery
-dateutil
+python-dateutil
