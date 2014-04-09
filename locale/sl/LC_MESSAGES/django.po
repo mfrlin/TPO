@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-08 14:11+0200\n"
+"POT-Creation-Date: 2014-04-09 12:28+0200\n"
 "PO-Revision-Date: 2014-01-31 20:34+0100\n"
 "Last-Translator: klemen šavli <klemen@itklinika.si>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,8 +87,8 @@ msgid "Image is null!"
 msgstr ""
 
 #: .\enarocanje\accountext\models.py:20 .\enarocanje\accountext\models.py:29
-#: .\enarocanje\reservations\models.py:32
-#: .\enarocanje\reservations\models.py:38 .\enarocanje\service\models.py:11
+#: .\enarocanje\reservations\models.py:33
+#: .\enarocanje\reservations\models.py:39 .\enarocanje\service\models.py:11
 #: .\enarocanje\service\models.py:28
 msgid "name"
 msgstr "ime"
@@ -136,7 +136,7 @@ msgid "Email"
 msgstr "E-naslov"
 
 #: .\enarocanje\accountext\models.py:106
-#: .\enarocanje\reservations\models.py:33
+#: .\enarocanje\reservations\models.py:34
 msgid "phone number"
 msgstr "telefonska številka"
 
@@ -314,15 +314,15 @@ msgstr "Ne sinhroniziraj z Google koledarjem"
 msgid "Create new calendar"
 msgstr "Ustvari nov koledar"
 
-#: .\enarocanje\reservations\models.py:34
+#: .\enarocanje\reservations\models.py:35
 msgid "email address"
 msgstr "e-poštni naslov"
 
-#: .\enarocanje\reservations\models.py:39 .\enarocanje\service\models.py:29
+#: .\enarocanje\reservations\models.py:40 .\enarocanje\service\models.py:29
 msgid "duration"
 msgstr "trajanje"
 
-#: .\enarocanje\reservations\models.py:40 .\enarocanje\service\models.py:31
+#: .\enarocanje\reservations\models.py:41 .\enarocanje\service\models.py:31
 msgid "price"
 msgstr "cena"
 
@@ -348,8 +348,8 @@ msgid "Reservation reminder"
 msgstr "Rezervacija"
 
 #: .\enarocanje\reservations\views.py:131
-#: .\enarocanje\reservations\views.py:138 .\enarocanje\service\views.py:526
-#: .\enarocanje\service\views.py:556
+#: .\enarocanje\reservations\views.py:138 .\enarocanje\service\views.py:527
+#: .\enarocanje\service\views.py:557
 msgid "Confirmation of service reservation"
 msgstr "Potrditev rezervacije"
 
@@ -383,7 +383,7 @@ msgid "Price (in EUR)"
 msgstr "Cena (v EUR)"
 
 #: .\enarocanje\service\forms.py:67 .\enarocanje\service\views.py:338
-#: .\enarocanje\service\views.py:417 .\enarocanje\service\views.py:421
+#: .\enarocanje\service\views.py:418 .\enarocanje\service\views.py:422
 msgid "All"
 msgstr "Vsi"
 
@@ -428,6 +428,10 @@ msgstr "spol"
 msgid "active until"
 msgstr "aktiven do"
 
+#: .\enarocanje\service\models.py:61 .\enarocanje\service\models.py:66
+msgid "Free"
+msgstr "Zastonj"
+
 #: .\enarocanje\service\models.py:63
 msgid "with"
 msgstr "z"
@@ -454,37 +458,37 @@ msgstr "vsebina"
 
 #: .\enarocanje\service\views.py:133
 msgid "Error during decoding"
-msgstr ""
+msgstr "Napaka pri dekodiranju"
 
 #: .\enarocanje\service\views.py:135
 msgid "No image was submited"
-msgstr ""
+msgstr "Niste poslali slike"
 
-#: .\enarocanje\service\views.py:298 .\enarocanje\service\views.py:378
+#: .\enarocanje\service\views.py:298 .\enarocanje\service\views.py:379
 msgid "Order by distance"
 msgstr "Uredi po oddaljenosti"
 
-#: .\enarocanje\service\views.py:299 .\enarocanje\service\views.py:381
+#: .\enarocanje\service\views.py:299 .\enarocanje\service\views.py:382
 msgid "Order lexicographically"
 msgstr "Uredi po abecedi"
 
-#: .\enarocanje\service\views.py:379
+#: .\enarocanje\service\views.py:380
 msgid "Order by price"
 msgstr "Uredi po ceni"
 
-#: .\enarocanje\service\views.py:380
+#: .\enarocanje\service\views.py:381
 msgid "Order by discount level"
 msgstr "Uredi po višini popusta"
 
-#: .\enarocanje\service\views.py:382
-msgid "Last ordered"
-msgstr ""
+#: .\enarocanje\service\views.py:383 .\templates\browse\providers.html:27
+msgid "Last reserved"
+msgstr "Nazadnje rezervirano"
 
-#: .\enarocanje\service\views.py:383
-msgid "My last ordered"
-msgstr ""
+#: .\enarocanje\service\views.py:384
+msgid "My last reserved"
+msgstr "Moje nazadnje rezervirano"
 
-#: .\enarocanje\service\views.py:536 .\enarocanje\service\views.py:570
+#: .\enarocanje\service\views.py:537 .\enarocanje\service\views.py:571
 msgid "Your reservation was not confirmed"
 msgstr "Vaša rezervacija ni bila potrjena"
 
@@ -635,17 +639,17 @@ msgstr "O piškotkih"
 msgid "Did you mean"
 msgstr "Ste mislili"
 
+# never used because cookies are needed for language preferences
 #: .\templates\main.html:161
 #, python-format
-# never used because cookies are needed for language preferences
 msgid ""
 " 'We use cookies on this website, you can <a href=\"%(cookiePolicyLink)s\" "
 "title=\"read about our cookies\">read about them here</a>. To use the "
 "website as intended please...'"
 msgstr ""
-" 'Na tej strani uporabljamo piškotke, o njih si lahko <a href=\"%(cookiePolicyLink)s\" "
-"title=\"read about our cookies\">preberete tukaj</a>. Če želite uporabljati "
-"stran, kot je zamišljena, prosimo...'"
+" 'Na tej strani uporabljamo piškotke, o njih si lahko <a href=\"%"
+"(cookiePolicyLink)s\" title=\"read about our cookies\">preberete tukaj</a>. "
+"Če želite uporabljati stran, kot je zamišljena, prosimo...'"
 
 #: .\templates\account\base.html:12 .\templates\account\profile.html:6
 msgid "Profile"
@@ -1095,7 +1099,7 @@ msgstr ""
 msgid "Photo services"
 msgstr "Fotografske storitve"
 
-#: .\templates\browse\gallery.html:187 .\templates\browse\providers.html:49
+#: .\templates\browse\gallery.html:187 .\templates\browse\providers.html:61
 #: .\templates\browse\services.html:64
 msgid "away"
 msgstr "oddaljen"
@@ -1139,15 +1143,15 @@ msgstr "Išči"
 msgid "Categories"
 msgstr "Kategorije"
 
-#: .\templates\browse\providers.html:27 .\templates\browse\services.html:41
+#: .\templates\browse\providers.html:39 .\templates\browse\services.html:41
 msgid "Order by"
 msgstr "Uredi po"
 
-#: .\templates\browse\providers.html:53
+#: .\templates\browse\providers.html:65
 msgid "Address"
 msgstr "Naslov"
 
-#: .\templates\browse\providers.html:68
+#: .\templates\browse\providers.html:80
 msgid "No providers found."
 msgstr "Najden ni bil noben ponudnik."
 

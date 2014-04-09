@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys
 import datetime, random
 from dateutil.relativedelta import relativedelta

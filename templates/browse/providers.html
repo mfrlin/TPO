@@ -24,7 +24,7 @@
                     </li>
                 {% endfor %}
 
-                <li class="nav-header">{% trans "Last ordered" %}</li>
+                <li class="nav-header">{% trans "Last reserved" %}</li>
                 {% for reservation in last_reserved %}
                     <li style="padding-left: 10px" class="obrobe last_reserved">
                         <a href="{% url 'service' reservation.service.id %}">

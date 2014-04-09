@@ -380,8 +380,8 @@ SORT_CHOICES_SERVICE = (
     (_('Order by price'), 'price'),
     (_('Order by discount level'), 'disc'),
     (_('Order lexicographically'), 'lexi'),
-    (_('Last ordered'), 'reserv'),
-    (_('My last ordered'), 'myres'),
+    (_('Last reserved'), 'reserv'),
+    (_('My last reserved'), 'myres'),
 )
 
 
