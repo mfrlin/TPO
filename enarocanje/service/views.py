@@ -132,7 +132,7 @@ def view_gallery(request, id):
                 else:
                     error_msg = _("Error during decoding")
             else:
-                error_msg = _("No image was submited")
+                error_msg = _("No image was submitted")
 
         if request.POST.get('action') == 'update':
             form = ServiceProviderMultiImageHelperForm(request.POST, request.FILES)

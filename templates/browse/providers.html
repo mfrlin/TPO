@@ -18,13 +18,13 @@
                     {% if sor != 'dist' %}<input type="hidden" name="sort" value="{{ sor }}"/>{% endif %}
                 </form>
 
-                <li class="nav-header">{% trans "Categories" %}</li>
+                <li class="nav-header last_reserved">{% trans "Categories" %}</li>
                 {% for category in categories %}
                     <li class="{% if category.2 %}active{% endif %}"><a href="{{ category.1 }}">{{ category.0 }}</a>
                     </li>
                 {% endfor %}
 
-                <li class="nav-header">{% trans "Last reserved" %}</li>
+                <li class="nav-header last_reserved">{% trans "Last reserved" %}</li>
                 {% for reservation in last_reserved %}
                     <li style="padding-left: 10px" class="obrobe last_reserved">
                         <a href="{% url 'service' reservation.service.id %}">

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-09 12:28+0200\n"
+"POT-Creation-Date: 2014-04-14 18:08+0200\n"
 "PO-Revision-Date: 2014-01-31 20:34+0100\n"
 "Last-Translator: klemen šavli <klemen@itklinika.si>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -461,7 +461,8 @@ msgid "Error during decoding"
 msgstr "Napaka pri dekodiranju"
 
 #: .\enarocanje\service\views.py:135
-msgid "No image was submited"
+#, fuzzy
+msgid "No image was submitted"
 msgstr "Niste poslali slike"
 
 #: .\enarocanje\service\views.py:298 .\enarocanje\service\views.py:379
@@ -1073,7 +1074,7 @@ msgid ""
 "picked cheapest and the best service from our database."
 msgstr ""
 "Priporočamo, da za kar se da dobre slike uporabite profesionalno fotografsko "
-"storitev. Iz naše baze smo izbrali najcenejšo in najkvalitetnejšomožnost."
+"storitev. Iz naše baze smo izbrali najcenejšo in najkvalitetnejšo možnost."
 
 #: .\templates\browse\gallery.html:164
 msgid "Photos should be taken in well lit room."
