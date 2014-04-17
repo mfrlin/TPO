@@ -236,3 +236,7 @@ td.scheduleNonworking {
     margin-bottom: 15px;
     word-wrap: break-word;
 }
+
+.nav-header.last_reserved{
+    color: #000000;
+}

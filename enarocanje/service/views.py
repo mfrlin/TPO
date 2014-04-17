@@ -132,7 +132,7 @@ def view_gallery(request, id):
                 else:
                     error_msg = _("Error during decoding")
             else:
-                error_msg = _("No image was submited")
+                error_msg = _("No image was submitted")
 
         if request.POST.get('action') == 'update':
             form = ServiceProviderMultiImageHelperForm(request.POST, request.FILES)
@@ -380,8 +380,8 @@ SORT_CHOICES_SERVICE = (
     (_('Order by price'), 'price'),
     (_('Order by discount level'), 'disc'),
     (_('Order lexicographically'), 'lexi'),
-    (_('Last ordered'), 'reserv'),
-    (_('My last ordered'), 'myres'),
+    (_('Last reserved'), 'reserv'),
+    (_('My last reserved'), 'myres'),
 )
 
 

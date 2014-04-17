@@ -11,14 +11,14 @@ $(document).ready(function () {
         $(this).addClass("active");
 
         var state = $("#select_files_mode").find(".active").val();
+        var images_id = $("#" + id);
         if (state === "files") {
             images_id.removeAttr("directory");
             images_id.removeAttr("webkitdirectory");
             images_id.removeAttr("mozdirectory");
             images_id.removeAttr("capture");
 
-            console.log(images_id);
-            console.log("files");
+            //console.log("files");
         } else if (state === "folder") {
             images_id.removeAttr("directory");
             images_id.removeAttr("webkitdirectory");
@@ -27,7 +27,7 @@ $(document).ready(function () {
 
             images_id.attr({"directory": "", "webkitdirectory": "", "mozdirectory": ""});
 
-            console.log("folder");
+            //console.log("folder");
         } else if (state === "camera") {
             images_id.removeAttr("directory");
             images_id.removeAttr("webkitdirectory");
@@ -36,7 +36,7 @@ $(document).ready(function () {
 
             images_id.attr({"capture": "camera", "accept": "image/*"});
 
-            console.log("camera");
+            //console.log("camera");
         }
     });
 

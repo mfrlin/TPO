@@ -58,12 +58,12 @@ class Service(models.Model):
         if discount:
             if self.discounted_price() == 0.00:
                 #return u'Free (%s -%d%%)' % (ugettext(_('with')), discount.discount)
-                return "Free"
+                return _("Free")
             else:
                 return u'%s\u20ac (%s -%d%%)' % (self.discounted_price(), ugettext(_('with')), discount.discount)
         else:
             if not self.price:
-                return "Free"
+                return _("Free")
             else:
                 return u'%s\u20ac' % self.price
 
