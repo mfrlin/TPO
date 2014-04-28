@@ -344,6 +344,7 @@ def browse_providers(request):
         for sort in ORDER_CHOICES_PROVIDER
     ]
     last_reserved = Reservation.objects.order_by('-date', '-time')[:3]
+    last_reserved.reverse()
 
     if cat:
         providers = providers.filter(category_id=cat)

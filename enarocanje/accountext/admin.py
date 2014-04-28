@@ -10,11 +10,11 @@ class UserAdmin(DefaultUserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('email', 'first_name', 'last_name', 'phone')}),
-        (_('User type'), {'fields': ('premium', 'coupons', 'reservations')}),
+        #(_('User type'), {'fields': ('premium', 'coupons', 'reservations')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
-    list_display = ('email', 'first_name', 'last_name', 'phone', 'premium', 'coupons', 'reservations', 'is_staff', 'referral')
+    list_display = ('email', 'first_name', 'last_name', 'phone', 'is_staff', 'referral')
     form = UserChangeForm
 
 
