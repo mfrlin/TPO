@@ -157,7 +157,7 @@ def reservation(request, id):
             sync(service.service_provider)
 
             """ Preveri, če je uporabnik dobil/obdržal/ali izgubil premium pravice """
-            premium = request.user.calculate_premium(new_reservation=True, coupon=coupon_is_used)
+            # premium = request.user.calculate_premium(new_reservation=True, coupon=coupon_is_used)
 
             return render_to_response('reservations/done.html', locals(), context_instance=RequestContext(request))
 
