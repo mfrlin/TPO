@@ -13,6 +13,7 @@ urlpatterns = patterns('',
                        url(r'^', include('enarocanje.workinghours.urls')),
                        url(r'^', include('enarocanje.reservations.urls')),
                        url(r'^', include('enarocanje.coupon.urls')),
+                       url(r'^', include('enarocanje.employees.urls')),
 
                        # External apps
                        url(r'^accounts/', include('allauth.urls')),
@@ -20,7 +21,7 @@ urlpatterns = patterns('',
                        # Django admin
                        url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
                        url(r'^admin/', include(admin.site.urls)),
-)
+                       )
 
 if settings.DEBUG:
     urlpatterns += patterns('',

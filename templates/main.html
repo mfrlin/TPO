@@ -58,6 +58,8 @@
                                 href="{% url 'myworkinghours' %}">{% trans "My Working Hours" %}</a></li>
                         <li class="{% block main_nav_reservations %}{% endblock %}"><a
                                 href="{% url 'myreservations' %}">{% trans "My Reservations" %}</a></li>
+                        <li class="{% block main_nav_myemployees %}{% endblock %}"><a
+                                href="{% url 'myemployees' %}">{% trans "My Employees" %}</a></li>
                     {% endif %}
                 </ul>
                 {% if user.has_service_provider %}

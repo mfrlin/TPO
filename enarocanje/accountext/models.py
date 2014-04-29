@@ -19,7 +19,8 @@ import enarocanje.common.config as config
 class Category(models.Model):
     name = models.CharField(_('name'), max_length=100)
 
-    generic_gallery = models.CharField(_('Generic gallery'), choices=config.GENERIC_GALLERY_CHOICES, max_length=64, null=True, blank=True)
+    generic_gallery = models.CharField(_('Generic gallery'), choices=config.GENERIC_GALLERY_CHOICES, max_length=64,
+                                       null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -45,7 +46,7 @@ class ServiceProvider(models.Model):
     subscription_mail_sent = models.BooleanField()
 
     display_generic_gallery = models.BooleanField(_('Display generic gallery'))
-    
+
     reservation_confirmation_needed = models.BooleanField()
 
     lat = models.FloatField(null=True)
@@ -124,6 +125,7 @@ class User(AbstractUser):
         Stranka je premium, če je plačala polno ceno na več kot 10% rezervacij
         oz. Stranka ni premium če je uporabljala kupone na več kot 10% rezervacij
     """
+
     def calculate_premium(self, new_reservation=False, coupon=False):
         if new_reservation:
             self.reservations += 1

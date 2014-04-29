@@ -151,6 +151,7 @@ INSTALLED_APPS = (
     'enarocanje.workinghours',
     'enarocanje.reservations',
     'enarocanje.coupon',
+    'enarocanje.employees'
 )
 
 # A sample logging configuration. The only tangible logging

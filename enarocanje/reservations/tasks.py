@@ -7,6 +7,7 @@ from enarocanje.accountext.models import User
 
 from celery import shared_task
 
+
 @shared_task
 def send_reminder(reservation):
     send_email = reservation.user.notification_type == User.NOTIFICATION_TYPE_EMAIL
