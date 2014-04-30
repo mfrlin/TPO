@@ -106,7 +106,7 @@ class User(AbstractUser):
     )
     phone = models.CharField(_('phone number'), max_length=100)
     language = models.CharField(_('language'), max_length=5, choices=settings.LANGUAGES, default='en')
-    premium = models.BooleanField(default=False)
+    #premium = models.BooleanField(default=False)
     coupons = models.IntegerField(default=0)
     reservations = models.IntegerField(default=0)
     service_provider = models.OneToOneField(ServiceProvider, null=True)
@@ -125,8 +125,7 @@ class User(AbstractUser):
         Stranka je premium, če je plačala polno ceno na več kot 10% rezervacij
         oz. Stranka ni premium če je uporabljala kupone na več kot 10% rezervacij
     """
-
-    def calculate_premium(self, new_reservation=False, coupon=False):
+    """def calculate_premium(self, new_reservation=False, coupon=False):
         if new_reservation:
             self.reservations += 1
             if coupon:
@@ -135,7 +134,7 @@ class User(AbstractUser):
             self.premium = False
         else:
             self.premium = True
-        self.save()
+        self.save()"""
 
 
 class ServiceProviderImage(models.Model):
