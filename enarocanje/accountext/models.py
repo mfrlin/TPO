@@ -106,8 +106,8 @@ class User(AbstractUser):
     phone = models.CharField(_('phone number'), max_length=100)
     language = models.CharField(_('language'), max_length=5, choices=settings.LANGUAGES, default='en')
     #premium = models.BooleanField(default=False)
-    #coupons = models.IntegerField(default=0)
-    #reservations = models.IntegerField(default=0)
+    coupons = models.IntegerField(default=0)
+    reservations = models.IntegerField(default=0)
     service_provider = models.OneToOneField(ServiceProvider, null=True)
     referral = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     notification_type = models.SmallIntegerField(_('notification type'),
