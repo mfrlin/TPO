@@ -46,6 +46,8 @@ class ServiceProvider(models.Model):
 
     display_generic_gallery = models.BooleanField(_('Display generic gallery'))
     
+    visit_us = models.CharField(_('Visit us'), max_length=256, null=True, blank=True)
+    
     reservation_confirmation_needed = models.BooleanField()
 
     lat = models.FloatField(null=True)
