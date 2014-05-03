@@ -13,6 +13,7 @@ urlpatterns = patterns('',
                        url(r'^', include('enarocanje.workinghours.urls')),
                        url(r'^', include('enarocanje.reservations.urls')),
                        url(r'^', include('enarocanje.coupon.urls')),
+                       url(r'^', include('enarocanje.userpages.urls')),
 
                        # External apps
                        url(r'^accounts/', include('allauth.urls')),
