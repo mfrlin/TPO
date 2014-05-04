@@ -344,6 +344,7 @@ def browse_providers(request):
         for sort in ORDER_CHOICES_PROVIDER
     ]
     last_reserved = Reservation.objects.order_by('-date', '-time')[:3]
+    last_reserved.reverse()
 
     if cat:
         providers = providers.filter(category_id=cat)
@@ -462,33 +463,31 @@ def browse_services(request):
         services = []
         if cat:
             for x in Category.objects.filter(id=cat): # iz vsake kategorije
-                [services.append(y.service)
+                services.extend([y.service
                  for y in Reservation.objects.filter(service__category=x)
                 .order_by('-date', '-time')
-                ] # 3 nazadnje rezerviranih storitev
+                ][:3]) # 3 nazadnje rezerviranih storitev
         else:
             for x in Category.objects.all(): # iz vsake kategorije
-                [services.append(y.service)
+                services.extend([y.service
                  for y in Reservation.objects.filter(service__category=x)
                 .order_by('-date', '-time')
-                ] # 3 nazadnje rezerviranih storitev
-        services = services[:3]
+                ][:3]) # 3 nazadnje rezerviranih storitev
 
     elif sor == 'myres':
         services = []
         if cat and request.user.is_authenticated():
             for x in Category.objects.filter(id=cat): # iz vsake kategorije
-                [services.append(y.service)
+                services.extend([y.service
                  for y in Reservation.objects.filter(service__category=x, user=request.user)
                 .order_by('-date', '-time')
-                ] # 3 nazadnje rezerviranih storitev
+                ][:3]) # 3 nazadnje rezerviranih storitev
         elif request.user.is_authenticated():
             for x in Category.objects.all(): # iz vsake kategorije
-                [services.append(y.service)
+                services.extend([y.service
                  for y in Reservation.objects.filter(service__category=x, user=request.user)
                 .order_by('-date', '-time')
-                ] # 3 nazadnje rezerviranih storitev
-        services = services[:3]
+                ][:3]) # 3 nazadnje rezerviranih storitev
 
     if disc:
         services = [service for service in services if
