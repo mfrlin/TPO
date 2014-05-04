@@ -13,12 +13,9 @@ urlpatterns = patterns('',
                        url(r'^', include('enarocanje.workinghours.urls')),
                        url(r'^', include('enarocanje.reservations.urls')),
                        url(r'^', include('enarocanje.coupon.urls')),
-<<<<<<< HEAD
                        url(r'^', include('enarocanje.mynewsletter.urls')),
-=======
                        url(r'^', include('enarocanje.customers.urls')),
 
->>>>>>> 9e7fc42d9af98e042c163d447e95e45d57348a04
 
                        # External apps
                        url(r'^accounts/', include('allauth.urls')),
