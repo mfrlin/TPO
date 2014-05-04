@@ -15,7 +15,7 @@ class UserAdmin(DefaultUserAdmin):
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     list_display = (
-        'email', 'first_name', 'last_name', 'phone', 'premium', 'coupons', 'reservations', 'is_staff', 'referral')
+        'email', 'first_name', 'last_name', 'phone', 'coupons', 'reservations', 'is_staff', 'referral')
     form = UserChangeForm
 
 
