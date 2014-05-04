@@ -151,6 +151,7 @@ INSTALLED_APPS = (
     'enarocanje.workinghours',
     'enarocanje.reservations',
     'enarocanje.coupon',
+    'enarocanje.mynewsletter',
     'enarocanje.customers',
 )
 

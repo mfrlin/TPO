@@ -17,4 +17,5 @@ urlpatterns = patterns('enarocanje.service.views',
                        url(r'^services/(?P<id>\d+)/comments$', 'service_comments', name='servicecomments'),
 
                        url(r'^gallery/(?P<id>\d+)', 'view_gallery', name='gallery'),
+                       url(r'^subscribe/$', 'subscribe', name='subscribe'),
 )

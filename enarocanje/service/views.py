@@ -447,12 +447,10 @@ def browse_services(request):
             services = services.select_related('service_provider').extra(
                 select={'dist': ServiceProvider.DISTANCE_FORMULA % location}).order_by('dist')
     elif sor == 'price':
-        # TODO: sort in database
         services = sorted(services,
                           #lambda a, b: cmp(a.discounted_price() or float('inf'), b.discounted_price() or float('inf')))
                           lambda a, b: cmp(a.discounted_price(), b.discounted_price()))
     elif sor == 'disc':
-        # TODO: sort in database
         services = sorted(services, lambda a, b: cmp(a.get_discount().discount if a.get_discount() else 0,
                                                      b.get_discount().discount if b.get_discount() else 0),
                           reverse=True)
@@ -581,3 +579,11 @@ def myunconfirmedreservations(request):
                                              is_deny=False, date__gte=datetime.date.today(), isfromgcal=False)
     return render_to_response('service/myunconfirmedreservation.html', locals(),
                               context_instance=RequestContext(request))
+    
+    
+def subscribe(request):
+    user = request.user
+    provider_id = request.GET.get('provider', 1)
+    provider = ServiceProvider.objects.get(id=provider_id)
+    provider.subscribers.add(user)
+    return render_to_response('newsletter/subscribe.html', locals(), context_instance=RequestContext(request))
