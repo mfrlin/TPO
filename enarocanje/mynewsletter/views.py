@@ -1,6 +1,6 @@
-import sys
 from django.shortcuts import render
-from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.core.mail import send_mail, BadHeaderError
 from enarocanje.accountext.models import ServiceProvider
 
 def newsletter(request):
@@ -13,8 +13,11 @@ def send(request):
         provider = ServiceProvider.objects.get(name=request.user.service_provider.name)
         subscribers = provider.subscribers.all()
         emails = [user.email for user in subscribers]
-        send_mail(subject, message, request.user.email, 
+        try:
+            send_mail(subject, message, request.user.email, 
                   emails, fail_silently=False)
+        except BadHeaderError:
+            return HttpResponse('Invalid header found.')
         return render(request, 'newsletter/sent.html')
     else:
         return render(request, 'newsletter/post.html')
