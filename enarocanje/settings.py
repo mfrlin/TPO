@@ -19,6 +19,11 @@ ALLOWED_HOSTS = '*'
 #CELERY_ENABLE_UTC = True
 #CELERY_TIMEZONE = 'Europe/Ljubljana'
 
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -151,6 +156,7 @@ INSTALLED_APPS = (
     'enarocanje.workinghours',
     'enarocanje.reservations',
     'enarocanje.coupon',
+    'enarocanje.mynewsletter',
 )
 
 # A sample logging configuration. The only tangible logging
