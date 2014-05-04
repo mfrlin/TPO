@@ -36,7 +36,7 @@ class ServiceProvider(models.Model):
                                 max_length=30)
 
     "Subscribers"
-    subscribers = models.ManyToManyField('User', through='Subscription')
+    subscribers = models.ManyToManyField('User')
 
     logo = models.ImageField(upload_to='logos', width_field='logo_width', height_field='logo_height', null=True,
                              blank=True)
@@ -136,11 +136,6 @@ class User(AbstractUser):
         else:
             self.premium = True
         self.save()"""
-
-class Subscription(models.Model):
-    service_provider = models.ForeignKey(ServiceProvider)
-    user = models.ForeignKey(User)
-    subscribed = models.BooleanField(default=False)
 
 class ServiceProviderImage(models.Model):
     image = models.ImageField(upload_to='images', width_field='image_width', height_field='image_height', null=False,

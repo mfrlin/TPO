@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from enarocanje.mynewsletter import views
+#from enarocanje.mynewsletter import views
 
 urlpatterns = patterns(
     'enarocanje.mynewsletter.views',
