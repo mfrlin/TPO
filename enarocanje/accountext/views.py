@@ -9,6 +9,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from django.conf import settings
+
 from forms import SignupForm, ServiceProviderForm
 from models import User, ServiceProvider
 
@@ -38,7 +40,10 @@ def account_profile(request):
     if request.user.service_provider:
         lat = request.user.service_provider.lat
         lng = request.user.service_provider.lng
-
+        
+        
+        user_page_link = '%s/u/%s' % (settings.BASE_URL, request.user.service_provider.userpage_link)
+    
     if request.method == "POST":
         form = SignupForm(request.POST, initial=initial)
         service_provider_form = ServiceProviderForm(request.POST, request.FILES, instance=request.user.service_provider)

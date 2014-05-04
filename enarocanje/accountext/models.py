@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 # from enarocanje.service.views import service_comments
+from django.core.validators import validate_slug
 
 import enarocanje.common.config as config
 
@@ -49,7 +50,12 @@ class ServiceProvider(models.Model):
     subscription_mail_sent = models.BooleanField()
 
     display_generic_gallery = models.BooleanField(_('Display generic gallery'))
-
+    
+    visit_us = models.TextField(_('Visit us'), null=True, blank=True)
+    description = models.TextField(_('description'), null=True, blank=True)
+    
+    userpage_link = models.CharField(_('User link'), max_length=40, unique=True, validators=[validate_slug])
+    
     reservation_confirmation_needed = models.BooleanField()
 
     lat = models.FloatField(null=True)

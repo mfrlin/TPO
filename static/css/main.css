@@ -240,3 +240,7 @@ td.scheduleNonworking {
 .nav-header.last_reserved{
     color: #000000;
 }
+
+.well.white-bg{
+	background-color:white
+}
