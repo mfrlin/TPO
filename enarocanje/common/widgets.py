@@ -58,6 +58,25 @@ class BootstrapDateInput(forms.DateInput):
         return super(BootstrapDateInput, self).render(name, value, attrs)
 
 
+class BootstrapDateTimeInput(forms.DateTimeInput):
+    bootstrap = {
+    'append': mark_safe('<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>'),
+    'prepend': None,
+    }
+
+    def __init__(self, attrs=None, format=None):
+        if not format:
+            format = '%Y-%m-%d, %H:%M'
+        super(BootstrapDateTimeInput, self).__init__(attrs, format)
+
+    def render(self, name, value, attrs=None):
+        if attrs is None:
+            attrs = {}
+        attrs['class'] = add_to_css_class(attrs.get('class', ''), 'date-field')
+        attrs['data-format'] = ' '.join([javascript_date_format(self.format), javascript_time_format(self.format)])
+        return super(BootstrapDateTimeInput, self).render(name, value, attrs)
+
+
 class BootstrapTimeInput(forms.TimeInput):
     bootstrap = {
     'append': mark_safe('<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>'),

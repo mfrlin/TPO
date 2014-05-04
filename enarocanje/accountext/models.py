@@ -36,6 +36,9 @@ class ServiceProvider(models.Model):
     timezone = models.CharField(_('timezone'), choices=((x, x,) for x in pytz.common_timezones), default='UTC',
                                 max_length=30)
 
+    "Subscribers"
+    subscribers = models.ManyToManyField('User')
+
     logo = models.ImageField(upload_to='logos', width_field='logo_width', height_field='logo_height', null=True,
                              blank=True)
     logo_width = models.PositiveIntegerField(null=True)
@@ -96,7 +99,6 @@ class ServiceProvider(models.Model):
             self.lat, self.lng = None, None
         super(ServiceProvider, self).save(*args, **kwargs)
 
-
 class User(AbstractUser):
     NOTIFICATION_TYPE_SMS = 0
     NOTIFICATION_TYPE_EMAIL = 1
@@ -135,7 +137,6 @@ class User(AbstractUser):
         else:
             self.premium = True
         self.save()"""
-
 
 class ServiceProviderImage(models.Model):
     image = models.ImageField(upload_to='images', width_field='image_width', height_field='image_height', null=False,
