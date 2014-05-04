@@ -1,0 +1,41 @@
+{% extends "main.html" %}
+
+{% load bootstrap_toolkit %}
+
+{% block content %}
+{% if customer.id %}
+<h1>Edit Customer</h1>
+{% else %}
+<h1>Add Customer</h1>
+{% endif %}
+
+<form action="{{ action }}" method="POST">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <ul>
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% for field in form %}
+    <div id="{{ field.auto_id }}_container">
+        {{ field.help_text }}
+        <div>
+            {{ field|as_bootstrap }}
+        </div>
+        <div id="{{ field.auto_id }}_errors">
+            {{ field.errors }}
+        </div>
+    </div>
+    {% endfor %}
+    <input id="save_customer" type="submit" value="Save">
+</form>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    (function() {
+    $('.date-field').parent().datetimepicker({pickTime: false, language: '{{ request.LANGUAGE_CODE }}'});
+    })();
+{% endblock %}

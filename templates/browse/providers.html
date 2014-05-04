@@ -57,6 +57,11 @@
                                     <h3 class="obrobe-title"><a style="color: #000000"
                                                                 href="{% url 'browseservices' %}?provider={{ provider.id }}">{{ provider.name }}</a>
                                     </h3>
+                                    <!-- The subscribe button -->
+                                    {% if user.is_authenticated %}
+                                    <a class="btn btn-primary"  href="{% url 'subscribe' %}?provider={{ provider.id }}">{% trans "Subscribe" %}</a>
+                                    {% endif %}
+                                    
                                     {% if provider.has_location and location %}
                                         <p>{{ provider|distance:location }} {% trans "away" %}</p>
                                     {% endif %}
