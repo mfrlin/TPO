@@ -9,7 +9,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "enarocanje.settings")
 
 from enarocanje.service.models import Service, Discount, Category
 from enarocanje.accountext.models import User, ServiceProvider, Category as ProvCat
-from enarocanje.workinghours.models import WorkingHours
+from enarocanje.workinghours.models import WorkingHours, EmployeeWorkingHours
+from enarocanje.customers.models import Customer
+from enarocanje.employees.models import Employee
 
 
 def fillDatabase():
@@ -92,6 +94,24 @@ def fillDatabase():
                 disc.save()
             obj.save()
             id += 1
+
+    #some employees
+    for p in ServiceProvider.objects.all():
+        for s in range(1, 11):
+            e = Employee(name="Name" + str(s), surname="Surname" + str(s), phone=random.randint(100000, 999999),
+                         employer=p)
+            e.save()
+            h = EmployeeWorkingHours()
+            h.employee = e
+            h.time_from = datetime.time(8)
+            h.time_to = datetime.time(16)
+            h.week_days = "1,2,3,4,5"
+            h.save()
+            name = "Customer_"+str(s)
+            c = Customer(name=name, service=p,
+                         phone=random.randint(100000, 999999), email=name + '@gmail.com',
+                         last_reservation=datetime.datetime.now())
+            c.save()
 
 
 fillDatabase()
