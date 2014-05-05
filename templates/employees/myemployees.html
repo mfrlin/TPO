@@ -37,16 +37,16 @@
 
                 {% for employee in employees %}
                     <tr>
-                        <td>
+                        <td data-title="{% trans 'Name' %}">
                             {{ employee.name }}
                         </td>
-                        <td>
+                        <td data-title="{% trans 'Surname' %}">
                             {{ employee.surname }}
                         </td>
-                        <td>
+                        <td data-title="{% trans 'Phone' %}">
                             {{ employee.phone }}
                         </td>
-                        <td>
+                        <td data-title="{% trans 'Actions' %}">
                             <a class="btn" href={% url 'editemployee' employee.id %}>{% trans "Edit" %}</a>
 
                             <form method="POST" action="{% url 'manageemployee' %}" style="display: inline">

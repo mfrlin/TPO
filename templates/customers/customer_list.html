@@ -3,31 +3,76 @@
 {% load url from future %}
 {% load i18n %}
 
-{% block main_nav_customer %}active{% endblock %}
+{% block main_nav_customers %}active{% endblock %}
 
 {% block content %}
 
     <h1>{% trans 'My Customers' %}</h1>
 
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="{% url 'mycustomers' %}">{% trans 'Customers' %}</a>
-        </li>
-    </ul>
 
     <div class="form-actions">
-        <a class="btn btn-primary" href="{% url 'customers-new' %}">{% trans "Add a Customer" %}</a>
+        <a class="btn btn-primary" href="{% url 'customers-new' %}">{% trans "Add customer" %}</a>
     </div>
-    <ul class="nav nav-pills pull-right visible-desktop">
-        <li class="active"><a href="?sort_by=last_reserved">sort by last reserved</a></li>
-        <li class="active"><a href="?sort_by=name">sort by name</a></li>
-    </ul>
-    <ul>
-    {% for customer in object_list %}
-    <li class="customer">
-        {{ customer }}
-        (<a href="{% url "customers-edit" pk=customer.id %}">edit</a>)
-    </li>
-    {% endfor %}
-    </ul>
+
+    {% if object_list %}
+        <ul class="nav nav-pills">
+            <li class="active"><a href="?sort_by=last_reserved">sort by last reserved</a></li>
+            <li class="active"><a href="?sort_by=name">sort by name</a></li>
+        </ul>
+
+        <div id="no-more-tables">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        {% trans 'Name' %}
+                    </th>
+                    <th>
+                        {% trans 'E-mail' %}
+                    </th>
+                    <th>
+                        {% trans 'Phone' %}
+                    </th>
+                    <th>
+                        {% trans 'Last reservation' %}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for customer in object_list %}
+                    <tr>
+                        <td data-title="{% trans 'Name' %}">
+                            {{ customer.name }}
+                        </td>
+                        <td data-title="{% trans 'E-mail' %}">
+                            {{ customer.email }}
+                        </td>
+                        <td data-title="{% trans 'Phone' %}">
+                            {{ customer.phone }}
+                        </td>
+                        <td data-title="{% trans 'Last reservation' %}">
+                            {{ customer.last_reservation }}
+                        </td>
+                        <td data-title="{% trans 'Actions' %}">
+                            <a class="btn" href={% url 'customers-edit' customer.id %}>{% trans "Edit" %}</a>
+
+                            <form method="POST" action="{% url 'managecustomer' %}" style="display: inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="service" value="{{ customer.id }}"/>
+                                <button class="btn btn-danger" type="submit" name="action"
+                                        value="delete">{% trans "Remove" %}</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        {% trans 'You currently have no customers to display.' %}
+    {% endif %}
+
+
 {% endblock %}
