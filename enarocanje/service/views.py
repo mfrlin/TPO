@@ -579,11 +579,12 @@ def myunconfirmedreservations(request):
                                              is_deny=False, date__gte=datetime.date.today(), isfromgcal=False)
     return render_to_response('service/myunconfirmedreservation.html', locals(),
                               context_instance=RequestContext(request))
-    
-    
+
+
 def subscribe(request):
     user = request.user
     provider_id = request.GET.get('provider', 1)
     provider = ServiceProvider.objects.get(id=provider_id)
     provider.subscribers.add(user)
-    return render_to_response('newsletter/subscribe.html', locals(), context_instance=RequestContext(request))
+
+    return render_to_response('newsletter/subscribe.html', locals(), context_instance=RequestContext(request),)

@@ -9,7 +9,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "enarocanje.settings")
 
 from enarocanje.service.models import Service, Discount, Category
 from enarocanje.accountext.models import User, ServiceProvider, Category as ProvCat
-from enarocanje.workinghours.models import WorkingHours
+from enarocanje.workinghours.models import WorkingHours, EmployeeWorkingHours
+from enarocanje.customers.models import Customer
+from enarocanje.employees.models import Employee
 
 
 def fillDatabase():
@@ -57,7 +59,8 @@ def fillDatabase():
                               zipcode='100' + str(i - 1),
                               city="City" + str(i - 1), country="Country" + str(i - 1),
                               category_id=random.randint(1, len(ProvCat.objects.all())), subscription_mail_sent=0,
-                              reservation_confirmation_needed=0, display_generic_gallery=True, userpage_link=None)
+                              reservation_confirmation_needed=0, display_generic_gallery=True,
+                              userpage_link="Provider" + str(i - 1))
         obj.save()
         user = User.objects.get(id=i)
         user.service_provider_id = i
@@ -91,6 +94,24 @@ def fillDatabase():
                 disc.save()
             obj.save()
             id += 1
+
+    #some employees
+    for p in ServiceProvider.objects.all():
+        for s in range(1, 11):
+            e = Employee(name="Name" + str(s), surname="Surname" + str(s), phone=random.randint(100000, 999999),
+                         employer=p)
+            e.save()
+            h = EmployeeWorkingHours()
+            h.employee = e
+            h.time_from = datetime.time(8)
+            h.time_to = datetime.time(16)
+            h.week_days = "1,2,3,4,5"
+            h.save()
+            name = "Customer_"+str(s)
+            c = Customer(name=name, service=p,
+                         phone=random.randint(100000, 999999), email=name + '@gmail.com',
+                         last_reservation=datetime.datetime.now())
+            c.save()
 
 
 fillDatabase()

@@ -50,11 +50,12 @@ class ServiceProvider(models.Model):
     subscription_mail_sent = models.BooleanField()
 
     display_generic_gallery = models.BooleanField(_('Display generic gallery'))
-    
+
     visit_us = models.TextField(_('Visit us'), null=True, blank=True)
     description = models.TextField(_('description'), null=True, blank=True)
     
-    userpage_link = models.CharField(_('User link'), max_length=40, unique=True, validators=[validate_slug])
+    userpage_link = models.CharField(_('User link'), max_length=40, validators=[validate_slug],
+                                     unique=True, null=True)
     
     reservation_confirmation_needed = models.BooleanField()
 
@@ -105,6 +106,7 @@ class ServiceProvider(models.Model):
             self.lat, self.lng = None, None
         super(ServiceProvider, self).save(*args, **kwargs)
 
+
 class User(AbstractUser):
     NOTIFICATION_TYPE_SMS = 0
     NOTIFICATION_TYPE_EMAIL = 1
@@ -143,6 +145,7 @@ class User(AbstractUser):
         else:
             self.premium = True
         self.save()"""
+
 
 class ServiceProviderImage(models.Model):
     image = models.ImageField(upload_to='images', width_field='image_width', height_field='image_height', null=False,

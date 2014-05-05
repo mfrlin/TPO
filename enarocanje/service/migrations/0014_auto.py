@@ -8,42 +8,20 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'ServiceProvider.description'
-        db.add_column(u'accountext_serviceprovider', 'description',
-                      self.gf('django.db.models.fields.TextField')(null=True, blank=True),
-                      keep_default=False)
-
-        # Adding field 'ServiceProvider.userpage_link'
-        db.add_column(u'accountext_serviceprovider', 'userpage_link',
-                      self.gf('django.db.models.fields.CharField')(max_length=40, unique=True, null=True),
-                      keep_default=False)
-
-        # Adding M2M table for field subscribers on 'ServiceProvider'
-        m2m_table_name = db.shorten_name(u'accountext_serviceprovider_subscribers')
+        # Adding M2M table for field employees on 'Service'
+        m2m_table_name = db.shorten_name(u'service_service_employees')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('serviceprovider', models.ForeignKey(orm[u'accountext.serviceprovider'], null=False)),
-            ('user', models.ForeignKey(orm[u'accountext.user'], null=False))
+            ('service', models.ForeignKey(orm[u'service.service'], null=False)),
+            ('employee', models.ForeignKey(orm[u'employees.employee'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['serviceprovider_id', 'user_id'])
+        db.create_unique(m2m_table_name, ['service_id', 'employee_id'])
 
-
-        # Changing field 'ServiceProvider.visit_us'
-        db.alter_column(u'accountext_serviceprovider', 'visit_us', self.gf('django.db.models.fields.TextField')(null=True))
 
     def backwards(self, orm):
-        # Deleting field 'ServiceProvider.description'
-        db.delete_column(u'accountext_serviceprovider', 'description')
+        # Removing M2M table for field employees on 'Service'
+        db.delete_table(db.shorten_name(u'service_service_employees'))
 
-        # Deleting field 'ServiceProvider.userpage_link'
-        db.delete_column(u'accountext_serviceprovider', 'userpage_link')
-
-        # Removing M2M table for field subscribers on 'ServiceProvider'
-        db.delete_table(db.shorten_name(u'accountext_serviceprovider_subscribers'))
-
-
-        # Changing field 'ServiceProvider.visit_us'
-        db.alter_column(u'accountext_serviceprovider', 'visit_us', self.gf('django.db.models.fields.CharField')(max_length=256, null=True))
 
     models = {
         u'accountext.category': {
@@ -57,7 +35,6 @@ class Migration(SchemaMigration):
             'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.Category']", 'null': 'True', 'blank': 'True'}),
             'city': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'country': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'display_generic_gallery': ('django.db.models.fields.BooleanField', [], {}),
             'gcal_id': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True'}),
             'gcal_updated': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
@@ -70,22 +47,10 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'reservation_confirmation_needed': ('django.db.models.fields.BooleanField', [], {}),
             'street': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'subscribers': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['accountext.User']", 'symmetrical': 'False'}),
-            'subscription_end_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 6, 4, 0, 0)'}),
+            'subscription_end_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 5, 29, 0, 0)'}),
             'subscription_mail_sent': ('django.db.models.fields.BooleanField', [], {}),
             'timezone': ('django.db.models.fields.CharField', [], {'default': "u'UTC'", 'max_length': '30'}),
-            'userpage_link': ('django.db.models.fields.CharField', [], {'max_length': '40', 'unique': 'True', 'null': 'True'}),
-            'visit_us': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'zipcode': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'})
-        },
-        u'accountext.serviceproviderimage': {
-            'Meta': {'object_name': 'ServiceProviderImage'},
-            'delete_image': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'image_height': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
-            'image_width': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
-            'service_provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.ServiceProvider']"})
         },
         u'accountext.user': {
             'Meta': {'object_name': 'User'},
@@ -104,6 +69,7 @@ class Migration(SchemaMigration):
             'notification_type': ('django.db.models.fields.SmallIntegerField', [], {'default': '1'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'phone': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'premium': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'referral': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.User']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'reservations': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'service_provider': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['accountext.ServiceProvider']", 'unique': 'True', 'null': 'True'}),
@@ -129,7 +95,50 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'employees.employee': {
+            'Meta': {'object_name': 'Employee'},
+            'employer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.ServiceProvider']", 'null': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'surname': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'service.category': {
+            'Meta': {'object_name': 'Category'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'show_in_gallery': ('django.db.models.fields.BooleanField', [], {})
+        },
+        u'service.comment': {
+            'Meta': {'object_name': 'Comment'},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'comments'", 'to': u"orm['accountext.User']"}),
+            'body': ('django.db.models.fields.TextField', [], {}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'service': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'comments'", 'to': u"orm['service.Service']"})
+        },
+        u'service.discount': {
+            'Meta': {'object_name': 'Discount'},
+            'discount': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'service': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'discounts'", 'to': u"orm['service.Service']"}),
+            'valid_from': ('django.db.models.fields.DateField', [], {}),
+            'valid_to': ('django.db.models.fields.DateField', [], {})
+        },
+        u'service.service': {
+            'Meta': {'object_name': 'Service'},
+            'active_until': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['service.Category']", 'null': 'True', 'blank': 'True'}),
+            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'duration': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'employees': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['employees.Employee']", 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'price': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '7', 'decimal_places': '2', 'blank': 'True'}),
+            'service_provider': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'services'", 'to': u"orm['accountext.ServiceProvider']"}),
+            'sex': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'})
         }
     }
 
-    complete_apps = ['accountext']
+    complete_apps = ['service']
