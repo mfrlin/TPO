@@ -31,7 +31,7 @@
                             {{ reservation.service.name }}
                             <img src="{{ reservation.service.service_provider.logo_url }}"
                                     {{ reservation.service.service_provider|logowh:"80,130" }}
-                                class="logotip"/>
+                                 class="logotip"/>
                         </a>
                     </li>
                 {% endfor %}
@@ -59,9 +59,15 @@
                                     </h3>
                                     <!-- The subscribe button -->
                                     {% if user.is_authenticated %}
-                                    <a class="btn btn-primary"  href="{% url 'subscribe' %}?provider={{ provider.id }}">{% trans "Subscribe" %}</a>
+                                        {% if not user in provider.subscribers.all|dictsort:'id' %}
+                                            <a class="btn btn-primary"
+                                               href="{% url 'subscribe' %}?provider={{ provider.id }}">{% trans "Subscribe" %}</a>
+                                        {% else %}
+                                            <label class="label custom_label"
+                                               >{% trans "Already subscribed" %}</label>
+                                        {% endif %}
                                     {% endif %}
-                                    
+
                                     {% if provider.has_location and location %}
                                         <p>{{ provider|distance:location }} {% trans "away" %}</p>
                                     {% endif %}

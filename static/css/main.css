@@ -267,3 +267,9 @@ td.scheduleNonworking {
     height: 15px;
     font-size: 18px;
 }
+
+/* custom label for subscription */
+
+.label.custom_label{
+   color: #666;
+}

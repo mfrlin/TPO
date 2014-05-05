@@ -106,6 +106,7 @@ class ServiceProvider(models.Model):
             self.lat, self.lng = None, None
         super(ServiceProvider, self).save(*args, **kwargs)
 
+
 class User(AbstractUser):
     NOTIFICATION_TYPE_SMS = 0
     NOTIFICATION_TYPE_EMAIL = 1
