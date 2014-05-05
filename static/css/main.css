@@ -250,3 +250,26 @@ td.scheduleNonworking {
     position: relative;
     left: -20px;
 }
+
+/* newsletter */
+
+.nl_subject{
+    width: 350px;
+}
+
+.nl_content{
+    width: 350px;
+    height: 250px;
+}
+
+.nl_message{
+    padding: 5px;
+    height: 15px;
+    font-size: 18px;
+}
+
+/* custom label for subscription */
+
+.label.custom_label{
+   color: #666;
+}

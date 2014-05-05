@@ -8,42 +8,40 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'ServiceProvider.description'
-        db.add_column(u'accountext_serviceprovider', 'description',
-                      self.gf('django.db.models.fields.TextField')(null=True, blank=True),
+        # Deleting field 'EmployeeWorkingHours.service_provider'
+        db.delete_column(u'workinghours_employeeworkinghours', 'service_provider_id')
+
+        # Adding field 'EmployeeWorkingHours.employee'
+        db.add_column(u'workinghours_employeeworkinghours', 'employee',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=0, related_name='working_hours', to=orm['employees.Employee']),
                       keep_default=False)
 
-        # Adding field 'ServiceProvider.userpage_link'
-        db.add_column(u'accountext_serviceprovider', 'userpage_link',
-                      self.gf('django.db.models.fields.CharField')(max_length=40, unique=True, null=True),
+        # Deleting field 'EmployeeAbsence.service_provider'
+        db.delete_column(u'workinghours_employeeabsence', 'service_provider_id')
+
+        # Adding field 'EmployeeAbsence.employee'
+        db.add_column(u'workinghours_employeeabsence', 'employee',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=0, to=orm['employees.Employee']),
                       keep_default=False)
 
-        # Adding M2M table for field subscribers on 'ServiceProvider'
-        m2m_table_name = db.shorten_name(u'accountext_serviceprovider_subscribers')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('serviceprovider', models.ForeignKey(orm[u'accountext.serviceprovider'], null=False)),
-            ('user', models.ForeignKey(orm[u'accountext.user'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['serviceprovider_id', 'user_id'])
-
-
-        # Changing field 'ServiceProvider.visit_us'
-        db.alter_column(u'accountext_serviceprovider', 'visit_us', self.gf('django.db.models.fields.TextField')(null=True))
 
     def backwards(self, orm):
-        # Deleting field 'ServiceProvider.description'
-        db.delete_column(u'accountext_serviceprovider', 'description')
+        # Adding field 'EmployeeWorkingHours.service_provider'
+        db.add_column(u'workinghours_employeeworkinghours', 'service_provider',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=0, related_name='working_hours', to=orm['accountext.Employee']),
+                      keep_default=False)
 
-        # Deleting field 'ServiceProvider.userpage_link'
-        db.delete_column(u'accountext_serviceprovider', 'userpage_link')
+        # Deleting field 'EmployeeWorkingHours.employee'
+        db.delete_column(u'workinghours_employeeworkinghours', 'employee_id')
 
-        # Removing M2M table for field subscribers on 'ServiceProvider'
-        db.delete_table(db.shorten_name(u'accountext_serviceprovider_subscribers'))
+        # Adding field 'EmployeeAbsence.service_provider'
+        db.add_column(u'workinghours_employeeabsence', 'service_provider',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=0, to=orm['accountext.Employee']),
+                      keep_default=False)
 
+        # Deleting field 'EmployeeAbsence.employee'
+        db.delete_column(u'workinghours_employeeabsence', 'employee_id')
 
-        # Changing field 'ServiceProvider.visit_us'
-        db.alter_column(u'accountext_serviceprovider', 'visit_us', self.gf('django.db.models.fields.CharField')(max_length=256, null=True))
 
     models = {
         u'accountext.category': {
@@ -74,18 +72,9 @@ class Migration(SchemaMigration):
             'subscription_end_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 6, 4, 0, 0)'}),
             'subscription_mail_sent': ('django.db.models.fields.BooleanField', [], {}),
             'timezone': ('django.db.models.fields.CharField', [], {'default': "u'UTC'", 'max_length': '30'}),
-            'userpage_link': ('django.db.models.fields.CharField', [], {'max_length': '40', 'unique': 'True', 'null': 'True'}),
+            'userpage_link': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '40'}),
             'visit_us': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'zipcode': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'})
-        },
-        u'accountext.serviceproviderimage': {
-            'Meta': {'object_name': 'ServiceProviderImage'},
-            'delete_image': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'image_height': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
-            'image_width': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
-            'service_provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.ServiceProvider']"})
         },
         u'accountext.user': {
             'Meta': {'object_name': 'User'},
@@ -129,7 +118,52 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'employees.employee': {
+            'Meta': {'object_name': 'Employee'},
+            'employer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.ServiceProvider']", 'null': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'surname': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'workinghours.absence': {
+            'Meta': {'ordering': "['date_from', 'date_to']", 'object_name': 'Absence'},
+            'date_from': ('django.db.models.fields.DateField', [], {}),
+            'date_to': ('django.db.models.fields.DateField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'service_provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.ServiceProvider']"})
+        },
+        u'workinghours.employeeabsence': {
+            'Meta': {'ordering': "['date_from', 'date_to']", 'object_name': 'EmployeeAbsence'},
+            'date_from': ('django.db.models.fields.DateField', [], {}),
+            'date_to': ('django.db.models.fields.DateField', [], {}),
+            'employee': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['employees.Employee']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
+        u'workinghours.employeeworkinghours': {
+            'Meta': {'ordering': "['week_days', 'time_from', 'time_to']", 'object_name': 'EmployeeWorkingHours'},
+            'employee': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'working_hours'", 'to': u"orm['employees.Employee']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'time_from': ('django.db.models.fields.TimeField', [], {}),
+            'time_to': ('django.db.models.fields.TimeField', [], {}),
+            'week_days': ('django.db.models.fields.CommaSeparatedIntegerField', [], {'max_length': '13'})
+        },
+        u'workinghours.workinghours': {
+            'Meta': {'ordering': "['week_days', 'time_from', 'time_to']", 'object_name': 'WorkingHours'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'service_provider': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'working_hours'", 'to': u"orm['accountext.ServiceProvider']"}),
+            'time_from': ('django.db.models.fields.TimeField', [], {}),
+            'time_to': ('django.db.models.fields.TimeField', [], {}),
+            'week_days': ('django.db.models.fields.CommaSeparatedIntegerField', [], {'max_length': '13'})
+        },
+        u'workinghours.workinghoursbreak': {
+            'Meta': {'ordering': "['time_from', 'time_to']", 'object_name': 'WorkingHoursBreak'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'time_from': ('django.db.models.fields.TimeField', [], {}),
+            'time_to': ('django.db.models.fields.TimeField', [], {}),
+            'working_hours': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'breaks'", 'to': u"orm['workinghours.WorkingHours']"})
         }
     }
 
-    complete_apps = ['accountext']
+    complete_apps = ['workinghours']
