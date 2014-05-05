@@ -9,19 +9,22 @@
 {% block content %}
 
     <h1>{% trans 'Send a newsletter' %}</h1>
-	
-	<form action="{% url 'sendnewsletter' %}" method="POST">
-		{% csrf_token %}
-		<label for="subject">{% trans 'Subject' %}</label>
-		<input name="subject" type="text" autofocus="autofocus" required="required"
-			style="width:350px;" >
-		<br>
-		<label for="newsletter">{% trans 'Message' %}</label>
-	    <textarea name="newsletter" cols="80" rows="12" required="required"
-	    	style="width:350px;height:150px;" wrap="hard"></textarea>
-	    <br>
-	    <input class="btn btn-success" type="submit" value="Send newsletter">
-    	
-   	</form>
-   	
+
+    <form action="{% url 'sendnewsletter' %}" method="POST">
+        {% if message %}
+            <h2 class="label label-success nl_message">{{ message }}</h2>
+
+        {% endif %}
+        {% csrf_token %}
+        <label for="subject">{% trans 'Subject' %}</label>
+        <input name="subject" class="nl_subject" type="text" autofocus="autofocus" required="true">
+        <br>
+        <label for="newsletter">{% trans 'Message' %}</label>
+        <textarea name="newsletter" class="nl_content" required="true"
+                  wrap="hard"></textarea>
+        <br>
+        <input class="btn btn-success" type="submit" value="Send newsletter">
+
+    </form>
+
 {% endblock %}

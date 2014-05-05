@@ -8,6 +8,8 @@
 
 {% block content %}
 
-    <h1>{% trans 'You should use the form at 'Send a newsletter' to send newsletters.' %}</h1>
-   	
+    {% if message %}
+        <h2 class="label label-important nl_message">{{ message }}</h2>
+    {% endif %}
+
 {% endblock %}

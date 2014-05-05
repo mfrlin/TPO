@@ -57,7 +57,8 @@ def fillDatabase():
                               zipcode='100' + str(i - 1),
                               city="City" + str(i - 1), country="Country" + str(i - 1),
                               category_id=random.randint(1, len(ProvCat.objects.all())), subscription_mail_sent=0,
-                              reservation_confirmation_needed=0, display_generic_gallery=True, userpage_link=None)
+                              reservation_confirmation_needed=0, display_generic_gallery=True,
+                              userpage_link="Provider" + str(i - 1))
         obj.save()
         user = User.objects.get(id=i)
         user.service_provider_id = i

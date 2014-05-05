@@ -15,8 +15,17 @@ class Migration(SchemaMigration):
 
         # Adding field 'ServiceProvider.userpage_link'
         db.add_column(u'accountext_serviceprovider', 'userpage_link',
-                      self.gf('django.db.models.fields.CharField')(max_length=40, unique=True, null=True, blank=True),
+                      self.gf('django.db.models.fields.CharField')(max_length=40, unique=True, null=True),
                       keep_default=False)
+
+        # Adding M2M table for field subscribers on 'ServiceProvider'
+        m2m_table_name = db.shorten_name(u'accountext_serviceprovider_subscribers')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('serviceprovider', models.ForeignKey(orm[u'accountext.serviceprovider'], null=False)),
+            ('user', models.ForeignKey(orm[u'accountext.user'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['serviceprovider_id', 'user_id'])
 
 
         # Changing field 'ServiceProvider.visit_us'
@@ -28,6 +37,9 @@ class Migration(SchemaMigration):
 
         # Deleting field 'ServiceProvider.userpage_link'
         db.delete_column(u'accountext_serviceprovider', 'userpage_link')
+
+        # Removing M2M table for field subscribers on 'ServiceProvider'
+        db.delete_table(db.shorten_name(u'accountext_serviceprovider_subscribers'))
 
 
         # Changing field 'ServiceProvider.visit_us'
@@ -46,7 +58,7 @@ class Migration(SchemaMigration):
             'city': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'country': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'display_generic_gallery': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'display_generic_gallery': ('django.db.models.fields.BooleanField', [], {}),
             'gcal_id': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True'}),
             'gcal_updated': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -56,12 +68,13 @@ class Migration(SchemaMigration):
             'logo_height': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
             'logo_width': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'reservation_confirmation_needed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'reservation_confirmation_needed': ('django.db.models.fields.BooleanField', [], {}),
             'street': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'subscription_end_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 6, 3, 0, 0)'}),
-            'subscription_mail_sent': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'subscribers': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['accountext.User']", 'symmetrical': 'False'}),
+            'subscription_end_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 6, 4, 0, 0)'}),
+            'subscription_mail_sent': ('django.db.models.fields.BooleanField', [], {}),
             'timezone': ('django.db.models.fields.CharField', [], {'default': "u'UTC'", 'max_length': '30'}),
-            'userpage_link': ('django.db.models.fields.CharField', [], {'max_length': '40', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'userpage_link': ('django.db.models.fields.CharField', [], {'max_length': '40', 'unique': 'True', 'null': 'True'}),
             'visit_us': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'zipcode': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'})
         },
@@ -80,7 +93,7 @@ class Migration(SchemaMigration):
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -94,7 +107,7 @@ class Migration(SchemaMigration):
             'referral': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accountext.User']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'reservations': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'service_provider': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['accountext.ServiceProvider']", 'unique': 'True', 'null': 'True'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
         u'auth.group': {
