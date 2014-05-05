@@ -72,8 +72,8 @@
     {{ block.super }}
     (function(){
     function timeFields(el) {
-    el.find('.time-field').parent().datetimepicker({pickDate: false, pickSeconds: false, language: '
-    {{ request.LANGUAGE_CODE }}'});
+    el.find('.time-field').parent().datetimepicker({pickDate: false, pickSeconds: false, language: 
+	'{{ request.LANGUAGE_CODE }}'});
     $(document).trigger('sizing');
     }
 

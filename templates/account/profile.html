@@ -13,7 +13,13 @@
         {% trans "Referral URL" %}:
         <a href="{{ request.user.referral_url }}">{{ request.user.referral_url }}</a>
         {% if request.user.has_service_provider %}
+
             <h2>{% trans "Service provider" %}</h2>
+			{% if user_page_link%}
+			{% trans "User page URL" %}:
+			<a href="{{ user_page_link }}">{{ user_page_link }}</a>
+			{% endif %}
+			<hr/>
             <div class="row">
                 <div class="span4" id="service-provider-settings">
                     {{ service_provider_form|as_bootstrap }}
