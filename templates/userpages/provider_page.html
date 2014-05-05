@@ -9,163 +9,157 @@
 
 {% block content_browse %}
 
-	<div class="row-fluid">
-		<div>
-			<img src="{{ selected_provider.logo_url }}" {{ selected_provider|logowh:"150,200" }} class="logotip"/>
-		</div>
-		
-		<div class="">
-			<div class="row">
-				<h1>{{ selected_provider.name }}</h1>
-				<b>{{ selected_provider.full_address }}</b>
-				<div></div>
-				<div>{% trans "Phone" %}: {{ provider_user.phone }}</div>
-				<div>E-mail: {{ provider_user.email }}</div>
-			</div>
-		</div>
-	</div>	
-	<hr />
-	<div class="row-fluid">
-		
-		<div class="span8 well well-small white-bg clearfix">
-			{% if lat and lng %}
-			<div id="map-canvas"></div>
-			<script type="text/javascript"
-					src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCS-RtNtjWY3jTqLyF-1kxkiplZq7WuRgQ&amp;sensor=false"></script>
-					
-			{% endif %}
-			
-			<p>{{ selected_provider.visit_us }}</p>
-		</div>
-		<div class="span4 well well-small white-bg clearfix" id="working_hours_block">
-			<h4>{% trans "Working hours" %}</h4>
-			{% for wh_bl in working_hours_blocks %}
-			<div class="row-fluid">
-				<div class="span1"></div>
-				<div class="span5"><label>{{wh_bl.1 | upper}}</label> </div>
-				<div class="span6">
-				{% if wh_bl.2 %}
-					<span class="label label-success">
+    <div class="row-fluid">
+        <div>
+            <img src="{{ selected_provider.logo_url }}" {{ selected_provider|logowh:"150,200" }} class="logotip"/>
+        </div>
+
+        <div class="">
+            <div class="row">
+                <h1>{{ selected_provider.name }}</h1>
+                <b>{{ selected_provider.full_address }}</b>
+
+                <div></div>
+                <div>{% trans "Phone" %}: {{ provider_user.phone }}</div>
+                <div>E-mail: {{ provider_user.email }}</div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row-fluid">
+
+        <div class="span8 well well-small white-bg clearfix">
+            {% if lat and lng %}
+                <div id="map-canvas"></div>
+                <script type="text/javascript"
+                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCS-RtNtjWY3jTqLyF-1kxkiplZq7WuRgQ&amp;sensor=false"></script>
+
+            {% endif %}
+
+            <p>{{ selected_provider.visit_us }}</p>
+        </div>
+        <div class="span4 well well-small white-bg clearfix" id="working_hours_block">
+            <h4>{% trans "Working hours" %}</h4>
+            {% for wh_bl in working_hours_blocks %}
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span5"><label>{{ wh_bl.1 | upper }}</label></div>
+                    <div class="span6">
+                        {% if wh_bl.2 %}
+                            <span class="label label-success">
 					{% for wh_b in wh_bl.2 %}
-					<div class="row-fluid">{{ wh_b.0|time:"h:i A" }} - {{ wh_b.1|time:"h:i A" }}</div>
-					{%endfor%}
+                        <div class="row-fluid">{{ wh_b.0|time:"h:i A" }} - {{ wh_b.1|time:"h:i A" }}</div>
+                    {% endfor %}
 					</span>
-				{% else %}
-					<span class="label label-important">{% trans "Closed" %}</span>
-				{% endif %}
-				</div>
-			</div>
-			{%endfor%}
-		</div>
-	</div>
-<hr />
-   <div class="row-fluid">
+                        {% else %}
+                            <span class="label label-important">{% trans "Closed" %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr/>
+    <div class="row-fluid">
         <div class="span12">
-			{% if selected_provider.description %}
-			<p> {{selected_provider.description}} </p>
-			{% endif %}
+            {% if selected_provider.description %}
+                <p> {{ selected_provider.description }} </p>
+            {% endif %}
             {% if services %}
-				<h4>{% trans "Services" %}</h4>
-				
-				{% for cat_id, cat_serv in categorized_services.items %}
-					<div class="span6"  style="margin-left:10px;margin-right:0px">
-					
-						<hr/>
-						{% if cat_serv.0 %}
-							<p><b>{{cat_serv.0}}</b></p>
-						{% endif %}
-						{% for service in cat_serv.1 %}
-							<!--  well well-small white-bg -->
-							
-								<div class="span12 well well-small white-bg clearfix" style="margin-bottom:5px;">
-									
-										<div class="pull-left">
-											
-											<a href="#collapse_id_{{ service.id }}" data-toggle="collapse" class="btn btn-small">
-												<span class="icon-plus"></span>
-											</a>
-											
-											<a href="{% url 'service' service.id %}" style="color: black" class="btn btn-small">
-												<span class="icon-bookmark"></span>
+                <h4>{% trans "Services" %}</h4>
+
+                {% for cat_id, cat_serv in categorized_services.items %}
+                    <div class="span6" style="margin-left:10px;margin-right:0px">
+
+                        <hr/>
+                        {% if cat_serv.0 %}
+                            <p><b>{{ cat_serv.0 }}</b></p>
+                        {% endif %}
+                        {% for service in cat_serv.1 %}
+                            <!--  well well-small white-bg -->
+
+                            <div class="span12 well well-small white-bg clearfix" style="margin-bottom:5px;">
+
+                                <div class="pull-left">
+                                    <a href="#collapse_id_{{ service.id }}" data-toggle="collapse"
+                                       class="btn btn-small">
+                                        <span class="icon-plus"></span>
+                                    </a>
+
+                                    <a href="{% url 'service' service.id %}" style="color: black" class="btn btn-small">
+                                        <span class="icon-bookmark"></span>
 												<span class="discount font-weight:bold" data-toggle="tooltip"
-													data-placement="top"
-													title="{{service.description}}">{{ service.name }}</span>
-											</a>
-											
-											
-											
-											
-										</div>
-								
-										<div class="pull-right">
-											<div class="discount label
+                                                      data-placement="top"
+                                                      title="{{ service.description }}">{{ service.name }}</span>
+                                    </a>
+                                </div>
+
+                                <div class="pull-right">
+                                    <div class="discount label
 												{% if service.get_discount %}
 													label-important
 												{% else %}
 													label-default
 												{% endif %}"
-												
-												data-toggle="tooltip"
-												data-placement="top"
-												title="{% if service.get_discount %}
+
+                                         data-toggle="tooltip"
+                                         data-placement="top"
+                                         title="{% if service.get_discount %}
 												{% trans "Discounted until" %} {{ service.get_discount.valid_to }}
 											{% endif %}">{{ service.price_with_unit }}</div>
-										</div>
-										
-										{% if service.description %}
-												<div class="collapse row-fluid clearfix" id="collapse_id_{{ service.id }}" >
-													<hr/>
-													<p><span class>{{service.description}}</span></p>
-													<p>{% trans "Duration" %}: {{ service.duration_with_unit }}</p>
-												</div>
-										{% endif %}
-								</div>
-					
-						{% endfor %}
-					</div>
-				{% endfor %}
+                                </div>
+
+                                {% if service.description %}
+                                    <div class="collapse row-fluid clearfix" id="collapse_id_{{ service.id }}">
+                                        <hr/>
+                                        <p><span class>{{ service.description }}</span></p>
+
+                                        <p>{% trans "Duration" %}: {{ service.duration_with_unit }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                {% endfor %}
 
             {% endif %}
         </div>
 
     </div>
-	{% if generic_gallery or gallery %}
+    {% if generic_gallery or gallery %}
+        <hr/>
+        <div class="row-fluid">
+            <div class="span12 clearfix media">
+                <h4>{% trans "Gallery" %}</h4>
 
-		<hr />
-		
-		<div class="row-fluid">
-			
-			
-			<div class="span12 clearfix media">
-				<h4>{% trans "Gallery" %}</h4>
-	
-				{% for img in gallery %}
-					<div class="col-lg-3 col-md-4 col-xs-6" style="margin-left:5px;margin-right:5px">
-						<a class="fancybox thumbnail" href="{{ MEDIA_URL }}{{ img.image.url }}"
-						   data-fancybox-group="gallery" title="{{ img.image }}">
-							<img src="{{ MEDIA_URL }}{{ img.image.url }}" class="img-responsive" alt="" width="140"
-								 height="140"/>
-						</a>
-					</div>
-				{% endfor %}
-				{% if generic_gallery %}
-					{% for image_link in image_list %}
-						<div class="col-lg-3 col-md-4 col-xs-6 generic"  style="margin-left:5px;margin-right:5px">>
-							<a class="fancybox thumbnail"
-							   href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
-							   data-fancybox-group="gallery"
-							   title="{{ generic_gallery_id_name }}/{{ image_link }}">
-								<img src="
+                {% for img in gallery %}
+                    <div class="col-lg-3 col-md-4 col-xs-6" style="margin-left:5px;margin-right:5px">
+                        <a class="fancybox thumbnail" href="{{ MEDIA_URL }}{{ img.image.url }}"
+                           data-fancybox-group="gallery" title="{{ img.image }}">
+                            <img src="{{ MEDIA_URL }}{{ img.image.url }}" class="img-responsive" alt="" width="140"
+                                 height="140"/>
+                        </a>
+                    </div>
+                {% endfor %}
+                {% if generic_gallery %}
+                    {% for image_link in generic_gallery %}
+                        <div class="col-lg-3 col-md-4 col-xs-6 generic" style="margin-left:5px;margin-right:5px">
+                            <a class="fancybox thumbnail"
+                               href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
+                               data-fancybox-group="gallery"
+                               title="{{ generic_gallery_id_name }}/{{ image_link }}">
+                                <img src="
 										{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
-									 class="img-responsive" alt="" width="140" height="140"/>
-							</a>
-						</div>
-					{% endfor %}
-				{% endif %}	
-			</div>
-		</div>
-	{% endif %}
- 
+                                     class="img-responsive" alt="" width="140" height="140"/>
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}
 
 {% block javascript %}
@@ -176,8 +170,8 @@
     {% include "common/map.js" %}
     })();
     $(document).ready(function() {
-		$('.fancybox').fancybox();
-		$('.discount').tooltip();
+    $('.fancybox').fancybox();
+    $('.discount').tooltip();
     });
-	
+
 {% endblock %}
