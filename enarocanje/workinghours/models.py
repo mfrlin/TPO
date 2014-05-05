@@ -67,7 +67,7 @@ class Absence(models.Model):
 
 
 class EmployeeWorkingHours(models.Model):
-    service_provider = models.ForeignKey(Employee, related_name='working_hours')
+    employee = models.ForeignKey(Employee, related_name='working_hours')
     time_from = models.TimeField(_('time from'))
     time_to = models.TimeField(_('time to'))
     week_days = models.CommaSeparatedIntegerField(_('week days'), max_length=13)
@@ -90,7 +90,7 @@ class EmployeeWorkingHours(models.Model):
 
 
 class EmployeeAbsence(models.Model):
-    service_provider = models.ForeignKey(Employee)
+    employee = models.ForeignKey(Employee)
     date_from = models.DateField(_('date from'))
     date_to = models.DateField(_('date to'))
 

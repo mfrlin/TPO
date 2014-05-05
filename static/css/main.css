@@ -244,3 +244,9 @@ td.scheduleNonworking {
 .well.white-bg{
 	background-color:white
 }
+
+.span4.service_checkbox > ul{
+    list-style: none;
+    position: relative;
+    left: -20px;
+}
