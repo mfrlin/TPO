@@ -15,13 +15,10 @@ class ListCustomerView(ListView):
 
     def get_queryset(self):
         provider = self.request.user.service_provider
-        sort_by = self.request.GET
-        if not sort_by:
-            sort_by = 'name'
-        else:
-            sort_by = sort_by['sort_by']
+        sort_by = self.request.GET.get('sort_by', 'name')
         if sort_by == 'name':
-            return Customer.objects.filter(service=provider).order_by('name')
+            return Customer.objects.filter(service=provider).extra(
+                select={'lower_name': 'lower(name)'}).order_by('lower_name')
         else:
             return Customer.objects.filter(service=provider).order_by('-last_reservation')
 
