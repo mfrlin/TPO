@@ -7,14 +7,14 @@ from south.modelsinspector import add_introspection_rules
 import pytz
 from django.utils import timezone as tz
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.utils.translation import ugettext_lazy as _
 
 from tasks import send_reminder
 
 from enarocanje.accountext.models import User, ServiceProvider
 from enarocanje.service.models import Service
-
+from enarocanje.customers.models import Customer
 add_introspection_rules([], ['^oauth2client\.django_orm\.CredentialsField'])
 
 
@@ -58,6 +58,34 @@ class Reservation(models.Model):
 
     class Meta:
         unique_together = ('service_provider', 'gcalid')
+
+
+def customer_handler(sender, instance, **kwargs):
+    if instance.user:
+        c, created = Customer.objects.get_or_create(user=instance.user_id)
+        if created:
+            c.provider = instance.service_provider
+            c.name = instance.user_fullname
+            c.phone = instance.user_phone
+            c.email = instance.user_email
+        c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
+        c.num_reservations += 1
+        c.save()
+    else:
+        c = Customer.objects.filter(name=instance.user_fullname)
+        if c:
+            c = c[0]
+        else:
+            c = Customer()
+            c.provider = instance.service_provider
+            c.name = instance.user_fullname
+            c.phone = instance.user_phone
+            c.email = instance.user_email
+    c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
+    c.num_reservations += 1
+    c.save()
+
+post_save.connect(customer_handler, sender=Reservation)
 
 
 def reservation_handler(sender, instance, **kwargs):
