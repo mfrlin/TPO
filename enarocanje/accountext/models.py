@@ -20,7 +20,8 @@ import enarocanje.common.config as config
 class Category(models.Model):
     name = models.CharField(_('name'), max_length=100)
 
-    generic_gallery = models.CharField(_('Generic gallery'), choices=config.GENERIC_GALLERY_CHOICES, max_length=64, null=True, blank=True)
+    generic_gallery = models.CharField(_('Generic gallery'), choices=config.GENERIC_GALLERY_CHOICES, max_length=64,
+                                       null=True, blank=True)
 
     def __unicode__(self):
         return self.name

@@ -58,13 +58,16 @@
                                 href="{% url 'myworkinghours' %}">{% trans "My Working Hours" %}</a></li>
                         <li class="{% block main_nav_reservations %}{% endblock %}"><a
                                 href="{% url 'myreservations' %}">{% trans "My Reservations" %}</a></li>
-                        
-                        <!-- The service provider can now click on a 'send a newsletter' button -->
-                        <li class="{% block main_nav_mynewsletter %}{% endblock %}"><a
-                        		href="{% url 'mynewsletter' %}">{% trans "Send a newsletter" %}</a></li>
-                        <!-- the main_nav_newsletter can be found in //templates/newsletter/mynewsletter.html -->
+                        <li class="{% block main_nav_myemployees %}{% endblock %}"><a
+                                href="{% url 'myemployees' %}">{% trans "My Employees" %}</a></li>
                         <li class="{% block main_nav_customers %}{% endblock %}"><a
                                 href="{% url 'mycustomers' %}">{% trans "My Customers" %}</a></li>
+
+                        <!-- The service provider can now click on a 'send a newsletter' button -->
+                        <li class="{% block main_nav_mynewsletter %}{% endblock %}"><a
+                                href="{% url 'mynewsletter' %}">{% trans "Send a newsletter" %}</a></li>
+                        <!-- the main_nav_newsletter can be found in //templates/newsletter/mynewsletter.html -->
+
                     {% endif %}
                 </ul>
                 {% if user.has_service_provider %}
@@ -165,7 +168,8 @@
         $(document).ready(function () {
             $.cookieCuttr(
                     {
-                        cookieMessage: {% blocktrans %} 'We use cookies on this website, you can <a href="{{cookiePolicyLink}}" title="read about our cookies">read about them here</a>. To use the website as intended please...'{% endblocktrans %},
+                        cookieMessage: {% blocktrans %}
+                            'We use cookies on this website, you can <a href="{{cookiePolicyLink}}" title="read about our cookies">read about them here</a>. To use the website as intended please...'{% endblocktrans %},
                         cookieAnalytics: false,
                         cookiePolicyLink: '/cookies/'
                     }

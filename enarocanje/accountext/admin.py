@@ -14,10 +14,19 @@ class UserAdmin(DefaultUserAdmin):
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
-    list_display = ('email', 'first_name', 'last_name', 'phone', 'is_staff', 'referral')
+    list_display = (
+        'email', 'first_name', 'last_name', 'phone', 'coupons', 'reservations', 'is_staff', 'referral')
     form = UserChangeForm
 
 
+class ServiceProviderAdmin(admin.ModelAdmin):
+    list_display = ('name', 'street')
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+
+
 admin.site.register(User, UserAdmin)
-admin.site.register(ServiceProvider)
-admin.site.register(Category)
+admin.site.register(ServiceProvider, ServiceProviderAdmin)
+admin.site.register(Category, CategoryAdmin)

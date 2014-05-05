@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _, ugettext
 
 from enarocanje.accountext.models import ServiceProvider, User
+from enarocanje.employees.models import Employee
 
 
 class Category(models.Model):
@@ -32,6 +33,7 @@ class Service(models.Model):
     sex = models.CharField(_('sex'), choices=SEX_SERVICE_CHOICES, max_length=1, null=True, blank=True)
     category = models.ForeignKey(Category, null=True, blank=True)
     active_until = models.DateField(_('active until'), null=True, blank=True)
+    employees = models.ManyToManyField(Employee, null=True, blank=True)
 
     def __unicode__(self):
         return self.name
