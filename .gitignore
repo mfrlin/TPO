@@ -7,3 +7,6 @@ enarocanje.sublime-workspace
 .idea
 .allow-devtools-edit
 storage
+.project
+.pydevproject
+.settings
