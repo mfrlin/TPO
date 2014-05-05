@@ -15,13 +15,15 @@ from tasks import send_reminder
 from enarocanje.accountext.models import User, ServiceProvider
 from enarocanje.service.models import Service
 from enarocanje.customers.models import Customer
+
 add_introspection_rules([], ['^oauth2client\.django_orm\.CredentialsField'])
 
 
 class Reservation(models.Model):
     """Reservation model - who made a reservation and when"""
     user = models.ForeignKey(User, null=True)  # null for gcal imported reservations
-    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL, related_name='service')  # service can be deleted
+    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL,
+                                related_name='service')  # service can be deleted
     date = models.DateField(null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
     gcalid = models.CharField(max_length=255, null=True)
@@ -61,14 +63,17 @@ class Reservation(models.Model):
 
 
 def customer_handler(sender, instance, **kwargs):
+    date = datetime.datetime.combine(instance.date, instance.time)
     if instance.user:
-        c, created = Customer.objects.get_or_create(user=instance.user_id)
+        c, created = Customer.objects.get_or_create(user_id=instance.user, last_reservation=date,
+                                                    service_id=instance.service_provider.id)
+        print c, created
         if created:
             c.provider = instance.service_provider
             c.name = instance.user_fullname
             c.phone = instance.user_phone
             c.email = instance.user_email
-        c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
+            c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
         c.num_reservations += 1
         c.save()
     else:
@@ -84,6 +89,7 @@ def customer_handler(sender, instance, **kwargs):
     c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
     c.num_reservations += 1
     c.save()
+
 
 post_save.connect(customer_handler, sender=Reservation)
 
@@ -115,6 +121,7 @@ def reservation_handler(sender, instance, **kwargs):
 
         result = send_reminder.apply_async(eta=dt - diff, kwargs={'reservation': instance})
         instance.task_id = result.task_id
+
 
 pre_save.connect(reservation_handler, sender=Reservation)
 

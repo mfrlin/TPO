@@ -22,7 +22,7 @@ def send(request):
         except BadHeaderError:
             return HttpResponse('Invalid header found.')
         return render(request, 'newsletter/mynewsletter.html',
-                      {'message': _('Your message has been send to all of your subscribers.')})
+                      {'message': _('Your message has been sent to all of your subscribers.')})
     else:
         return render(request, 'newsletter/post.html',
                       {'message': _('You should use the form at \'Send a newsletter\' to send newsletters.')})
