@@ -55,7 +55,7 @@ $(document).ready(function () {
 			singleFileUploads: true,
 			sequentialUploads: true,
 			paramName:'image',
-			acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
+			//acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
 			add: function(e, data){
 			},
 			done: function (e, data) {
@@ -70,9 +70,11 @@ $(document).ready(function () {
 			var added_count = 0;
 		
 			$.each(data.files, function (index, file) {
-				if(file.name==='.'){
-					return;
-				}
+                var reg = /jpe?g|png|JPE?G|PNG/;
+                var ext = file.name.split('.').slice(-1)[0];
+                if (reg.exec(ext) === null){
+                    return;
+                }
 
 				var row = $('<div class="fluid-row clearfix"><div class="innerdiv span12"></div></div>');
 				
@@ -125,13 +127,13 @@ $(document).ready(function () {
 				
 				if('error' in file){
 					data.context_row.find('span.caption-name')
-						.html('<span class="label label-important" >{% trans "Error" %}</span> <span class="">'
+						.html('<span class="label label-important" >'+gettext("Error")+'</span> <span class="">'
 							+file.name+' {%trans "failed with" %} '+file.error+'</span>');
 				}else{
 					addGalleryImage(file);
 					
 					data.context_row.find('span.caption-name')
-						.html('<span class="label label-success" >{% trans "Completed" %}</span> '+file.name);
+						.html('<span class="label label-success" >'+gettext("Completed")+'</span> '+file.name);
 						
 				}
 			});
