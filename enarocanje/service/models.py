@@ -10,7 +10,7 @@ from enarocanje.employees.models import Employee
 
 class Category(models.Model):
     name = models.CharField(_('name'), max_length=100)
-    
+
     show_in_gallery = models.BooleanField(_('Show in gallery'))
 
     def __unicode__(self):
@@ -51,7 +51,11 @@ class Service(models.Model):
         discount = self.get_discount()
         if discount:
             #so 99% and similar discounts don't return too many decimal places
-            return round(self.price - discount.discount * self.price / 100, 2)
+            n = round(self.price - discount.discount * self.price / 100, 2)
+            if n % 1 == 0:
+                return int(n)
+            else:
+                return n
         else:
             return self.price
 
