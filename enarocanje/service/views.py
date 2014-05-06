@@ -36,7 +36,7 @@ import enarocanje.common.config as config
 
 @for_service_providers
 def async_file_upload(request, id):
-    print '='*10,"async_file_upload",'='*10
+    #print '='*10,"async_file_upload",'='*10
     service_provider = get_object_or_404(ServiceProvider, id=id)
     
     status = 200
@@ -66,7 +66,7 @@ def async_file_upload(request, id):
     json_payload = {};
     json_payload['files'] = [file];
 
-    print '='*35
+    #print '='*35
 
     return HttpResponse(json.dumps(json_payload), content_type="application/json", status=status)
 

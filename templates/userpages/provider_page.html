@@ -8,6 +8,16 @@
 {% block browse_nav_services %}active{% endblock %}
 
 {% block content_browse %}
+	<style>
+		.divider{
+			position:absolute;
+			left:50%;
+			top:10%;
+			bottom:10%;
+			border-left:1px solid white;
+		}
+	
+	</style>
 
     <div class="row-fluid">
         <div>
@@ -66,63 +76,95 @@
                 <p> {{ selected_provider.description }} </p>
             {% endif %}
             {% if services %}
-                <h4>{% trans "Services" %}</h4>
+                
+				<h4>{% trans "Services" %}</h4>
 
-                {% for cat_id, cat_serv in categorized_services.items %}
-                    <div class="span6" style="margin-left:10px;margin-right:0px">
+				{% if cats %}
 
-                        <hr/>
-                        {% if cat_serv.0 %}
-                            <p><b>{{ cat_serv.0 }}</b></p>
-                        {% endif %}
-                        {% for service in cat_serv.1 %}
-                            <!--  well well-small white-bg -->
+					<p>{% trans "We are providing:"%}</p>
+					
+					<ul class="unstyled inline">
+						{% for id,categ_name in cats.items %}
+						<li><span class="icon-ok"></span> {{categ_name}}</li>
+						{% endfor %}
+					</ul>
+				
+				{% endif %}
 
-                            <div class="span12 well well-small white-bg clearfix" style="margin-bottom:5px;">
+				<div class="tab-content">
+				{% for service_page in services_pages %}
+					<div class="tab-pane {% if forloop.counter0 == 0 %}active{% endif %} " id="page_{{forloop.counter0}}"  style="padding-left:0px;padding-right:5px">
+						<div class="row-fluid">
+						{% for category in service_page %}
+							<div class="span12 clearfix"  style="margin:0">
+								{% if category.category_name %}
+									<p><b>{{ category.category_name }}</b></p>
+								{% endif %}
+								
+								{% for service in category.services%}
+									<div class="span12 well well-small white-bg clearfix" style="margin-bottom:5px;margin-left:0px;margin-right:0px">
+										<div class="pull-left">
+											<a href="#collapse_id_{{ service.id }}" data-toggle="collapse"
+											   class="btn btn-small">
+												<span class="icon-question-sign"></span>
+											</a>
 
-                                <div class="pull-left">
-                                    <a href="#collapse_id_{{ service.id }}" data-toggle="collapse"
-                                       class="btn btn-small">
-                                        <span class="icon-plus"></span>
-                                    </a>
+											<a href="{% url 'service' service.id %}" style="color: black" class="btn btn-small">
+												<span class="icon-bookmark"></span>
+														<span class="discount font-weight:bold" data-toggle="tooltip"
+															  data-placement="top"
+															  title="{{ service.description }}">{{ service.name }}</span>
+											</a>
+										</div>
 
-                                    <a href="{% url 'service' service.id %}" style="color: black" class="btn btn-small">
-                                        <span class="icon-bookmark"></span>
-												<span class="discount font-weight:bold" data-toggle="tooltip"
-                                                      data-placement="top"
-                                                      title="{{ service.description }}">{{ service.name }}</span>
-                                    </a>
-                                </div>
+										<div class="pull-right">
+											<div class="discount label
+														{% if service.get_discount %}
+															label-important
+														{% else %}
+															label-default
+														{% endif %}"
 
-                                <div class="pull-right">
-                                    <div class="discount label
-												{% if service.get_discount %}
-													label-important
-												{% else %}
-													label-default
-												{% endif %}"
+												 data-toggle="tooltip"
+												 data-placement="top"
+												 title="{% if service.get_discount %}
+														{% trans "Discounted until" %} {{ service.get_discount.valid_to }}
+													{% endif %}">{{ service.price_with_unit }}</div>
+										</div>
 
-                                         data-toggle="tooltip"
-                                         data-placement="top"
-                                         title="{% if service.get_discount %}
-												{% trans "Discounted until" %} {{ service.get_discount.valid_to }}
-											{% endif %}">{{ service.price_with_unit }}</div>
-                                </div>
+										{% if service.description %}
+											<div class="collapse row-fluid clearfix" id="collapse_id_{{ service.id }}">
+												<hr/>
+												<p><span class>{{ service.description }}</span></p>
 
-                                {% if service.description %}
-                                    <div class="collapse row-fluid clearfix" id="collapse_id_{{ service.id }}">
-                                        <hr/>
-                                        <p><span class>{{ service.description }}</span></p>
-
-                                        <p>{% trans "Duration" %}: {{ service.duration_with_unit }}</p>
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-
+												<p>{% trans "Duration" %}: {{ service.duration_with_unit }}</p>
+											</div>
+										{% endif %}
+									</div>
+								{% endfor %}
+							</div>
+						{% endfor %}
+						</div>
+					</div>
+				{% endfor %}
+				</div>
+				
+				{% if services_pages.count > 1 %}
+				
+				<div class="nav pagination" id="page_tabs">
+				  <ul>
+					<!--<li><a href="#" id="prev_page">Prev</a></li>-->
+					{% for service_page in services_pages %}
+						<li class="{% if forloop.counter0 == 0 %}active{% endif %}" >
+							<a href="#page_{{forloop.counter0}}" data-toggle="tab">{{ forloop.counter0 }}</a>
+						</li>
+					{% endfor %}
+					<!--<a href="#" id="next_page">Next</a></li> -->
+				  </ul>
+				</div>
+				
+				{% endif %}
+				
             {% endif %}
         </div>
 

@@ -4,6 +4,8 @@ import urllib
 import re
 import base64
 
+import operator
+
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -44,22 +46,57 @@ def userpage_main(request, user_link):
 
     categories = Category.objects.all()
 
-    categorized_services = {}
+#    categorized_services = {}
 
     cats = dict(map(lambda x: (x.id, x.name), categories))
 
-    for service in services:
-        if service.category_id in categorized_services:
-            categorized_services[service.category_id][1].append(service)
-        else:
-            categorized_services[service.category_id] \
-                = (cats[service.category_id] if service.category_id in cats else None, [service])
+#    for service in services:
+#        if service.category_id in categorized_services:
+#            categorized_services[service.category_id][1].append(service)
+#        else:
+#            categorized_services[service.category_id] \
+#                = (cats[service.category_id] if service.category_id in cats else None, [service])
+
+    page_size = 10
+
+    prev_cat_id = -1
+    cc = 0
+    
+    services_list_sorted_by_cat = sorted(list(services), key=operator.attrgetter('category_id'))
+
+    services_pages = []
+    for i, service in enumerate(services_list_sorted_by_cat):
+        
+        if i%page_size == 0:
+            prev_cat_id = -1
+            services_pages.append([])
+        page = services_pages[-1]
+        
+        paged_category = None
+        if(service.category_id != prev_cat_id):
+            prev_cat_id = service.category_id
+            
+            paged_category = {'category_id':service.category_id,
+                                'category_name':cats[service.category_id] if service.category_id in cats else  None,'services':[]}
+            page.append(paged_category)
+
+        #print paged_category
+        #print page
+
+        paged_category = page[-1]
+        
+        #print paged_category
+        #print service.category_id
+            
+        paged_category['services'].append(service)
+
+    #dxx = json.dumps(services_pages, sort_keys=True, indent=4, separators=(',', ': '))
 
     service_provider_category = selected_provider.category
 
     generic_gallery = None
     generic_gallery_id_name = None
-    print selected_provider.display_generic_gallery
+    #print selected_provider.display_generic_gallery
     if selected_provider.display_generic_gallery:
         if service_provider_category:
             generic_gallery_id_name = service_provider_category.generic_gallery
