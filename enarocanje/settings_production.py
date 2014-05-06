@@ -9,3 +9,5 @@ DATABASES = {
         'USER': '',
     }
 }
+
+BASE_URL = 'http://boc.fri.uni-lj.si'
