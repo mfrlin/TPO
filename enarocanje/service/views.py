@@ -9,13 +9,14 @@ from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.http import HttpResponseRedirect
+
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.images import ImageFile
 from django.core.files.base import ContentFile
@@ -23,7 +24,7 @@ from django.core.files.base import ContentFile
 from cStringIO import StringIO
 
 from enarocanje.accountext.decorators import for_service_providers
-from enarocanje.accountext.forms import ServiceProviderImageForm, ServiceProviderMultiImageHelperForm
+from enarocanje.accountext.forms import ServiceProviderImageForm, ServiceProviderMultiImageHelperForm, ServiceProviderImageFormSet
 from enarocanje.accountext.models import ServiceProvider, ServiceProviderImage, Category as SPCategory
 from enarocanje.service.models import Category as ServiceCategory, Service
 from enarocanje.reservations.models import Reservation
@@ -33,6 +34,41 @@ from models import Service, Category, Discount, Comment
 import enarocanje.common.config as config
 # List of services for editing
 
+@for_service_providers
+def async_file_upload(request, id):
+    print '='*10,"async_file_upload",'='*10
+    service_provider = get_object_or_404(ServiceProvider, id=id)
+    
+    status = 200
+    
+    if(request.user.service_provider_id != int(id)):
+        return HttpResponse("Not allowed", status=403)
+        return
+    
+    name = request.FILES.getlist('image')[0].name
+    size = request.FILES.getlist('image')[0].size
+
+    file = {}
+    file['name'] = name
+    file['size'] = size
+
+    image_form = ServiceProviderImageForm(request.POST, request.FILES)
+    if image_form.is_valid():
+        image = image_form.save(commit=False)
+        image.service_provider_id = id
+        image.save()
+        
+        file['id'] = image.id
+        file['url'] = image.image.url
+    else:
+        file['error'] = image_form.error.encode('utf-8')
+
+    json_payload = {};
+    json_payload['files'] = [file];
+
+    print '='*35
+
+    return HttpResponse(json.dumps(json_payload), content_type="application/json", status=status)
 
 def view_gallery(request, id):
     GENERIC_GALLERY_URL = config.GENERIC_GALLERY_URL
@@ -80,26 +116,24 @@ def view_gallery(request, id):
             edit_gallery = True
 
     if request.method == 'POST':
+        
+    
         if request.POST.get('action') == 'delete':
-            form = ServiceProviderMultiImageHelperForm()
             if request.POST.getlist('img_id'):
                 for img_id in request.POST.getlist('img_id'):
-                    print "iiid", img_id
+                    #print "iiid", img_id
                     img = ServiceProviderImage.objects.get(id=int(img_id))
                     img.delete()
 
         if request.POST.get('action') == 'enable_generic_gallery':
-            form = ServiceProviderMultiImageHelperForm()
             service_provider.display_generic_gallery = True
             service_provider.save()
 
         if request.POST.get('action') == 'disable_generic_gallery':
-            form = ServiceProviderMultiImageHelperForm()
             service_provider.display_generic_gallery = False
             service_provider.save()
 
         if request.POST.get('action') == 'upload_photo':
-            form = ServiceProviderMultiImageHelperForm()
 
             error_msg = None
 
@@ -127,26 +161,11 @@ def view_gallery(request, id):
                         image.service_provider_id = request.user.service_provider_id
                         image.save()
                     else:
-                        form.error_list.append(helper_form.errors)
-
+                        error_msg = helper_form.image.error
                 else:
                     error_msg = _("Error during decoding")
             else:
                 error_msg = _("No image was submitted")
-
-        if request.POST.get('action') == 'update':
-            form = ServiceProviderMultiImageHelperForm(request.POST, request.FILES)
-
-            print form.service_provider_forms
-            for uploaded_file_form in form.service_provider_forms:
-                if uploaded_file_form.is_valid():
-                    image = uploaded_file_form.save(commit=False)
-                    image.service_provider_id = request.user.service_provider_id
-                    image.save()
-                else:
-                    form.error_list.append(uploaded_file_form.errors)
-    else:
-        form = ServiceProviderMultiImageHelperForm()
 
     return render_to_response('browse/gallery.html', locals(), context_instance=RequestContext(request))
 

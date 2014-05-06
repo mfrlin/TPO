@@ -2,6 +2,8 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import UserChangeForm as DefaultUserChangeForm
 from django.forms import ModelForm, BaseForm, Form
+from django.forms.formsets import formset_factory
+
 from django.utils.translation import ugettext_lazy as _
 
 from enarocanje.common.widgets import ClearableImageInput
@@ -9,6 +11,7 @@ from enarocanje.reservations.gcal import reset_sync, sync
 from models import ServiceProvider, ServiceProviderImage, User
 
 from misc import MultiImageField, CustomImageField
+
 
 
 class UserChangeForm(DefaultUserChangeForm):
@@ -76,16 +79,19 @@ class ServiceProviderImageForm(ModelForm):
         if not super(ServiceProviderImageForm, self).is_valid():
             return False
 
-        images = self.files['image']
+        imageA = self.files.getlist('image') if not isinstance(self.files,dict) else self.files['image']
 
-        if not images:
+        if not imageA:
             self.error = _("No files")
             return False
 
-        image = images[0]
+        #imageA = images[0]
+        if imageA.name == "logo.png":
+            self.error = _("Artificial error")
+            return False
 
-        if image:
-            if image._size > 15 * 1024 * 1024:
+        if imageA:
+            if imageA._size > 15 * 1024 * 1024:
                 self.error = _("Image bigger than 15MB!")
                 return False
 
@@ -111,4 +117,4 @@ class ServiceProviderMultiImageHelperForm(Form):
                 for i, img in enumerate(FILES.getlist('images')):
                     self.service_provider_forms.append(ServiceProviderImageForm(FIELDS, {'image': [img]}, file_id=i))
 
-
+ServiceProviderImageFormSet = formset_factory(ServiceProviderImageForm)

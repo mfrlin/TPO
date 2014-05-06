@@ -20,4 +20,4 @@ class MultiImageField(forms.ImageField):
 
 class CustomImageField(forms.ImageField):
     def to_python(self, data):
-        return super(CustomImageField, self).to_python(data[0])
+        return super(CustomImageField, self).to_python(data)

@@ -19,12 +19,12 @@
     </style>
 
     <h1>{% trans "Gallery" %}</h1>
-    <form method="POST" enctype="multipart/form-data" action="" class="">
+    <form method="POST" enctype="multipart/form-data" action="" class="" id="gallery_form">
         {% csrf_token %}
 
         <div class="row" style="margin-left:0px">
             {% for img in gallery %}
-                <div class="col-lg-3 col-md-4 col-xs-6">
+                <div class="col-lg-3 col-md-4 col-xs-6 real-gallery-image">
                     <a class="fancybox thumbnail" href="{{ MEDIA_URL }}{{ img.image.url }}"
                        data-fancybox-group="gallery" title="{{ img.image }}">
                         <img src="{{ MEDIA_URL }}{{ img.image.url }}" class="img-responsive" alt="" width="140"
@@ -37,6 +37,8 @@
                     {% endif %}
                 </div>
             {% endfor %}
+
+				<div id="gallery_anchor" style="display:hidden"></div>
 
             {% if service_provider.display_generic_gallery %}
                 {% if generic_gallery %}
@@ -108,46 +110,71 @@
         {% if edit_gallery %}
 
             <script type="text/javascript">
-                var id = "{{form.images.auto_id}}";
+				var media_url = "{{ MEDIA_URL }}";
+				var provider_id = {{ service_provider.id }};
             </script>
 
             <div class="form-actions">
-                <div class="btn-group" data-toggle="buttons-radio" id="select_files_mode">
-                    <button type="button" class="btn btn-primary active" value="files">{% trans "Files" %}</button>
-                    <button type="button" class="btn btn-primary" value="folder">{% trans "Folder" %}</button>
-                </div>
 
-                <button type="button" id="take_photo_camera" class="btn btn-primary" style="display:none"
-                        value="camera">{% trans "Camera" %}</button>
+				<span class="btn btn-default fileinput-button"  id="image_uploader_folder_button">
+					<i class="icon-folder-open"></i>
+					<span>{% trans "Add folder" %}</span>
+					<input id="image_uploader_folder" class="image-upload-bundle" type="file" name="images[]" multiple 
+						directory webkitdirectory mozdirectory odirectory>
+				</span>
+				
+				<span class="btn btn-default fileinput-button">
+					<i class="icon-plus"></i>
+					<span>{% trans "Add files" %}</span>
+					<input id="image_uploader_files" class="image-upload-bundle" type="file" name="images[]" multiple>
+				</span>
 
-                {{ form.images }}
-
-                <button class="btn btn-success" type="submit" name="action"
-                        value="update">{% trans "Upload files" %}</button>
+				
+				<div class="row-fluid" style="margin-top:10px;display:none;" id="uploaded_files_list">
+					<div class="span12 well well-small white-bg clearfix " style="margin-bottom:5px;">
+						<p>{% trans "Uploaded images" %}:</p>
+						<div class="row-fluid">
+							
+							<div  id="image_list" class="span12" style="margin-left:10px">
+								
+							</div>
+						</div>
+						<div class="row-fluid">
+							<div  class="progress clearfix">
+								<div id="uploadprogress" class="bar"></div>
+							</div>
+							
+							<button id="upload_files" class="btn btn-success" name="action">{% trans "Upload files" %}</button>
+						</div>
+					</div>
+				</div>
 
                 <input name="captured_photo" id="captured_photo" type="hidden"/>
+			
+				<button type="button" id="take_photo_camera" class="btn btn-primary" style="display:none"
+				value="camera">{%trans "Direct"%} {% trans "camera" %}</button>
+		
+				{% if error_msg %}
+					<div class="alert alert-error">
+					  <button type="button" class="close" data-dismiss="alert">&times;</button>
+					  <strong>{% trans "Camera photo error" %}: </strong> {{error_msg}}
+					</div>
+				{% endif %}
+		
+                <div id="camera_display" style="display:none;margin-top:10px" class="row-fluid ">
+					<div class="span12 well well-small white-bg clearfix">
+						<p>{% trans "Click on video to capture image and then click upload photo" %}</p>
 
-
-                <div style="font-weight:bold">
-
-                    {% if form.error_list %}
-                        {% for error in form.error_list %}
-                            {{ error }}
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                <div id="camera_display" style="display:none">
-                    <p>{% trans "Click on video to capture image and then click upload photo" %}</p>
-
-                    <div class="row-fluid">
-                        <button type="submit" id="upload_photo" style="display:none" class="btn btn-primary"
-                                name="action" value="upload_photo">{% trans "Upload photo" %}</button>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="btn-block">
-                            <video id="video" width="240" height="240" autoplay></video>
-                        </div>
-                    </div>
+						<div class="row-fluid">
+							<button type="submit" id="upload_photo" style="display:none" class="btn btn-primary"
+									name="action" value="upload_photo">{% trans "Upload photo" %}</button>
+						</div>
+						<div class="row-fluid">
+							<div class="btn-block">
+								<video id="video" width="240" height="240" autoplay></video>
+							</div>
+						</div>
+					</div>
                 </div>
             </div>
 
@@ -208,8 +235,8 @@
             </div>
         {% endif %}
     </form>
-
-    <script src="/static/js/gallery.js"></script>
+	<!--<input id="image_uploader" multiple="multiple" name="images" type="file" accept="image/*" directory="" webkitdirectory="" mozdirectory="">-->
+    <script src="/static/js/gallery.js?_=1"></script>
 {% endblock %}
 
 
