@@ -36,19 +36,18 @@ import enarocanje.common.config as config
 
 @for_service_providers
 def async_file_upload(request, id):
-    print '='*10,"async_file_upload",'='*10
+    #print '='*10,"async_file_upload",'='*10
     service_provider = get_object_or_404(ServiceProvider, id=id)
     
     status = 200
     
-    if(request.user.service_provider_id != int(id)):
+    if request.user.service_provider_id != int(id):
         return HttpResponse("Not allowed", status=403)
-        return
     
     name = request.FILES.getlist('image')[0].name
     size = request.FILES.getlist('image')[0].size
 
-    file = {}
+    file = dict()
     file['name'] = name
     file['size'] = size
 
@@ -63,12 +62,13 @@ def async_file_upload(request, id):
     else:
         file['error'] = image_form.error.encode('utf-8')
 
-    json_payload = {};
-    json_payload['files'] = [file];
+    json_payload = dict()
+    json_payload['files'] = [file]
 
-    print '='*35
+    #print '='*35
 
     return HttpResponse(json.dumps(json_payload), content_type="application/json", status=status)
+
 
 def view_gallery(request, id):
     GENERIC_GALLERY_URL = config.GENERIC_GALLERY_URL
@@ -116,14 +116,17 @@ def view_gallery(request, id):
             edit_gallery = True
 
     if request.method == 'POST':
-        
-    
+
         if request.POST.get('action') == 'delete':
-            if request.POST.getlist('img_id'):
-                for img_id in request.POST.getlist('img_id'):
-                    #print "iiid", img_id
+            selected = request.POST.getlist('img_id')
+            if selected:
+                for img_id in selected:
                     img = ServiceProviderImage.objects.get(id=int(img_id))
                     img.delete()
+
+        if request.POST.get('action') == 'delete_all':
+            l = ServiceProviderImage.objects.filter(service_provider_id=id)
+            gallery.delete()
 
         if request.POST.get('action') == 'enable_generic_gallery':
             service_provider.display_generic_gallery = True
@@ -166,7 +169,6 @@ def view_gallery(request, id):
                     error_msg = _("Error during decoding")
             else:
                 error_msg = _("No image was submitted")
-
     return render_to_response('browse/gallery.html', locals(), context_instance=RequestContext(request))
 
 
