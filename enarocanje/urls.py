@@ -1,8 +1,13 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.views.i18n import javascript_catalog
 
 admin.autodiscover()
+
+js_info_dict = {
+    'packages': ('enarocanje.userpages.package', ),
+}
 
 urlpatterns = patterns('',
                        url(r'^accounts/signup/$', 'enarocanje.accountext.views.signup'),
@@ -20,6 +25,7 @@ urlpatterns = patterns('',
                        url(r'^', include('enarocanje.mynewsletter.urls')),
                        url(r'^', include('enarocanje.customers.urls')),
 
+                       url(r'^jsi18n/$', javascript_catalog, js_info_dict),
 
                        # External apps
                        url(r'^accounts/', include('allauth.urls')),

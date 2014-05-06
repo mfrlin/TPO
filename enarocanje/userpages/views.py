@@ -96,7 +96,7 @@ def userpage_main(request, user_link):
 
     generic_gallery = None
     generic_gallery_id_name = None
-    #print selected_provider.display_generic_gallery
+
     if selected_provider.display_generic_gallery:
         if service_provider_category:
             generic_gallery_id_name = service_provider_category.generic_gallery
@@ -107,10 +107,9 @@ def userpage_main(request, user_link):
                 else:
                     generic_gallery = {'title': service_provider_category.name, 'values': []}
 
-
     working_hours = WorkingHours.objects.filter(service_provider=selected_provider)
 
-    wkdys = {}
+    wkdys = dict()
     wkdys[1] = set([])
     wkdys[2] = set([])
     wkdys[3] = set([])
