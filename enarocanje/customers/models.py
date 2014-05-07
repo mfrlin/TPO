@@ -4,7 +4,7 @@ from enarocanje.accountext.models import User, ServiceProvider
 
 
 class Customer(models.Model):
-    user_id = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True)
     name = models.CharField(max_length=255)
     service = models.ForeignKey(ServiceProvider)
     num_reservations = models.IntegerField(default=0)
@@ -14,3 +14,6 @@ class Customer(models.Model):
 
     def __unicode__(self):
         return self.name
+    
+    class Meta:
+        unique_together = ("service", "email")
