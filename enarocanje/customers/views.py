@@ -16,11 +16,19 @@ class ListCustomerView(ListView):
     def get_queryset(self):
         provider = self.request.user.service_provider
         sort_by = self.request.GET.get('sort_by', 'name')
+        search_by = self.request.GET.get('search_by', '')
+        if search_by:
+            query = Customer.objects.filter(service=provider, name__regex=search_by)
+        else:
+            query = Customer.objects.filter(service=provider)
         if sort_by == 'name':
-            return Customer.objects.filter(service=provider).extra(
+            return query.extra(
                 select={'lower_name': 'lower(name)'}).order_by('lower_name')
         else:
-            return Customer.objects.filter(service=provider).order_by('-last_reservation')
+            return query.order_by('-last_reservation')
+
+
+
 
 
 class EditCustomerView(UpdateView):
