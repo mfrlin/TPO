@@ -270,6 +270,7 @@ td.scheduleNonworking {
 
 /* custom label for subscription */
 
-.label.custom_label{
-   color: #666;
+.label.label-custom{
+   background-color: #ffffff;
+   color: #000;
 }
