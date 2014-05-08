@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-07 17:47+0200\n"
+"POT-Creation-Date: 2014-05-08 10:18+0200\n"
 "PO-Revision-Date: 2014-01-31 20:34+0100\n"
 "Last-Translator: klemen šavli <klemen@itklinika.si>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -376,8 +376,8 @@ msgid "Reservation reminder"
 msgstr "Opomnik o rezervaciji"
 
 #: .\enarocanje\reservations\views.py:131
-#: .\enarocanje\reservations\views.py:138 .\enarocanje\service\views.py:545
-#: .\enarocanje\service\views.py:575
+#: .\enarocanje\reservations\views.py:138 .\enarocanje\service\views.py:546
+#: .\enarocanje\service\views.py:576
 msgid "Confirmation of service reservation"
 msgstr "Potrditev rezervacije"
 
@@ -410,8 +410,8 @@ msgstr "Trajanje (v minutah)"
 msgid "Price (in EUR)"
 msgstr "Cena (v EUR)"
 
-#: .\enarocanje\service\forms.py:67 .\enarocanje\service\views.py:359
-#: .\enarocanje\service\views.py:440 .\enarocanje\service\views.py:444
+#: .\enarocanje\service\forms.py:67 .\enarocanje\service\views.py:360
+#: .\enarocanje\service\views.py:441 .\enarocanje\service\views.py:445
 msgid "All"
 msgstr "Vsi"
 
@@ -479,39 +479,39 @@ msgstr "avtor"
 msgid "body"
 msgstr "vsebina"
 
-#: .\enarocanje\service\views.py:169
+#: .\enarocanje\service\views.py:170
 msgid "Error during decoding"
 msgstr "Napaka pri dekodiranju"
 
-#: .\enarocanje\service\views.py:171
+#: .\enarocanje\service\views.py:172
 msgid "No image was submitted"
 msgstr "Niste poslali slike"
 
-#: .\enarocanje\service\views.py:319 .\enarocanje\service\views.py:401
+#: .\enarocanje\service\views.py:320 .\enarocanje\service\views.py:402
 msgid "Order by distance"
 msgstr "Uredi po oddaljenosti"
 
-#: .\enarocanje\service\views.py:320 .\enarocanje\service\views.py:404
+#: .\enarocanje\service\views.py:321 .\enarocanje\service\views.py:405
 msgid "Order lexicographically"
 msgstr "Uredi po abecedi"
 
-#: .\enarocanje\service\views.py:402
+#: .\enarocanje\service\views.py:403
 msgid "Order by price"
 msgstr "Uredi po ceni"
 
-#: .\enarocanje\service\views.py:403
+#: .\enarocanje\service\views.py:404
 msgid "Order by discount level"
 msgstr "Uredi po višini popusta"
 
-#: .\enarocanje\service\views.py:405 .\templates\browse\providers.html:27
+#: .\enarocanje\service\views.py:406 .\templates\browse\providers.html:27
 msgid "Last reserved"
 msgstr "Nazadnje rezervirano"
 
-#: .\enarocanje\service\views.py:406
+#: .\enarocanje\service\views.py:407
 msgid "My last reserved"
 msgstr "Moje nazadnje rezervirano"
 
-#: .\enarocanje\service\views.py:555 .\enarocanje\service\views.py:589
+#: .\enarocanje\service\views.py:556 .\enarocanje\service\views.py:590
 msgid "Your reservation was not confirmed"
 msgstr "Vaša rezervacija ni bila potrjena"
 
@@ -1073,7 +1073,6 @@ msgid "Delete selected"
 msgstr "Izbriši izbrane"
 
 #: .\templates\browse\gallery.html:68
-#, fuzzy
 msgid "Delete all images"
 msgstr "Izbriši vse"
 
@@ -1087,7 +1086,7 @@ msgstr "Omogoči"
 
 #: .\templates\browse\gallery.html:96 .\templates\browse\gallery.html.py:99
 msgid "generic gallery"
-msgstr "Poglej galerijo"
+msgstr "generično galerijo"
 
 #: .\templates\browse\gallery.html:99
 msgid "Disable"
@@ -1102,9 +1101,8 @@ msgid "Add files"
 msgstr "Dodaj sliko"
 
 #: .\templates\browse\gallery.html:137
-#, fuzzy
 msgid "Uploaded images"
-msgstr "Naloži sliko"
+msgstr "Naložene slike"
 
 #: .\templates\browse\gallery.html:149
 msgid "Upload files"
@@ -1116,7 +1114,6 @@ msgid "Direct"
 msgstr "dec"
 
 #: .\templates\browse\gallery.html:157
-#, fuzzy
 msgid "camera"
 msgstr "Kamera"
 
@@ -1331,29 +1328,25 @@ msgid "Delete all"
 msgstr "Izbriši vse"
 
 #: .\templates\customers\customer_list.html:14
-#, fuzzy
 msgid "Add customer"
-msgstr "Dodaj kupon"
+msgstr "Dodaj stranko"
 
 #: .\templates\customers\customer_list.html:34
 #: .\templates\customers\customer_list.html:51
 #: .\templates\employees\myemployees.html:29
 #: .\templates\employees\myemployees.html:46
 #: .\templates\userpages\provider_page.html:33
-#, fuzzy
 msgid "Phone"
-msgstr "Nič!"
+msgstr "Telefon"
 
 #: .\templates\customers\customer_list.html:37
 #: .\templates\customers\customer_list.html:54
-#, fuzzy
 msgid "Last reservation"
-msgstr "Rezerviraj"
+msgstr "Zadnja rezervacija"
 
 #: .\templates\customers\customer_list.html:74
-#, fuzzy
 msgid "You currently have no customers to display."
-msgstr "Trenutno nimate vpisanega nobenega računa socialnega omrežja."
+msgstr "Trenutno nimate vpisane nobene stranke."
 
 #: .\templates\emails\comment.html:2
 #, fuzzy, python-format
@@ -1445,9 +1438,8 @@ msgstr ""
 "\tDodatne informacije o rezervaciji:"
 
 #: .\templates\employees\add.html:5
-#, fuzzy
 msgid "Add Employee"
-msgstr "Dodaj E-naslov"
+msgstr "Dodaj zaposlenega"
 
 #: .\templates\employees\edit.html:11
 msgid "Edit Employee"
