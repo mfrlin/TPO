@@ -10,17 +10,14 @@
 
     <h1>{% block content_title %}{% trans 'Edit Employee' %}{% endblock %}</h1>
 
-    <form method="POST" action="">
+    <form method="POST" enctype="multipart/form-data" action="">
         {% csrf_token %}
         <div class="row">
             <div class="span5">
                 {% if form.non_field_errors %}
                     {% include "bootstrap_toolkit/non_field_errors.html" %}
                 {% endif %}
-                {{ form.name|as_bootstrap }}
-                {{ form.surname|as_bootstrap }}
-                {{ form.phone|as_bootstrap }}
-                {{ form.employer|as_bootstrap }}
+                {{ form|as_bootstrap }}
             </div>
             <div class="span7">
                 {{ form.description|as_bootstrap }}

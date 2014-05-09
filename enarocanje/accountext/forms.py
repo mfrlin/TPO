@@ -13,7 +13,6 @@ from models import ServiceProvider, ServiceProviderImage, User
 from misc import MultiImageField, CustomImageField
 
 
-
 class UserChangeForm(DefaultUserChangeForm):
     phone = forms.CharField(max_length=100, label=_('Phone Number'))
     premium = forms.BooleanField(label=_('Premium User'))
@@ -47,7 +46,7 @@ class ServiceProviderForm(ModelForm):
     class Meta:
         model = ServiceProvider
         exclude = ('lat', 'lng', 'gcal_id', 'gcal_updated', 'logo_width', 'logo_height', 'subscription_end_date',
-                   'subscription_mail_sent', 'subscription_end_date', 'display_generic_gallery')
+                   'subscription_mail_sent', 'subscription_end_date', 'display_generic_gallery', 'subscribers')
 
     def save(self, *args, **kwargs):
         if self.instance and self.instance.timezone != self.old_timezone:

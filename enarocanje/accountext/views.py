@@ -40,8 +40,7 @@ def account_profile(request):
     if request.user.service_provider:
         lat = request.user.service_provider.lat
         lng = request.user.service_provider.lng
-        
-        
+
         user_page_link = '%s/u/%s' % (settings.BASE_URL, request.user.service_provider.userpage_link)
     
     if request.method == "POST":
