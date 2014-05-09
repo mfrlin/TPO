@@ -12,15 +12,17 @@
     {% if minTime and maxTime %}
         <form method="POST" action="{% url 'reservation' service.id %}">
             {% csrf_token %}
-
             <input type="hidden" name="data" value="{{ data|encode_data }}"/>
 
             <div class="row">
-                <div class="span6">
+                <div class="span4">
                     {{ form.date|as_bootstrap }}
                 </div>
-                <div class="span6">
+                <div class="span4">
                     {{ form.time|as_bootstrap }}
+                </div>
+                <div class="span4">
+                    {{ form.employees | as_bootstrap }}
                 </div>
             </div>
 
@@ -109,7 +111,8 @@
 
         var timePicker = $('.time-field').parent().datetimepicker({pickDate: false, pickSeconds: false, minuteStep: 15,
         language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeTime);
-        var datePicker = $('.date-field').parent().datetimepicker({pickTime: false, startDate: now, language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
+        var datePicker = $('.date-field').parent().datetimepicker({pickTime: false, startDate: now, language:
+        '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
 
         var dateDate = datePicker.data('datetimepicker').getLocalDate();
         var dateTime = timePicker.data('datetimepicker').getLocalDate();

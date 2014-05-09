@@ -36,7 +36,8 @@ def reservation(request, id):
     minTime, maxTime = getMinMaxTime(service.service_provider)
 
     if request.method != 'POST':
-        form = ReservationForm(request, workingHours=None, service=None)
+        #form = ReservationForm(request, workingHours=None, service=None)
+        form = ReservationForm(request, workingHours=None, service=service)
         data = {'service_provider_id': service.service_provider_id, 'service_id': service.id}
         return render_to_response('reservations/reservation.html', locals(), context_instance=RequestContext(request))
 

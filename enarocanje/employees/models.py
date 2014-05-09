@@ -21,3 +21,6 @@ class Employee(models.Model):
         if self.img:
             return self.img.url
         return settings.STATIC_URL + 'img/default.png'
+
+    def __unicode__(self):
+        return "%s %s" % (self.name, self.surname)
