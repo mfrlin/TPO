@@ -1,11 +1,11 @@
 from django import forms
 from .models import Customer
 
-from enarocanje.common.widgets import BootstrapDateTimeInput
+from enarocanje.common.widgets import BootstrapDateInput
 
 
 class CustomerForm(forms.ModelForm):
-    last_reservation = forms.DateTimeField(required=True, widget=BootstrapDateTimeInput())
+    last_reservation = forms.DateField(required=True, widget=BootstrapDateInput)
 
     class Meta:
         model = Customer
