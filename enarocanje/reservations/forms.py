@@ -127,7 +127,7 @@ class ReservationForm(forms.Form):
         self.workingHours = kwargs.pop('workingHours')
         self.service = kwargs.pop('service')
         self.request = request
-        self.employees = forms.ModelChoiceField(queryset=self.service.employees)
+        self.employees = forms.ModelChoiceField(queryset=self.service.employees, required=False)
         super(ReservationForm, self).__init__(*args, **kwargs)
         self.fields['employees'] = self.employees
 

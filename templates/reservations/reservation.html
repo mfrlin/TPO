@@ -22,7 +22,7 @@
                     {{ form.time|as_bootstrap }}
                 </div>
                 <div class="span4">
-                    {{ form.employees | as_bootstrap }}
+                    {{ form.employees|as_bootstrap }}
                 </div>
             </div>
 
@@ -45,6 +45,7 @@
     </script><script>
     //just to enable syntax coloring in pycharm
     {% if minTime and maxTime %}
+        console.log('{{ minTime }}'+'->'+'{{ maxTime }}');
         (function() {
             var date = new Date(), selectedEvent = null;
             function updateDate(ndate) {
@@ -112,6 +113,7 @@
             var now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
 
+
             var timePicker = $('.time-field').parent('').datetimepicker({pickDate: false, pickSeconds: false, minuteStep: 15,
                 language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeTime);
             var datePicker = $('.date-field').parent('').datetimepicker({pickTime: false, startDate: now, language:
@@ -128,7 +130,7 @@
 
             $('#calendar').fullCalendar({
                 header: {
-                    left: 'prev,next today',
+                    left: 'prev,next, today',
                     center: '',
                     right: 'agendaWeek,agendaDay'
                 },

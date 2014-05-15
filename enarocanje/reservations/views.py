@@ -36,6 +36,7 @@ def reservation(request, id):
     minTime, maxTime = getMinMaxTime(service.service_provider)
 
     if request.method != 'POST':
+        # TODO calculate free time considering all employees
         #form = ReservationForm(request, workingHours=None, service=None)
         form = ReservationForm(request, workingHours=None, service=service)
         data = {'service_provider_id': service.service_provider_id, 'service_id': service.id}
