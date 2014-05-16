@@ -42,8 +42,10 @@ I made a reservation for {{ name }} on {{ date }} at {{ time }} Here is link: {%
     <!-- Google + -->
     <div class="g-plus" data-action="share" data-href="{{ url_service }}" data-annotation="none"></div>
     <p>
-        <b>{% trans "Thanks for using E-Narocanje!" %}</b><br/>
-
+        <b>{% trans "Thanks for using E-Narocanje!" %}</b><br/><br/>
+        <a href="{% url 'browseservices' %}?provider={{ service.service_provider.id }}" class="btn">
+            {% trans 'Back to ' %}{{ service.service_provider }}</a>
+        <a href="{% url 'browseproviders' %}" class="btn">{% trans 'Back to providers' %}</a>
     </p>
 
 {% endblock %}

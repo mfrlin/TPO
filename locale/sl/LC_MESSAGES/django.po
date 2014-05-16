@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-16 18:31+0200\n"
+"POT-Creation-Date: 2014-05-16 19:56+0200\n"
 "PO-Revision-Date: 2014-01-31 20:34+0100\n"
 "Last-Translator: klemen šavli <klemen@itklinika.si>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -376,8 +376,8 @@ msgid "Reservation reminder"
 msgstr "Opomnik o rezervaciji"
 
 #: .\enarocanje\reservations\views.py:134
-#: .\enarocanje\reservations\views.py:143 .\enarocanje\service\views.py:544
-#: .\enarocanje\service\views.py:574
+#: .\enarocanje\reservations\views.py:143 .\enarocanje\service\views.py:551
+#: .\enarocanje\service\views.py:581
 msgid "Confirmation of service reservation"
 msgstr "Potrditev rezervacije"
 
@@ -411,7 +411,7 @@ msgid "Price (in EUR)"
 msgstr "Cena (v EUR)"
 
 #: .\enarocanje\service\forms.py:67 .\enarocanje\service\views.py:358
-#: .\enarocanje\service\views.py:439 .\enarocanje\service\views.py:443
+#: .\enarocanje\service\views.py:446 .\enarocanje\service\views.py:450
 msgid "All"
 msgstr "Vsi"
 
@@ -487,31 +487,31 @@ msgstr "Napaka pri dekodiranju"
 msgid "No image was submitted"
 msgstr "Niste poslali slike"
 
-#: .\enarocanje\service\views.py:318 .\enarocanje\service\views.py:400
+#: .\enarocanje\service\views.py:318 .\enarocanje\service\views.py:407
 msgid "Order by distance"
 msgstr "Uredi po oddaljenosti"
 
-#: .\enarocanje\service\views.py:319 .\enarocanje\service\views.py:403
+#: .\enarocanje\service\views.py:319 .\enarocanje\service\views.py:410
 msgid "Order lexicographically"
 msgstr "Uredi po abecedi"
 
-#: .\enarocanje\service\views.py:401
+#: .\enarocanje\service\views.py:408
 msgid "Order by price"
 msgstr "Uredi po ceni"
 
-#: .\enarocanje\service\views.py:402
+#: .\enarocanje\service\views.py:409
 msgid "Order by discount level"
 msgstr "Uredi po višini popusta"
 
-#: .\enarocanje\service\views.py:404 .\templates\browse\providers.html:27
+#: .\enarocanje\service\views.py:411 .\templates\browse\providers.html:27
 msgid "Last reserved"
 msgstr "Nazadnje rezervirano"
 
-#: .\enarocanje\service\views.py:405
+#: .\enarocanje\service\views.py:412
 msgid "My last reserved"
 msgstr "Moje nazadnje rezervirano"
 
-#: .\enarocanje\service\views.py:554 .\enarocanje\service\views.py:588
+#: .\enarocanje\service\views.py:561 .\enarocanje\service\views.py:595
 msgid "Your reservation was not confirmed"
 msgstr "Vaša rezervacija ni bila potrjena"
 
@@ -1574,12 +1574,20 @@ msgstr ""
 msgid "Thanks for using E-Narocanje!"
 msgstr "Hvala, ker uporabljate E-narocanje!"
 
-#: .\templates\reservations\done.html:66
+#: .\templates\reservations\done.html:47
+msgid "Back to "
+msgstr "Nazaj na "
+
+#: .\templates\reservations\done.html:48
+msgid "Back to providers"
+msgstr "Nazaj na vse ponudnike"
+
+#: .\templates\reservations\done.html:68
 msgid "Reservation at"
 msgstr "Rezervacija ob"
 
 # python-format
-#: .\templates\reservations\done.html:71
+#: .\templates\reservations\done.html:73
 #, python-format
 msgid ""
 "I made a reservation for %(service_name)s on %(date)s at %(time)s.\n"
@@ -2300,9 +2308,6 @@ msgstr "Dnevi v tednu"
 
 #~ msgid "All categories"
 #~ msgstr "Vse kategorije"
-
-#~ msgid "All providers"
-#~ msgstr "Vsi ponudniki"
 
 #~ msgid "All discount levels"
 #~ msgstr "Vsi popusti"
