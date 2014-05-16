@@ -3,12 +3,13 @@ import base64
 import datetime
 import pickle
 import urllib
+import json
 
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.mail import send_mass_mail
 from django.core.urlresolvers import reverse
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -23,6 +24,7 @@ from enarocanje.reservations.gcal import sync
 from enarocanje.reservations.models import Reservation
 from enarocanje.service.models import Service
 from enarocanje.workinghours.models import WorkingHours
+from enarocanje.employees.models import Employee
 from forms import ReservationForm, NonRegisteredUserForm
 from rcalendar import getMinMaxTime
 
@@ -178,3 +180,12 @@ def reservation(request, id):
 def myreservations(request):
     res_confirm = request.user.service_provider.reservation_confirmation_needed
     return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
+
+
+def getEmployeeTimetable(request, id):
+    emp = Employee.objects.get(id=id)
+    print emp
+    json_payload = dict()
+    json_payload['name'] = emp.name
+    json_payload['surname'] = emp.surname
+    return HttpResponse(json.dumps(json_payload), content_type="application/json")

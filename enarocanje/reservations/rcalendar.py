@@ -68,10 +68,10 @@ def getReservations(provider, start, end):
     for reservation in reservations:
         dt = datetime.datetime.combine(reservation.date, reservation.time)
         events.append({
-        'title': ugettext(EVENT_TITLE_RESERVED),
-        'start': encodeDatetime(dt),
-        'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
-        'color': EVENT_RESERVED_COLOR
+            'title': ugettext(EVENT_TITLE_RESERVED),
+            'start': encodeDatetime(dt),
+            'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
+            'color': EVENT_RESERVED_COLOR
         })
 
     return events
@@ -92,26 +92,26 @@ def getWorkingHours(provider, date):
 
     # Start
     events.append({
-    'title': ugettext(EVENT_TITLE_CLOSED),
-    'start': encodeDatetime(date),
-    'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_from)),
-    'color': EVENT_PAUSE_COLOR
+        'title': ugettext(EVENT_TITLE_CLOSED),
+        'start': encodeDatetime(date),
+        'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_from)),
+        'color': EVENT_PAUSE_COLOR
     })
 
     # End
     events.append({
-    'title': ugettext(EVENT_TITLE_CLOSED),
-    'start': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
-    'end': encodeDatetime(date + datetime.timedelta(days=1)),
-    'color': EVENT_PAUSE_COLOR
+        'title': ugettext(EVENT_TITLE_CLOSED),
+        'start': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
+        'end': encodeDatetime(date + datetime.timedelta(days=1)),
+        'color': EVENT_PAUSE_COLOR
     })
 
     for wrkbrk in workinghrs.breaks.all():
         events.append({
-        'title': ugettext(EVENT_TITLE_CLOSED),
-        'start': encodeDatetime(datetime.datetime.combine(date, wrkbrk.time_from)),
-        'end': encodeDatetime(datetime.datetime.combine(date, wrkbrk.time_to)),
-        'color': EVENT_PAUSE_COLOR
+            'title': ugettext(EVENT_TITLE_CLOSED),
+            'start': encodeDatetime(datetime.datetime.combine(date, wrkbrk.time_from)),
+            'end': encodeDatetime(datetime.datetime.combine(date, wrkbrk.time_to)),
+            'color': EVENT_PAUSE_COLOR
         })
 
     return events

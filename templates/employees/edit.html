@@ -58,3 +58,13 @@
     </form>
 
 {% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    </script><script>
+    (function() {
+        $('.time-field').parent('').datetimepicker({pickDate: false, pickSeconds: false, language:
+            '{{ request.LANGUAGE_CODE }}'});
+    })();
+    </script><script>
+{% endblock %}

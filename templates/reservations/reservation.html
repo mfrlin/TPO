@@ -45,10 +45,20 @@
     </script><script>
     //just to enable syntax coloring in pycharm
     {% if minTime and maxTime %}
-        console.log('{{ minTime }}'+'->'+'{{ maxTime }}');
+
+        $('#id_employees').change(function(){
+            var id = $(this).find(":selected").val();
+            var url = '/tt/' + id;
+            $.get(url, function(data){
+                console.log(data);
+            });
+            // TODO update calendar based on chosen employee
+        });
+
         (function() {
             var date = new Date(), selectedEvent = null;
             function updateDate(ndate) {
+                //console.log(arguments.callee.caller.name);
                 $('#calendar').fullCalendar('removeEventSource', selectedEvent);
                 date = ndate;
                 var dateEnd = new Date(date);
@@ -77,7 +87,9 @@
             }
 
             function viewDisplay(view) {
-
+                var cur_date = new Date();
+                cur_date.setDate(date.getDate());
+                cur_date.setTime(date.getTime());
                 if (view.start <= new Date()) {
                     $("#calendar .fc-button-prev").addClass('fc-state-disabled');
                 } else {
@@ -98,12 +110,21 @@
                         date.setDate(date.getDate() - 1);
                     }
                 }
-                updateDate(date);
+
+                var dt = date-cur_date;
+                // so selection gets cleared on date change
+                if (dt >= 86400000 || dt < 0){
+                    $('#calendar').fullCalendar('removeEventSource', selectedEvent);
+                }
+                else{
+                    updateDate(date);
+                }
                 datePicker.data('datetimepicker').setLocalDate(date);
                 timePicker.data('datetimepicker').setLocalDate(date);
             }
 
             function dayClick(ndate, allDay, jsEvent, view) {
+                //console.log($('#calendar').fullCalendar('clientEvents'));
                 updateDate(ndate);
                 $('#calendar').fullCalendar('gotoDate', date);
                 datePicker.data('datetimepicker').setLocalDate(date);
