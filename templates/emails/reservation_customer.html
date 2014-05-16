@@ -20,6 +20,7 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+    {% trans 'You can find us ' %} <a href="{{ link }}">{% trans 'here' %}</a>.
 {% endif %}
 
 {% if reservation.is_deny == True %}
