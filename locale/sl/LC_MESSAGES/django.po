@@ -1398,7 +1398,7 @@ msgstr "Telefonska številka ponudnika storitev"
 #: .\templates\emails\reservation_customer.html:12
 #: .\templates\emails\reservation_customer.html:24
 msgid "Our location and other information are here"
-msgstr ""
+msgstr "Našo lokacijo in druge informacije najdete tukaj"
 
 #: .\templates\emails\reminder.html:14
 msgid "We thank you for choosing our services!"
