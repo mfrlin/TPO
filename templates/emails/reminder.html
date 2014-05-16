@@ -9,7 +9,7 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
-    {% trans 'You can find us ' %} <a href="{{ link }}">{% trans 'here' %}</a>.
+    {% trans 'Our location and other information are here' %}: {{ link }}
 
-    We thank you for doing choosing our services!
+    {% trans 'We thank you for choosing our services!' %}
 

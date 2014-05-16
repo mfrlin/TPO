@@ -10,7 +10,7 @@
     <p>
         <b>{% trans "Service" %}:</b> {{ service.name }}<br/>
         <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
-        <b>{% trans "Date and time: " %}:</b> {{ data.date }}{{ data.time }}<br/>
+        <b>{% trans "Date and time" %}:</b> {{ data.date }}{{ data.time }}<br/>
     </p>
     {% if service.service_provider.reservation_confirmation_needed == True %}
 
