@@ -1,5 +1,7 @@
 from django.forms import ModelForm, Form, ModelMultipleChoiceField
+from enarocanje.common.widgets import ClearableImageInput
 import django.forms as forms
+from django.utils.translation import ugettext_lazy as _
 from enarocanje.accountext.models import ServiceProvider
 from enarocanje.service.models import Service
 
@@ -7,9 +9,11 @@ from enarocanje.employees.models import Employee
 
 
 class EmployeeForm(ModelForm):
+    img = forms.ImageField(widget=ClearableImageInput(), required=False, label=_('Employee image'))
+
     class Meta:
         model = Employee
-        exclude = ('employer', )
+        exclude = ('employer', 'img_width', 'img_height')
 
     def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
@@ -22,7 +26,7 @@ class EmployeeServicesForm(Form):
         data = kwargs.pop('data')
         self.services = ModelMultipleChoiceField(
             queryset=Service.objects.all().filter(service_provider_id=self.provider.id),
-            widget=forms.CheckboxSelectMultiple, initial=data)
+            widget=forms.CheckboxSelectMultiple, initial=data, required=False)
         super(EmployeeServicesForm, self).__init__(*args, **kwargs)
         self.fields['services'] = self.services
 

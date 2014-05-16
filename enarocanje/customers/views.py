@@ -52,7 +52,6 @@ def managecustomer(request):
     if request.method == 'POST':
         customer = get_object_or_404(Customer, service=request.user.service_provider,
                                      id=request.POST.get('service'))
-        print customer
         if request.POST.get('action') == 'delete':
             customer.delete()
     return HttpResponseRedirect(reverse('mycustomers'))

@@ -67,7 +67,6 @@ def customer_handler(sender, instance, **kwargs):
     if instance.user:
         c, created = Customer.objects.get_or_create(user_id=instance.user, last_reservation=date,
                                                     service_id=instance.service_provider.id)
-        print c, created
         if created:
             c.provider = instance.service_provider
             c.name = instance.user_fullname

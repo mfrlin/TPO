@@ -34,6 +34,7 @@ from models import Service, Category, Discount, Comment
 import enarocanje.common.config as config
 # List of services for editing
 
+
 @for_service_providers
 def async_file_upload(request, id):
     #print '='*10,"async_file_upload",'='*10
@@ -64,8 +65,6 @@ def async_file_upload(request, id):
 
     json_payload = dict()
     json_payload['files'] = [file]
-
-    #print '='*35
 
     return HttpResponse(json.dumps(json_payload), content_type="application/json", status=status)
 

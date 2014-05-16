@@ -52,7 +52,7 @@ def edit(request, id):
     services = Service.objects.filter(service_provider=provider, employees__in=[employee.id])
 
     if request.method == 'POST':
-        form = EmployeeForm(request.POST, instance=employee)
+        form = EmployeeForm(request.POST, request.FILES, instance=employee)
         form_w = EmployeeWorkingHoursForm(request.POST, instance=hours, employee=employee)
         form_s = EmployeeServicesForm(request.POST, service_provider=provider, employee=employee, data=services)
         form_valid = form.is_valid()

@@ -36,7 +36,9 @@ def reservation(request, id):
     minTime, maxTime = getMinMaxTime(service.service_provider)
 
     if request.method != 'POST':
-        form = ReservationForm(request, workingHours=None, service=None)
+        # TODO calculate free time considering all employees
+        #form = ReservationForm(request, workingHours=None, service=None)
+        form = ReservationForm(request, workingHours=None, service=service)
         data = {'service_provider_id': service.service_provider_id, 'service_id': service.id}
         return render_to_response('reservations/reservation.html', locals(), context_instance=RequestContext(request))
 
@@ -119,25 +121,30 @@ def reservation(request, id):
             coupons = Coupon.objects.filter(service=service.id)
             coupon_is_used = False
             for coup in coupons:
-                if (data['number'] == coup.number):
+                if data['number'] == coup.number:
                     coup.is_used = True
                     coup.save()
                     coupon_is_used = True
                     # Validation checking in form
 
+            user_page_link = '%s/u/%s' % (settings.BASE_URL, reserve.service_provider.userpage_link)
             email_to1 = data.get('email')
             email_to2 = service.service_provider.user.email
-            if (service.service_provider.reservation_confirmation_needed == False):
+            if service.service_provider.reservation_confirmation_needed:
                 subject = _('Confirmation of service reservation')
-                renderedToCustomer = render_to_string('emails/reservation_customer.html', {'reservation': reserve})
-                renderedToProvider = render_to_string('emails/reservation_provider.html', {'reservation': reserve})
+                renderedToCustomer = render_to_string('emails/reservation_customer.html',
+                                                      {'reservation': reserve, 'link': user_page_link})
+                print renderedToCustomer
+                renderedToProvider = render_to_string('emails/reservation_provider.html',
+                                                      {'reservation': reserve, 'link': user_page_link})
                 message1 = (subject, renderedToCustomer, None, [email_to1])
                 message2 = (subject, renderedToProvider, None, [email_to2])
                 send_mass_mail((message1, message2), fail_silently=True)
             else:
                 subject = _('Confirmation of service reservation')
-                renderedToProvider = render_to_string('emails/reservation_provider.html', {'reservation': reserve})
-                send_mail(subject, renderedToProvider, None, [email_to2], fail_silently=False)
+                renderedToProvider = render_to_string('emails/reservation_provider.html',
+                                                      {'reservation': reserve, 'link': user_page_link})
+                #send_mail(subject, renderedToProvider, None, [email_to2], fail_silently=False)
 
             start = datetime.datetime.combine(reserve.date, reserve.time)
             gcal_params = urllib.urlencode({

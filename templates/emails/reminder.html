@@ -1,0 +1,15 @@
+{% load i18n %}
+
+    {% blocktrans %}This is a reminder for your reservation
+        You have scheduled the folowing service:{% endblocktrans %}
+    {% trans "Service" %}: {{ reservation.service.name }}
+    {% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}
+    {% trans "Price" %}: {{ reservation.service.price_with_unit }}{% endif %}
+    {% trans "Date" %}: {{ reservation.date }}
+    {% trans "Time" %}: {{ reservation.time }}
+    {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
+    {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+    {% trans 'You can find us ' %} <a href="{{ link }}">{% trans 'here' %}</a>.
+
+    We thank you for doing choosing our services!
+

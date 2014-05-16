@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-07 17:47+0200\n"
+"POT-Creation-Date: 2014-05-16 17:37+0200\n"
 "PO-Revision-Date: 2014-01-31 20:34+0100\n"
 "Last-Translator: klemen šavli <klemen@itklinika.si>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,60 +31,60 @@ msgstr "Dovoljenja"
 msgid "Important dates"
 msgstr "Pomembni datumi"
 
-#: .\enarocanje\accountext\forms.py:18 .\enarocanje\accountext\forms.py:27
-#: .\enarocanje\reservations\forms.py:134
+#: .\enarocanje\accountext\forms.py:17 .\enarocanje\accountext\forms.py:26
+#: .\enarocanje\reservations\forms.py:137
 msgid "Phone Number"
 msgstr "Telefonska številka"
 
-#: .\enarocanje\accountext\forms.py:19
+#: .\enarocanje\accountext\forms.py:18
 msgid "Premium User"
 msgstr "Premium uporabnik"
 
-#: .\enarocanje\accountext\forms.py:20 .\templates\coupon\mycoupons.html:18
+#: .\enarocanje\accountext\forms.py:19 .\templates\coupon\mycoupons.html:18
 #: .\templates\service\myservices.html:18
 msgid "Coupons"
 msgstr "Kuponi"
 
-#: .\enarocanje\accountext\forms.py:21
+#: .\enarocanje\accountext\forms.py:20
 #: .\templates\reservations\myreservations.html:15
 #: .\templates\service\myunconfirmedreservation.html:13
 msgid "Reservations"
 msgstr "Rezervacije"
 
-#: .\enarocanje\accountext\forms.py:25
+#: .\enarocanje\accountext\forms.py:24
 msgid "First Name"
 msgstr "Ime"
 
-#: .\enarocanje\accountext\forms.py:26
+#: .\enarocanje\accountext\forms.py:25
 msgid "Last Name"
 msgstr "Priimek"
 
-#: .\enarocanje\accountext\forms.py:28
+#: .\enarocanje\accountext\forms.py:27
 msgid "Language"
 msgstr "Jezik"
 
-#: .\enarocanje\accountext\forms.py:68 .\enarocanje\accountext\forms.py:105
+#: .\enarocanje\accountext\forms.py:67 .\enarocanje\accountext\forms.py:104
 msgid "Upload images"
 msgstr "Naloži sliko"
 
-#: .\enarocanje\accountext\forms.py:85
+#: .\enarocanje\accountext\forms.py:84
 msgid "No files"
 msgstr "Brez datotek"
 
-#: .\enarocanje\accountext\forms.py:90
+#: .\enarocanje\accountext\forms.py:89
 msgid "Artificial error"
 msgstr ""
 
-#: .\enarocanje\accountext\forms.py:95
+#: .\enarocanje\accountext\forms.py:94
 msgid "Image bigger than 15MB!"
 msgstr ""
 
-#: .\enarocanje\accountext\forms.py:100
+#: .\enarocanje\accountext\forms.py:99
 msgid "Image is null!"
 msgstr ""
 
 #: .\enarocanje\accountext\models.py:21 .\enarocanje\accountext\models.py:31
-#: .\enarocanje\employees\models.py:10 .\enarocanje\reservations\models.py:35
+#: .\enarocanje\employees\models.py:11 .\enarocanje\reservations\models.py:35
 #: .\enarocanje\reservations\models.py:41 .\enarocanje\service\models.py:12
 #: .\enarocanje\service\models.py:29
 msgid "name"
@@ -144,7 +144,7 @@ msgid "Email"
 msgstr "E-naslov"
 
 #: .\enarocanje\accountext\models.py:117 .\enarocanje\customers\models.py:11
-#: .\enarocanje\employees\models.py:12 .\enarocanje\reservations\models.py:36
+#: .\enarocanje\employees\models.py:13 .\enarocanje\reservations\models.py:36
 msgid "phone number"
 msgstr "telefonska številka"
 
@@ -173,10 +173,10 @@ msgid "Coupon valid until"
 msgstr "Kupon velja do"
 
 #: .\enarocanje\coupon\forms.py:34 .\templates\coupon\mycoupons.html:34
-#: .\templates\coupon\mycoupons.html:52
+#: .\templates\coupon\mycoupons.html:52 .\templates\emails\reminder.html:5
 #: .\templates\emails\reservation_customer.html:5
 #: .\templates\emails\reservation_customer.html:16
-#: .\templates\emails\reservation_customer.html:29
+#: .\templates\emails\reservation_customer.html:30
 #: .\templates\emails\reservation_provider.html:6
 #: .\templates\emails\reservation_provider.html:17
 #: .\templates\reservations\confirmation.html:12
@@ -227,11 +227,15 @@ msgstr "Razčlenitev kuponov ni uspela. Preverite format."
 msgid "email address"
 msgstr "e-poštni naslov"
 
-#: .\enarocanje\employees\models.py:11
+#: .\enarocanje\employees\forms.py:12
+msgid "Employee image"
+msgstr "Slika zaposlenega"
+
+#: .\enarocanje\employees\models.py:12
 msgid "surname"
 msgstr "priimek"
 
-#: .\enarocanje\employees\models.py:13
+#: .\enarocanje\employees\models.py:14
 msgid "Employer"
 msgstr "Delodajalec"
 
@@ -243,20 +247,20 @@ msgstr ""
 msgid "You should use the form at 'Send a newsletter' to send newsletters."
 msgstr ""
 
-#: .\enarocanje\reservations\forms.py:28
+#: .\enarocanje\reservations\forms.py:29 .\templates\emails\reminder.html:8
 #: .\templates\emails\reservation_customer.html:8
 #: .\templates\emails\reservation_customer.html:19
-#: .\templates\emails\reservation_customer.html:32
+#: .\templates\emails\reservation_customer.html:33
 #: .\templates\emails\reservation_provider.html:9
 #: .\templates\emails\reservation_provider.html:20
 #: .\templates\reservations\confirmation.html:17
 msgid "Date"
 msgstr "Datum"
 
-#: .\enarocanje\reservations\forms.py:29
+#: .\enarocanje\reservations\forms.py:30 .\templates\emails\reminder.html:9
 #: .\templates\emails\reservation_customer.html:9
 #: .\templates\emails\reservation_customer.html:20
-#: .\templates\emails\reservation_customer.html:33
+#: .\templates\emails\reservation_customer.html:34
 #: .\templates\emails\reservation_provider.html:10
 #: .\templates\emails\reservation_provider.html:21
 #: .\templates\reservations\confirmation.html:18
@@ -265,64 +269,64 @@ msgstr "Datum"
 msgid "Time"
 msgstr "Čas"
 
-#: .\enarocanje\reservations\forms.py:45
+#: .\enarocanje\reservations\forms.py:46
 msgid ""
 "Sorry, you entered your cupon number wrong 10 times. You can try again in "
 "24h."
 msgstr ""
 "Napačno število kupona ste vnesli 10-krat. Ponovno lahko poskusite čez 24ur."
 
-#: .\enarocanje\reservations\forms.py:54
+#: .\enarocanje\reservations\forms.py:55
 msgid "Sorry, this coupon was already used."
 msgstr "Oprostite, vaša številka kupona je bila že uporabljena."
 
-#: .\enarocanje\reservations\forms.py:60
+#: .\enarocanje\reservations\forms.py:61
 msgid ""
 "Sorry, you coupon is not valid at this time. Check expiry date of your coupon"
 msgstr "Vaš kupon ni veljavem ob tem času. Preverite dan veljavnosti."
 
-#: .\enarocanje\reservations\forms.py:61
+#: .\enarocanje\reservations\forms.py:62
 msgid "Sorry, your coupon number is not valid. Please try again."
 msgstr ""
 "Oprostite, vaša številka kupona je neveljavna. Prosim, poskusite ponovno."
 
-#: .\enarocanje\reservations\forms.py:71
+#: .\enarocanje\reservations\forms.py:72
 msgid "Sorry, you can't make reservations for past days."
 msgstr "Ne morete rezervirati termina za pretekle dni."
 
-#: .\enarocanje\reservations\forms.py:78
+#: .\enarocanje\reservations\forms.py:79
 msgid "Sorry, you can't make a reservation on a non working day."
 msgstr "Ne morete rezervirati termina na dela prost dan."
 
-#: .\enarocanje\reservations\forms.py:82
+#: .\enarocanje\reservations\forms.py:83
 msgid "Sorry, the provider is absent on this day."
 msgstr "Ponudnik je na ta dan odsoten."
 
-#: .\enarocanje\reservations\forms.py:96
+#: .\enarocanje\reservations\forms.py:97
 msgid "Sorry, reservation can't span over multiple days."
 msgstr "Rezervacije ne morajo zavzemati več dni."
 
-#: .\enarocanje\reservations\forms.py:100
+#: .\enarocanje\reservations\forms.py:101
 msgid "Sorry, you can't make a reservation in the past."
 msgstr "Ne morete rezervirati preteklega termina."
 
-#: .\enarocanje\reservations\forms.py:107
+#: .\enarocanje\reservations\forms.py:108
 msgid "Sorry, the service isn't available before "
 msgstr "Storitev ni dostopna pred "
 
-#: .\enarocanje\reservations\forms.py:109
+#: .\enarocanje\reservations\forms.py:110
 msgid "Sorry, the service is closed from "
 msgstr "Oprostite! Ponudnik ne obratuje od "
 
-#: .\enarocanje\reservations\forms.py:114
+#: .\enarocanje\reservations\forms.py:115
 msgid "Sorry, the service isn't available at specified time."
 msgstr "Storitev ni na voljo ob izbranem času."
 
-#: .\enarocanje\reservations\forms.py:121
+#: .\enarocanje\reservations\forms.py:122
 msgid "Sorry, your reservation is overlapping with another reservation."
 msgstr "Oprostite! Izbran termin se prekriva z drugim terminom."
 
-#: .\enarocanje\reservations\forms.py:133
+#: .\enarocanje\reservations\forms.py:136
 #: .\templates\customers\customer_list.html:28
 #: .\templates\customers\customer_list.html:45
 #: .\templates\employees\myemployees.html:23
@@ -334,15 +338,15 @@ msgstr "Oprostite! Izbran termin se prekriva z drugim terminom."
 msgid "Name"
 msgstr "Naziv"
 
-#: .\enarocanje\reservations\forms.py:135
+#: .\enarocanje\reservations\forms.py:138
 msgid "Email address"
 msgstr "E-poštni naslov"
 
-#: .\enarocanje\reservations\forms.py:145
+#: .\enarocanje\reservations\forms.py:148
 msgid "Don't sync with Google Calendar"
 msgstr "Ne sinhroniziraj z Google koledarjem"
 
-#: .\enarocanje\reservations\forms.py:146
+#: .\enarocanje\reservations\forms.py:149
 msgid "Create new calendar"
 msgstr "Ustvari nov koledar"
 
@@ -367,17 +371,13 @@ msgstr "Zaprto na ta dan"
 msgid "Reserved"
 msgstr "Rezervirano"
 
-#: .\enarocanje\reservations\tasks.py:16
-msgid "Test text"
-msgstr ""
-
-#: .\enarocanje\reservations\tasks.py:17
+#: .\enarocanje\reservations\tasks.py:18
 msgid "Reservation reminder"
 msgstr "Opomnik o rezervaciji"
 
-#: .\enarocanje\reservations\views.py:131
-#: .\enarocanje\reservations\views.py:138 .\enarocanje\service\views.py:545
-#: .\enarocanje\service\views.py:575
+#: .\enarocanje\reservations\views.py:134
+#: .\enarocanje\reservations\views.py:144 .\enarocanje\service\views.py:544
+#: .\enarocanje\service\views.py:574
 msgid "Confirmation of service reservation"
 msgstr "Potrditev rezervacije"
 
@@ -410,8 +410,8 @@ msgstr "Trajanje (v minutah)"
 msgid "Price (in EUR)"
 msgstr "Cena (v EUR)"
 
-#: .\enarocanje\service\forms.py:67 .\enarocanje\service\views.py:359
-#: .\enarocanje\service\views.py:440 .\enarocanje\service\views.py:444
+#: .\enarocanje\service\forms.py:67 .\enarocanje\service\views.py:358
+#: .\enarocanje\service\views.py:439 .\enarocanje\service\views.py:443
 msgid "All"
 msgstr "Vsi"
 
@@ -479,39 +479,39 @@ msgstr "avtor"
 msgid "body"
 msgstr "vsebina"
 
-#: .\enarocanje\service\views.py:169
+#: .\enarocanje\service\views.py:168
 msgid "Error during decoding"
 msgstr "Napaka pri dekodiranju"
 
-#: .\enarocanje\service\views.py:171
+#: .\enarocanje\service\views.py:170
 msgid "No image was submitted"
 msgstr "Niste poslali slike"
 
-#: .\enarocanje\service\views.py:319 .\enarocanje\service\views.py:401
+#: .\enarocanje\service\views.py:318 .\enarocanje\service\views.py:400
 msgid "Order by distance"
 msgstr "Uredi po oddaljenosti"
 
-#: .\enarocanje\service\views.py:320 .\enarocanje\service\views.py:404
+#: .\enarocanje\service\views.py:319 .\enarocanje\service\views.py:403
 msgid "Order lexicographically"
 msgstr "Uredi po abecedi"
 
-#: .\enarocanje\service\views.py:402
+#: .\enarocanje\service\views.py:401
 msgid "Order by price"
 msgstr "Uredi po ceni"
 
-#: .\enarocanje\service\views.py:403
+#: .\enarocanje\service\views.py:402
 msgid "Order by discount level"
 msgstr "Uredi po višini popusta"
 
-#: .\enarocanje\service\views.py:405 .\templates\browse\providers.html:27
+#: .\enarocanje\service\views.py:404 .\templates\browse\providers.html:27
 msgid "Last reserved"
 msgstr "Nazadnje rezervirano"
 
-#: .\enarocanje\service\views.py:406
+#: .\enarocanje\service\views.py:405
 msgid "My last reserved"
 msgstr "Moje nazadnje rezervirano"
 
-#: .\enarocanje\service\views.py:555 .\enarocanje\service\views.py:589
+#: .\enarocanje\service\views.py:554 .\enarocanje\service\views.py:588
 msgid "Your reservation was not confirmed"
 msgstr "Vaša rezervacija ni bila potrjena"
 
@@ -567,37 +567,37 @@ msgid "Absence can't end before it starts."
 msgstr "Odsotnost se ne more končati preden se začne."
 
 #: .\enarocanje\workinghours\models.py:8
-#: .\templates\reservations\reservation.html:165
+#: .\templates\reservations\reservation.html:173
 msgid "Monday"
 msgstr "ponedeljek"
 
 #: .\enarocanje\workinghours\models.py:9
-#: .\templates\reservations\reservation.html:165
+#: .\templates\reservations\reservation.html:173
 msgid "Tuesday"
 msgstr "torek"
 
 #: .\enarocanje\workinghours\models.py:10
-#: .\templates\reservations\reservation.html:165
+#: .\templates\reservations\reservation.html:173
 msgid "Wednesday"
 msgstr "sreda"
 
 #: .\enarocanje\workinghours\models.py:11
-#: .\templates\reservations\reservation.html:166
+#: .\templates\reservations\reservation.html:174
 msgid "Thursday"
 msgstr "četrtek"
 
 #: .\enarocanje\workinghours\models.py:12
-#: .\templates\reservations\reservation.html:166
+#: .\templates\reservations\reservation.html:174
 msgid "Friday"
 msgstr "petek"
 
 #: .\enarocanje\workinghours\models.py:13
-#: .\templates\reservations\reservation.html:166
+#: .\templates\reservations\reservation.html:174
 msgid "Saturday"
 msgstr "sobota"
 
 #: .\enarocanje\workinghours\models.py:14
-#: .\templates\reservations\reservation.html:165
+#: .\templates\reservations\reservation.html:173
 msgid "Sunday"
 msgstr "nedelja"
 
@@ -1073,7 +1073,6 @@ msgid "Delete selected"
 msgstr "Izbriši izbrane"
 
 #: .\templates\browse\gallery.html:68
-#, fuzzy
 msgid "Delete all images"
 msgstr "Izbriši vse"
 
@@ -1087,7 +1086,7 @@ msgstr "Omogoči"
 
 #: .\templates\browse\gallery.html:96 .\templates\browse\gallery.html.py:99
 msgid "generic gallery"
-msgstr "Poglej galerijo"
+msgstr "generično galerijo"
 
 #: .\templates\browse\gallery.html:99
 msgid "Disable"
@@ -1102,45 +1101,43 @@ msgid "Add files"
 msgstr "Dodaj sliko"
 
 #: .\templates\browse\gallery.html:137
-#, fuzzy
 msgid "Uploaded images"
-msgstr "Naloži sliko"
+msgstr "Naložene slike"
 
-#: .\templates\browse\gallery.html:149
+#: .\templates\browse\gallery.html:151
 msgid "Upload files"
 msgstr "Naloži slike"
 
-#: .\templates\browse\gallery.html:157
+#: .\templates\browse\gallery.html:159
 #, fuzzy
 msgid "Direct"
 msgstr "dec"
 
-#: .\templates\browse\gallery.html:157
-#, fuzzy
+#: .\templates\browse\gallery.html:159
 msgid "camera"
 msgstr "Kamera"
 
-#: .\templates\browse\gallery.html:162
+#: .\templates\browse\gallery.html:164
 msgid "Camera photo error"
-msgstr ""
+msgstr "Napaka pri slikanu s kamero"
 
-#: .\templates\browse\gallery.html:168
+#: .\templates\browse\gallery.html:170
 msgid "Click on video to capture image and then click upload photo"
 msgstr "Kliknite ne video da zajamete sliko, nato kliknite naloži"
 
-#: .\templates\browse\gallery.html:172
+#: .\templates\browse\gallery.html:174
 msgid "Upload photo"
 msgstr "Naloži sliko"
 
-#: .\templates\browse\gallery.html:188
+#: .\templates\browse\gallery.html:190
 msgid "Basic instructions"
 msgstr "Osnovna navodila"
 
-#: .\templates\browse\gallery.html:190
+#: .\templates\browse\gallery.html:192
 msgid "Please follow these tips"
 msgstr "Prosimo, sledite tem namigom"
 
-#: .\templates\browse\gallery.html:192
+#: .\templates\browse\gallery.html:194
 msgid ""
 "We recommend that you use professional photo services for best photos. We "
 "picked cheapest and the best service from our database."
@@ -1148,39 +1145,40 @@ msgstr ""
 "Priporočamo, da za kar se da dobre slike uporabite profesionalno fotografsko "
 "storitev. Iz naše baze smo izbrali najcenejšo in najkvalitetnejšo možnost."
 
-#: .\templates\browse\gallery.html:193
+#: .\templates\browse\gallery.html:195
 msgid "Photos should be taken in well lit room."
 msgstr "Slike naj bodo narejene v dobro osvetljeni sobi."
 
-#: .\templates\browse\gallery.html:194
+#: .\templates\browse\gallery.html:196
 msgid "Reduce image resolution in image program."
 msgstr "Zmanjšajte ločljivost v programu za urejanje slik."
 
-#: .\templates\browse\gallery.html:195
+#: .\templates\browse\gallery.html:197
 msgid "Remove unnecessary alpha channel."
 msgstr "Odstranite nepotreben alfa kanal."
 
-#: .\templates\browse\gallery.html:196
+#: .\templates\browse\gallery.html:198
 msgid ""
-"Upload photos using regular upload or via folder upload(only supported in "
+"Upload photos using regular upload or via folder upload (only supported in "
 "chrome)."
 msgstr ""
 "Naložite slike z navadnim postopkom ali naložite celo mapo naenkrat (podprto "
 "le v Chromu)"
 
-#: .\templates\browse\gallery.html:202
+#: .\templates\browse\gallery.html:204
 msgid "Photo services"
 msgstr "Fotografske storitve"
 
-#: .\templates\browse\gallery.html:216 .\templates\browse\providers.html:72
+#: .\templates\browse\gallery.html:218 .\templates\browse\providers.html:72
 #: .\templates\browse\services.html:64
 msgid "away"
 msgstr "oddaljen"
 
-#: .\templates\browse\gallery.html:220 .\templates\browse\services.html:69
+#: .\templates\browse\gallery.html:222 .\templates\browse\services.html:69
+#: .\templates\emails\reminder.html:7
 #: .\templates\emails\reservation_customer.html:7
 #: .\templates\emails\reservation_customer.html:18
-#: .\templates\emails\reservation_customer.html:31
+#: .\templates\emails\reservation_customer.html:32
 #: .\templates\emails\reservation_provider.html:8
 #: .\templates\emails\reservation_provider.html:19
 #: .\templates\reservations\confirmation.html:14
@@ -1190,14 +1188,13 @@ msgstr "oddaljen"
 msgid "Price"
 msgstr "Cena"
 
-#: .\templates\browse\gallery.html:222 .\templates\browse\services.html:71
+#: .\templates\browse\gallery.html:224 .\templates\browse\services.html:71
 #: .\templates\service\service.html:34
 #: .\templates\userpages\provider_page.html:134
 msgid "Discounted until"
 msgstr "Popust velja do"
 
-#: .\templates\browse\gallery.html:234
-#, fuzzy
+#: .\templates\browse\gallery.html:236
 msgid "No services available"
 msgstr "Storitev ni dostopna pred "
 
@@ -1259,7 +1256,7 @@ msgstr "Naloži"
 
 #: .\templates\coupon\csvupload.html:22 .\templates\coupon\edit.html:31
 #: .\templates\customers\edit_customer.html:27
-#: .\templates\employees\edit.html:59
+#: .\templates\employees\edit.html:56
 #: .\templates\reservations\confirmation.html:33
 #: .\templates\reservations\gcal.html:20
 #: .\templates\reservations\userinfo.html:15 .\templates\service\edit.html:86
@@ -1273,7 +1270,7 @@ msgid "Edit Coupon"
 msgstr "Urejanje kuponov"
 
 #: .\templates\coupon\edit.html:30 .\templates\customers\edit_customer.html:26
-#: .\templates\employees\edit.html:58 .\templates\reservations\gcal.html:19
+#: .\templates\employees\edit.html:55 .\templates\reservations\gcal.html:19
 #: .\templates\service\edit.html:85 .\templates\workinghours\edit.html:65
 #: .\templates\workinghours\editabsence.html:27
 msgid "Save"
@@ -1331,29 +1328,25 @@ msgid "Delete all"
 msgstr "Izbriši vse"
 
 #: .\templates\customers\customer_list.html:14
-#, fuzzy
 msgid "Add customer"
-msgstr "Dodaj kupon"
+msgstr "Dodaj stranko"
 
 #: .\templates\customers\customer_list.html:34
 #: .\templates\customers\customer_list.html:51
 #: .\templates\employees\myemployees.html:29
 #: .\templates\employees\myemployees.html:46
 #: .\templates\userpages\provider_page.html:33
-#, fuzzy
 msgid "Phone"
-msgstr "Nič!"
+msgstr "Telefon"
 
 #: .\templates\customers\customer_list.html:37
 #: .\templates\customers\customer_list.html:54
-#, fuzzy
 msgid "Last reservation"
-msgstr "Rezerviraj"
+msgstr "Zadnja rezervacija"
 
 #: .\templates\customers\customer_list.html:74
-#, fuzzy
 msgid "You currently have no customers to display."
-msgstr "Trenutno nimate vpisanega nobenega računa socialnega omrežja."
+msgstr "Trenutno nimate vpisane nobene stranke."
 
 #: .\templates\emails\comment.html:2
 #, fuzzy, python-format
@@ -1365,19 +1358,16 @@ msgstr ""
 "Tukaj lahko pustite komentar za %(service_name)s pri %(provider_name)s: %"
 "(url)s"
 
-#: .\templates\emails\reservation_customer.html:3
-#: .\templates\emails\reservation_customer.html:14
-#, fuzzy
+#: .\templates\emails\reminder.html:3
 msgid ""
-"Your reservation was successful!\n"
-"        Here is some information about you reservation:"
+"This is a reminder for your reservation\n"
+"        You have scheduled the folowing service:"
 msgstr ""
-"Vaša rezervacija je bila uspešno sprejeta!\n"
-"\t\tDodatne informacije o rezervaciji:"
 
+#: .\templates\emails\reminder.html:6
 #: .\templates\emails\reservation_customer.html:6
 #: .\templates\emails\reservation_customer.html:17
-#: .\templates\emails\reservation_customer.html:30
+#: .\templates\emails\reservation_customer.html:31
 #: .\templates\emails\reservation_provider.html:7
 #: .\templates\emails\reservation_provider.html:18
 #: .\templates\reservations\confirmation.html:13
@@ -1390,20 +1380,40 @@ msgstr ""
 msgid "Duration"
 msgstr "Trajanje"
 
+#: .\templates\emails\reminder.html:10
 #: .\templates\emails\reservation_customer.html:10
 #: .\templates\emails\reservation_customer.html:21
-#: .\templates\emails\reservation_customer.html:34
+#: .\templates\emails\reservation_customer.html:35
 msgid "Service provider name"
 msgstr "Naziv ponudnika storitev"
 
+#: .\templates\emails\reminder.html:11
 #: .\templates\emails\reservation_customer.html:11
 #: .\templates\emails\reservation_customer.html:22
-#: .\templates\emails\reservation_customer.html:35
+#: .\templates\emails\reservation_customer.html:36
 msgid "Service provider phone"
 msgstr "Telefonska številka ponudnika storitev"
 
-#: .\templates\emails\reservation_customer.html:26
-#, fuzzy
+#: .\templates\emails\reminder.html:12
+#: .\templates\emails\reservation_customer.html:23
+msgid "You can find us "
+msgstr "Najdete nas lahko "
+
+#: .\templates\emails\reminder.html:12
+#: .\templates\emails\reservation_customer.html:23
+msgid "here"
+msgstr "tukaj"
+
+#: .\templates\emails\reservation_customer.html:3
+#: .\templates\emails\reservation_customer.html:14
+msgid ""
+"Your reservation was successful!\n"
+"        Here is some information about you reservation:"
+msgstr ""
+"Vaša rezervacija je bila uspešno sprejeta!\n"
+"\t\tDodatne informacije o rezervaciji:"
+
+#: .\templates\emails\reservation_customer.html:27
 msgid ""
 "Unfortunately your reservation was not confirmed by service provider. May be "
 "you can try again on\n"
@@ -1436,7 +1446,6 @@ msgid "Customer phone"
 msgstr "Naročnikov telefon"
 
 #: .\templates\emails\reservation_provider.html:15
-#, fuzzy
 msgid ""
 "You have a new reservation for your service!\n"
 "        Here is some information about this reservation:"
@@ -1445,20 +1454,19 @@ msgstr ""
 "\tDodatne informacije o rezervaciji:"
 
 #: .\templates\employees\add.html:5
-#, fuzzy
 msgid "Add Employee"
-msgstr "Dodaj E-naslov"
+msgstr "Dodaj zaposlenega"
 
 #: .\templates\employees\edit.html:11
 msgid "Edit Employee"
 msgstr ""
 
-#: .\templates\employees\edit.html:30
+#: .\templates\employees\edit.html:27
 #: .\templates\userpages\provider_page.html:52
 msgid "Working hours"
 msgstr "Delovni čas"
 
-#: .\templates\employees\edit.html:49
+#: .\templates\employees\edit.html:46
 msgid "Assign to service"
 msgstr "Določi storitvi"
 
@@ -1569,7 +1577,7 @@ msgid "Reservation at"
 msgstr "Rezervacija ob"
 
 #: .\templates\reservations\done.html:71
-#, fuzzy, python-format
+# python-format
 msgid ""
 "I made a reservation for %(service_name)s on %(date)s at %(time)s.\n"
 "        "
@@ -1588,160 +1596,160 @@ msgstr "Nepotrjene rezervacije"
 msgid "Google Calendar sync settings"
 msgstr "Nastavitve sinhronizacije z Google koledarjem"
 
-#: .\templates\reservations\reservation.html:30
+#: .\templates\reservations\reservation.html:32
 msgid "If you have a COUPON, then enter the coupon's number"
 msgstr "Če imate kupon, prosim vnesite številko kupona"
 
-#: .\templates\reservations\reservation.html:34
+#: .\templates\reservations\reservation.html:36
 msgid "Make a reservation"
 msgstr "Rezerviraj"
 
-#: .\templates\reservations\reservation.html:52
+#: .\templates\reservations\reservation.html:57
 msgid "Your reservation"
 msgstr "Vaša rezervacija"
 
-#: .\templates\reservations\reservation.html:153
+#: .\templates\reservations\reservation.html:161
 msgid "today"
 msgstr "danes"
 
-#: .\templates\reservations\reservation.html:154
+#: .\templates\reservations\reservation.html:162
 msgid "month"
 msgstr "mesec"
 
-#: .\templates\reservations\reservation.html:155
+#: .\templates\reservations\reservation.html:163
 msgid "week"
 msgstr "teden"
 
-#: .\templates\reservations\reservation.html:156
+#: .\templates\reservations\reservation.html:164
 msgid "day"
 msgstr "dan"
 
-#: .\templates\reservations\reservation.html:158
+#: .\templates\reservations\reservation.html:166
 msgid "January"
 msgstr "januar"
 
-#: .\templates\reservations\reservation.html:158
+#: .\templates\reservations\reservation.html:166
 msgid "February"
 msgstr "februar"
 
-#: .\templates\reservations\reservation.html:158
+#: .\templates\reservations\reservation.html:166
 msgid "March"
 msgstr "marec"
 
-#: .\templates\reservations\reservation.html:159
+#: .\templates\reservations\reservation.html:167
 msgid "April"
 msgstr "april"
 
-#: .\templates\reservations\reservation.html:159
-#: .\templates\reservations\reservation.html:163
+#: .\templates\reservations\reservation.html:167
+#: .\templates\reservations\reservation.html:171
 msgid "May"
 msgstr "maj"
 
-#: .\templates\reservations\reservation.html:159
+#: .\templates\reservations\reservation.html:167
 msgid "June"
 msgstr "junij"
 
-#: .\templates\reservations\reservation.html:159
+#: .\templates\reservations\reservation.html:167
 msgid "July"
 msgstr "julij"
 
-#: .\templates\reservations\reservation.html:160
+#: .\templates\reservations\reservation.html:168
 msgid "August"
 msgstr "august"
 
-#: .\templates\reservations\reservation.html:160
+#: .\templates\reservations\reservation.html:168
 msgid "September"
 msgstr "september"
 
-#: .\templates\reservations\reservation.html:160
+#: .\templates\reservations\reservation.html:168
 msgid "October"
 msgstr "oktober"
 
-#: .\templates\reservations\reservation.html:160
+#: .\templates\reservations\reservation.html:168
 msgid "November"
 msgstr "november"
 
-#: .\templates\reservations\reservation.html:161
+#: .\templates\reservations\reservation.html:169
 msgid "December"
 msgstr "december"
 
-#: .\templates\reservations\reservation.html:162
+#: .\templates\reservations\reservation.html:170
 msgid "Jan"
 msgstr "jan"
 
-#: .\templates\reservations\reservation.html:162
+#: .\templates\reservations\reservation.html:170
 msgid "Feb"
 msgstr "feb"
 
-#: .\templates\reservations\reservation.html:162
+#: .\templates\reservations\reservation.html:170
 msgid "Mar"
 msgstr "mar"
 
-#: .\templates\reservations\reservation.html:162
+#: .\templates\reservations\reservation.html:170
 msgid "Apr"
 msgstr "apr"
 
-#: .\templates\reservations\reservation.html:163
+#: .\templates\reservations\reservation.html:171
 msgid "Jun"
 msgstr "jun"
 
-#: .\templates\reservations\reservation.html:163
+#: .\templates\reservations\reservation.html:171
 msgid "Jul"
 msgstr "jul"
 
-#: .\templates\reservations\reservation.html:163
+#: .\templates\reservations\reservation.html:171
 msgid "Aug"
 msgstr "aug"
 
-#: .\templates\reservations\reservation.html:163
+#: .\templates\reservations\reservation.html:171
 msgid "Sep"
 msgstr "sep"
 
-#: .\templates\reservations\reservation.html:164
+#: .\templates\reservations\reservation.html:172
 msgid "Oct"
 msgstr "okt"
 
-#: .\templates\reservations\reservation.html:164
+#: .\templates\reservations\reservation.html:172
 msgid "Nov"
 msgstr "nov"
 
-#: .\templates\reservations\reservation.html:164
+#: .\templates\reservations\reservation.html:172
 msgid "Dec"
 msgstr "dec"
 
-#: .\templates\reservations\reservation.html:167
+#: .\templates\reservations\reservation.html:175
 msgid "Sun"
 msgstr "ned"
 
-#: .\templates\reservations\reservation.html:167
+#: .\templates\reservations\reservation.html:175
 msgid "Mon"
 msgstr "pon"
 
-#: .\templates\reservations\reservation.html:167
+#: .\templates\reservations\reservation.html:175
 msgid "Tue"
 msgstr "tor"
 
-#: .\templates\reservations\reservation.html:167
+#: .\templates\reservations\reservation.html:175
 msgid "Wed"
 msgstr "sre"
 
-#: .\templates\reservations\reservation.html:168
+#: .\templates\reservations\reservation.html:176
 msgid "Thu"
 msgstr "čet"
 
-#: .\templates\reservations\reservation.html:168
+#: .\templates\reservations\reservation.html:176
 msgid "Fri"
 msgstr "pet"
 
-#: .\templates\reservations\reservation.html:168
+#: .\templates\reservations\reservation.html:176
 msgid "Sat"
 msgstr "sob"
 
-#: .\templates\reservations\reservation.html:169
+#: .\templates\reservations\reservation.html:177
 msgid "W"
 msgstr "T"
 
-#: .\templates\reservations\reservation.html:170
+#: .\templates\reservations\reservation.html:178
 msgid "all-day"
 msgstr "ves dan"
 

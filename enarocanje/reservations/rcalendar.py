@@ -45,8 +45,8 @@ def daterange(start_date, end_date):
 def getMinMaxTime(provider):
     workinghours = list(provider.working_hours.all())
     if not workinghours:
-        return (None, None)
-    return (min(wh.time_from for wh in workinghours), max(wh.time_to for wh in workinghours))
+        return None, None
+    return min(wh.time_from for wh in workinghours), max(wh.time_to for wh in workinghours)
 
 
 def getEvents(provider, start, end):

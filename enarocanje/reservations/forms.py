@@ -9,6 +9,7 @@ from enarocanje.common.widgets import BootstrapDateInput, BootstrapTimeInput
 from enarocanje.coupon.models import Coupon
 from enarocanje.reservations.models import Reservation
 from enarocanje.workinghours.models import WorkingHours, Absence
+from enarocanje.employees.models import Employee
 
 
 def getDefaultReservationDate():
@@ -126,7 +127,9 @@ class ReservationForm(forms.Form):
         self.workingHours = kwargs.pop('workingHours')
         self.service = kwargs.pop('service')
         self.request = request
+        self.employees = forms.ModelChoiceField(queryset=self.service.employees, required=False)
         super(ReservationForm, self).__init__(*args, **kwargs)
+        self.fields['employees'] = self.employees
 
 
 class NonRegisteredUserForm(forms.Form):

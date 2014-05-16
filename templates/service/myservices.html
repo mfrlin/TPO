@@ -63,7 +63,7 @@
             {% for service in services %}
                 <tr{% if not service.is_active %} class="warning"{% endif %}>
                     <td data-title="{% trans 'Name' %}">
-                        {{ service.name }}
+                        <a href="/services/{{ service.id }}" style="color: inherit">{{ service.name }}</a>
                     </td>
                     <td data-title="{% trans 'Duration' %}">
                         {{ service.duration_with_unit }}
