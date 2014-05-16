@@ -134,7 +134,6 @@ def reservation(request, id):
                 subject = _('Confirmation of service reservation')
                 renderedToCustomer = render_to_string('emails/reservation_customer.html',
                                                       {'reservation': reserve, 'link': user_page_link})
-                print renderedToCustomer
                 renderedToProvider = render_to_string('emails/reservation_provider.html',
                                                       {'reservation': reserve, 'link': user_page_link})
                 message1 = (subject, renderedToCustomer, None, [email_to1])
@@ -142,9 +141,10 @@ def reservation(request, id):
                 send_mass_mail((message1, message2), fail_silently=True)
             else:
                 subject = _('Confirmation of service reservation')
-                renderedToProvider = render_to_string('emails/reservation_provider.html',
+                renderedToCustomer = render_to_string('emails/reservation_customer.html',
                                                       {'reservation': reserve, 'link': user_page_link})
-                #send_mail(subject, renderedToProvider, None, [email_to2], fail_silently=False)
+                send_mail(subject, renderedToCustomer, email_to2, [email_to1],
+                          fail_silently=False)
 
             start = datetime.datetime.combine(reserve.date, reserve.time)
             gcal_params = urllib.urlencode({

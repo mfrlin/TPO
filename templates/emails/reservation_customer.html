@@ -9,6 +9,7 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+    {% trans 'Our location and other information are here' %}: {{ link }}
 {% endif %}
 {% if reservation.is_confirmed == True %}
     {% blocktrans %}Your reservation was successful!
@@ -20,7 +21,7 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
-    {% trans 'You can find us ' %} <a href="{{ link }}">{% trans 'here' %}</a>.
+    {% trans 'Our location and other information are here' %}: {{ link }}
 {% endif %}
 
 {% if reservation.is_deny == True %}
