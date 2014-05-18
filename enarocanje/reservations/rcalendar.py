@@ -3,7 +3,6 @@ import json
 
 from django.http import Http404, HttpResponse
 from django.utils.translation import ugettext_lazy as _, ugettext
-from django.core import serializers
 
 from enarocanje.accountext.models import ServiceProvider
 from enarocanje.reservations.models import Reservation
@@ -12,6 +11,8 @@ from enarocanje.employees.models import Employee
 
 EVENT_TITLE_CLOSED = _('Closed')
 EVENT_TITLE_CLOSED_WHOLE_DAY = _('Closed on this day')
+EVENT_TITLE_NOT_WORKING = _('Absent')
+EVENT_TITLE_NOT_WORKING_WHOLE_DAY = _("Doesn't work")
 EVENT_TITLE_RESERVED = _('Reserved')
 
 EVENT_CLOSED_COLOR = '#E02D2D'
@@ -86,10 +87,10 @@ def getWorkingHours(provider, date):
     # Check if provider is working on this date
     if workinghrs is None or Absence.is_absent_on(provider, date):
         return [{
-                'title': ugettext(EVENT_TITLE_CLOSED_WHOLE_DAY),
-                'start': encodeDatetime(date),
-                'end': encodeDatetime(date + datetime.timedelta(days=1)),
-                'color': EVENT_CLOSED_COLOR
+                    'title': ugettext(EVENT_TITLE_CLOSED_WHOLE_DAY),
+                    'start': encodeDatetime(date),
+                    'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                    'color': EVENT_CLOSED_COLOR
                 }]
 
     # Start
@@ -119,11 +120,73 @@ def getWorkingHours(provider, date):
     return events
 
 
+# for employees
+
 def getEmployeeTimetable(request):
     #emp = Employee.objects.get(id=id)
     # form events
-    print request.GET
+    sp_id = request.GET.get('service_provider_id')
+    emp_id = request.GET.get('employee_id')
+    start = datetime.datetime.fromtimestamp(int(request.GET.get('start')))
+    end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
+    emp = Employee.objects.get(id=emp_id)
+
+    return HttpResponse(json.dumps(getEmpEvents(emp, start, end)))
 
 
-    return HttpResponse('derp')
-    #return HttpResponse(json.dumps(json_payload), content_type="application/json")
+def getEmpEvents(employee, start, end):
+    events = []
+
+    # Get reservation events
+    events.extend(getEmployeeReservations(employee, start, end))
+
+    # Get working hours events
+    for date in daterange(start.date(), end.date()):
+        events.extend(getEmployeeWorkingHours(employee, date))
+    return events
+
+
+def getEmployeeReservations(employee, start, end):
+    reservations = Reservation.objects.filter(employee=employee, date__gte=start, date__lte=end)
+    events = []
+    for reservation in reservations:
+        dt = datetime.datetime.combine(reservation.date, reservation.time)
+        events.append({
+            'title': ugettext(EVENT_TITLE_RESERVED),
+            'start': encodeDatetime(dt),
+            'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
+            'color': EVENT_RESERVED_COLOR
+        })
+    return events
+
+
+def getEmployeeWorkingHours(employee, date):
+    workinghrs = EmployeeWorkingHours.get_for_day(employee, date.weekday())
+    events = []
+
+    # TODO add employee absence support
+    if workinghrs is None:
+        return [{
+                'title': ugettext(EVENT_TITLE_NOT_WORKING_WHOLE_DAY),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                'color': EVENT_CLOSED_COLOR
+                }]
+
+    events.append({
+        'title': ugettext(EVENT_TITLE_NOT_WORKING),
+        'start': encodeDatetime(date),
+        'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_from)),
+        'color': EVENT_PAUSE_COLOR
+    })
+
+    events.append({
+        'title': ugettext(EVENT_TITLE_NOT_WORKING),
+        'start': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
+        'end': encodeDatetime(date + datetime.timedelta(days=1)),
+        'color': EVENT_PAUSE_COLOR
+    })
+
+    # TODO add break support
+
+    return events

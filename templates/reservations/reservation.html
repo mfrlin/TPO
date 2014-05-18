@@ -48,22 +48,33 @@
         (function() {
             var cal = $('#calendar');
             var id = null;
+            var defEvents = {
+                    url: '{% url 'calendarjson' %}',
+                    type: 'GET',
+                        data: {
+                            'service_provider_id': '{{ service.service_provider_id }}'
+                        }
+            };
             $('#id_employees').change(function(){
                 id = $(this).val();
+                var events = {
+                    url: '/timetable/',
+                    type: 'GET',
+                    data: {
+                       'service_provider_id': '{{ service.service_provider_id }}',
+                       'employee_id': id
+                    }
+                };
                 if (id != ''){
-                   //fetch employee timetable
-                   var events = {
-                       url: '/timetable/',
-                       type: 'GET',
-                       data: {
-                           'service_provider': '{{ service.service_provider_id }}',
-                           'employee': id
-                       }
-                   };
-                   //console.log(events);
-                   //cal.fullCalendar('removeEvents');
-                   //$('#calendar').fullCalendar('removeEventSource', events);
-                   $('#calendar').fullCalendar('addEventSource', events);
+                   cal.fullCalendar('removeEvents');
+                   cal.fullCalendar('removeEventSource', defEvents);
+                   cal.fullCalendar('removeEventSource', events);
+                   cal.fullCalendar('addEventSource', events);
+                }
+                else {
+                    cal.fullCalendar('removeEvents');
+                    cal.fullCalendar('removeEventSource', events);
+                    cal.fullCalendar('addEventSource', defEvents);
                 }
             });
 
@@ -98,6 +109,7 @@
 
             function viewDisplay(view) {
                 console.log(id);
+                console.log("viewDisplay");
                 var cur_date = new Date();
                 cur_date.setDate(date.getDate());
                 cur_date.setTime(date.getTime());
@@ -121,14 +133,12 @@
                         date.setDate(date.getDate() - 1);
                     }
                 }
-                // needs better condition
                 var dt = date-cur_date;
-                //console.log(dt);
                 // so selection gets cleared on date change
                 if (dt >= 86400000 || dt < 0){
                     cal.fullCalendar('removeEventSource', selectedEvent);
                 }
-                else{
+                else {
                     updateDate(date);
                 }
                 datePicker.data('datetimepicker').setLocalDate(date);
@@ -136,7 +146,6 @@
             }
 
             function dayClick(ndate, allDay, jsEvent, view) {
-                //console.log($('#calendar').fullCalendar('clientEvents'));
                 updateDate(ndate);
                 $('#calendar').fullCalendar('gotoDate', date);
                 datePicker.data('datetimepicker').setLocalDate(date);

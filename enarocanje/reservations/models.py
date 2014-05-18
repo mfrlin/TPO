@@ -15,6 +15,7 @@ from tasks import send_reminder
 from enarocanje.accountext.models import User, ServiceProvider
 from enarocanje.service.models import Service
 from enarocanje.customers.models import Customer
+from enarocanje.employees.models import Employee
 
 add_introspection_rules([], ['^oauth2client\.django_orm\.CredentialsField'])
 
@@ -35,6 +36,9 @@ class Reservation(models.Model):
     user_fullname = models.CharField(_('name'), max_length=60, null=True)
     user_phone = models.CharField(_('phone number'), max_length=100, null=True)
     user_email = models.CharField(_('email address'), max_length=100, null=True)
+
+    # employee
+    employee = models.ForeignKey(Employee, null=True)
 
     # Backup fields if the service is changed or deleted
     service_provider = models.ForeignKey(ServiceProvider, related_name='reservations')

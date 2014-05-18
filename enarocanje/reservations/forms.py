@@ -127,9 +127,12 @@ class ReservationForm(forms.Form):
         self.workingHours = kwargs.pop('workingHours')
         self.service = kwargs.pop('service')
         self.request = request
-        self.employees = forms.ModelChoiceField(queryset=self.service.employees, required=False)
+        if self.service.employees.all():
+            self.employees = forms.ModelChoiceField(queryset=self.service.employees, required=False,
+                                                    empty_label=_('anyone'))
         super(ReservationForm, self).__init__(*args, **kwargs)
-        self.fields['employees'] = self.employees
+        if self.service.employees.all():
+            self.fields['employees'] = self.employees
 
 
 class NonRegisteredUserForm(forms.Form):
