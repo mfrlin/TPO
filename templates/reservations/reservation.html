@@ -45,21 +45,31 @@
     </script><script>
     //just to enable syntax coloring in pycharm
     {% if minTime and maxTime %}
-
-        $('#id_employees').change(function(){
-            var id = $(this).find(":selected").val();
-            var url = '/tt/' + id;
-            $.get(url, function(data){
-                console.log(data);
-            });
-            // TODO update calendar based on chosen employee
-        });
-
         (function() {
+            var cal = $('#calendar');
+            var id = null;
+            $('#id_employees').change(function(){
+                id = $(this).val();
+                if (id != ''){
+                   //fetch employee timetable
+                   var events = {
+                       url: '/timetable/',
+                       type: 'GET',
+                       data: {
+                           'service_provider': '{{ service.service_provider_id }}',
+                           'employee': id
+                       }
+                   };
+                   //console.log(events);
+                   //cal.fullCalendar('removeEvents');
+                   //$('#calendar').fullCalendar('removeEventSource', events);
+                   $('#calendar').fullCalendar('addEventSource', events);
+                }
+            });
+
             var date = new Date(), selectedEvent = null;
             function updateDate(ndate) {
-                //console.log(arguments.callee.caller.name);
-                $('#calendar').fullCalendar('removeEventSource', selectedEvent);
+                cal.fullCalendar('removeEventSource', selectedEvent);
                 date = ndate;
                 var dateEnd = new Date(date);
                 dateEnd.setMinutes(dateEnd.getMinutes() + {{ service.duration }});
@@ -68,7 +78,7 @@
                     start: date,
                     end: dateEnd
                 }];
-                $('#calendar').fullCalendar('addEventSource', selectedEvent);
+                cal.fullCalendar('addEventSource', selectedEvent);
             }
 
             function changeDate(ev) {
@@ -87,6 +97,7 @@
             }
 
             function viewDisplay(view) {
+                console.log(id);
                 var cur_date = new Date();
                 cur_date.setDate(date.getDate());
                 cur_date.setTime(date.getTime());
@@ -110,11 +121,12 @@
                         date.setDate(date.getDate() - 1);
                     }
                 }
-
+                // needs better condition
                 var dt = date-cur_date;
+                //console.log(dt);
                 // so selection gets cleared on date change
                 if (dt >= 86400000 || dt < 0){
-                    $('#calendar').fullCalendar('removeEventSource', selectedEvent);
+                    cal.fullCalendar('removeEventSource', selectedEvent);
                 }
                 else{
                     updateDate(date);
@@ -149,7 +161,7 @@
             date.setMinutes(dateTime.getMinutes());
             date.setSeconds(0);
 
-            $('#calendar').fullCalendar({
+            cal.fullCalendar({
                 header: {
                     left: 'prev,next, today',
                     center: '',
@@ -219,7 +231,7 @@
             });
 
             $('#calendar-refresh').click(function() {
-                $('#calendar').fullCalendar('refetchEvents');
+                cal.fullCalendar('refetchEvents');
             });
         })();
         </script><script>

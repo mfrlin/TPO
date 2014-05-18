@@ -27,6 +27,7 @@ from enarocanje.workinghours.models import WorkingHours
 from enarocanje.employees.models import Employee
 from forms import ReservationForm, NonRegisteredUserForm
 from rcalendar import getMinMaxTime
+from enarocanje.workinghours.models import EmployeeWorkingHours
 
 # Service reservations
 
@@ -180,12 +181,3 @@ def reservation(request, id):
 def myreservations(request):
     res_confirm = request.user.service_provider.reservation_confirmation_needed
     return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
-
-
-def getEmployeeTimetable(request, id):
-    emp = Employee.objects.get(id=id)
-    print emp
-    json_payload = dict()
-    json_payload['name'] = emp.name
-    json_payload['surname'] = emp.surname
-    return HttpResponse(json.dumps(json_payload), content_type="application/json")

@@ -3,10 +3,12 @@ import json
 
 from django.http import Http404, HttpResponse
 from django.utils.translation import ugettext_lazy as _, ugettext
+from django.core import serializers
 
 from enarocanje.accountext.models import ServiceProvider
 from enarocanje.reservations.models import Reservation
-from enarocanje.workinghours.models import Absence, WorkingHours
+from enarocanje.workinghours.models import Absence, WorkingHours, EmployeeWorkingHours
+from enarocanje.employees.models import Employee
 
 EVENT_TITLE_CLOSED = _('Closed')
 EVENT_TITLE_CLOSED_WHOLE_DAY = _('Closed on this day')
@@ -115,3 +117,13 @@ def getWorkingHours(provider, date):
         })
 
     return events
+
+
+def getEmployeeTimetable(request):
+    #emp = Employee.objects.get(id=id)
+    # form events
+    print request.GET
+
+
+    return HttpResponse('derp')
+    #return HttpResponse(json.dumps(json_payload), content_type="application/json")
