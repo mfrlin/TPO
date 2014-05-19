@@ -35,23 +35,23 @@ class ReservationForm(forms.Form):
         coupons = Coupon.objects.filter(service=self.service.id)
         saved_time = self.request.session.get('start_session', None)
         now = datetime.datetime.now()
-        if (data):
-            if (saved_time != None and (saved_time < now and self.request.session.get('count') == 10)):
+        if data:
+            if saved_time is not None and (saved_time < now and self.request.session.get('count') == 10):
                 del self.request.session['count']
                 del self.request.session['start_session']
-            if ('count' in self.request.session):
-                if (self.request.session.get('count') == 10):
+            if 'count' in self.request.session:
+                if self.request.session.get('count') == 10:
                     self.request.session['start_session'] = now + datetime.timedelta(days=1)
                     raise ValidationError(
-                        _('Sorry, you entered your cupon number wrong 10 times. You can try again in 24h.'))
+                        _('Sorry, you entered your coupon number wrong 10 times. You can try again in 24h.'))
                 else:
                     self.request.session['count'] = self.request.session.get('count', 0) + 1
             else:
                 self.request.session['count'] = 1
             for coup in coupons:
-                if (data == coup.number and (saved_time == None or saved_time <= now)):
-                    if (coup.valid >= now.date()):
-                        if (coup.is_used == True):
+                if data == coup.number and (saved_time is None or saved_time <= now):
+                    if coup.valid >= now.date():
+                        if coup.is_used:
                             raise ValidationError(_('Sorry, this coupon was already used.'))
                         if 'count' and 'start_session' in self.request.session:
                             del self.request.session['count']
@@ -148,12 +148,13 @@ class GCalSettings(forms.Form):
         self.fields['calendar'] = forms.ChoiceField(
             widget=forms.RadioSelect(),
             choices=[
-                        (None, _('Don\'t sync with Google Calendar')),
-                        ('new', _('Create new calendar'))
-                    ] + [
-                        (calendar['id'], calendar['summary'])
-                        for calendar in calendars
-                        if calendar['accessRole'] in ('writer', 'owner')
-                    ],
+                (None, _('Don\'t sync with Google Calendar')),
+                ('new', _('Create new calendar'))
+            ] +
+            [
+                (calendar['id'], calendar['summary'])
+                for calendar in calendars
+                if calendar['accessRole'] in ('writer', 'owner')
+            ],
             label=''
         )

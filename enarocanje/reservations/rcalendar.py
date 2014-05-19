@@ -86,12 +86,14 @@ def getWorkingHours(provider, date):
 
     # Check if provider is working on this date
     if workinghrs is None or Absence.is_absent_on(provider, date):
-        return [{
-                    'title': ugettext(EVENT_TITLE_CLOSED_WHOLE_DAY),
-                    'start': encodeDatetime(date),
-                    'end': encodeDatetime(date + datetime.timedelta(days=1)),
-                    'color': EVENT_CLOSED_COLOR
-                }]
+        return [
+            {
+                'title': ugettext(EVENT_TITLE_CLOSED_WHOLE_DAY),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                'color': EVENT_CLOSED_COLOR
+            }
+        ]
 
     # Start
     events.append({
@@ -123,18 +125,17 @@ def getWorkingHours(provider, date):
 # for employees
 
 def getEmployeeTimetable(request):
-    #emp = Employee.objects.get(id=id)
-    # form events
-    sp_id = request.GET.get('service_provider_id')
     emp_id = request.GET.get('employee_id')
+    sp_id = request.GET.get('service_provider_id')
     start = datetime.datetime.fromtimestamp(int(request.GET.get('start')))
     end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
     emp = Employee.objects.get(id=emp_id)
+    sp = ServiceProvider.objects.get(id=sp_id)
 
-    return HttpResponse(json.dumps(getEmpEvents(emp, start, end)))
+    return HttpResponse(json.dumps(getEmpEvents(sp, emp, start, end)))
 
 
-def getEmpEvents(employee, start, end):
+def getEmpEvents(provider, employee, start, end):
     events = []
 
     # Get reservation events
@@ -142,7 +143,7 @@ def getEmpEvents(employee, start, end):
 
     # Get working hours events
     for date in daterange(start.date(), end.date()):
-        events.extend(getEmployeeWorkingHours(employee, date))
+        events.extend(getEmployeeWorkingHours(provider, employee, date))
     return events
 
 
@@ -160,18 +161,30 @@ def getEmployeeReservations(employee, start, end):
     return events
 
 
-def getEmployeeWorkingHours(employee, date):
+def getEmployeeWorkingHours(provider, employee, date):
+    sp_workinghrs = WorkingHours.get_for_day(provider, date.weekday())
     workinghrs = EmployeeWorkingHours.get_for_day(employee, date.weekday())
     events = []
 
     # TODO add employee absence support
+    if sp_workinghrs is None or Absence.is_absent_on(provider, date):
+        return [
+            {
+                'title': ugettext(EVENT_TITLE_CLOSED_WHOLE_DAY),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                'color': EVENT_CLOSED_COLOR
+            }
+        ]
     if workinghrs is None:
-        return [{
+        return [
+            {
                 'title': ugettext(EVENT_TITLE_NOT_WORKING_WHOLE_DAY),
                 'start': encodeDatetime(date),
                 'end': encodeDatetime(date + datetime.timedelta(days=1)),
                 'color': EVENT_CLOSED_COLOR
-                }]
+            }
+        ]
 
     events.append({
         'title': ugettext(EVENT_TITLE_NOT_WORKING),
@@ -186,6 +199,14 @@ def getEmployeeWorkingHours(employee, date):
         'end': encodeDatetime(date + datetime.timedelta(days=1)),
         'color': EVENT_PAUSE_COLOR
     })
+
+    for wrkbrk in sp_workinghrs.breaks.all():
+        events.append({
+            'title': ugettext(EVENT_TITLE_CLOSED),
+            'start': encodeDatetime(datetime.datetime.combine(date, wrkbrk.time_from)),
+            'end': encodeDatetime(datetime.datetime.combine(date, wrkbrk.time_to)),
+            'color': EVENT_PAUSE_COLOR
+        })
 
     # TODO add break support
 

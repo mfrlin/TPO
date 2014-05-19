@@ -15,7 +15,6 @@
             {% trans "Warning: previous reservations won't be affected by edits!" %}
         </div>
     {% endblock %}
-
     <form method="POST" action="">
         {% csrf_token %}
         <div class="row">
@@ -31,6 +30,7 @@
                 {{ form.price|as_bootstrap }}
                 {{ form.category|as_bootstrap }}
                 {{ form.sex|as_bootstrap }}
+                {{ form.employees|as_bootstrap }}
             </div>
             <div class="span7">
                 {{ form.description|as_bootstrap }}
