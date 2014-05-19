@@ -11,6 +11,9 @@
         <b>{% trans "Service" %}:</b> {{ service.name }}<br/>
         <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
         <b>{% trans "Date and time" %}:</b> {{ data.date }}{{ data.time }}<br/>
+        {% if chosen_employee %}
+            <b>{% trans "Employee" %}:</b> {{ chosen_employee }}<br/>
+        {% endif %}
     </p>
     {% if service.service_provider.reservation_confirmation_needed == True %}
 

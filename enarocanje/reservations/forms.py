@@ -29,6 +29,7 @@ class ReservationForm(forms.Form):
     date = forms.DateField(widget=BootstrapDateInput(), initial=getDefaultReservationDate, label=_('Date'))
     time = forms.TimeField(widget=BootstrapTimeInput(), initial=getDefaultReservationTime, label=_('Time'))
     number = forms.CharField(required=False, label='')
+    #employees = forms.ModelChoiceField(queryset=None, required=False)
 
     def clean_number(self):
         data = self.cleaned_data['number']
@@ -115,6 +116,7 @@ class ReservationForm(forms.Form):
                 raise ValidationError(_('Sorry, the service isn\'t available at specified time.'))
 
         # Check reservations
+        # TODO multiple employees
         reservations = Reservation.objects.filter(service_provider=service_provider, date=self.cleaned_data.get('date'))
         for res in reservations:
             resDt = datetime.datetime.combine(res.date, res.time)
@@ -123,6 +125,11 @@ class ReservationForm(forms.Form):
 
         return data
 
+    def clean_employees(self):
+        if 'employees' in self.data and self.data['employees'] != '' and self.data['employees'] is not None:
+            return Employee.objects.get(id=self.data['employees'])
+        return ''
+
     def __init__(self, request, *args, **kwargs):
         self.workingHours = kwargs.pop('workingHours')
         self.service = kwargs.pop('service')
@@ -130,9 +137,10 @@ class ReservationForm(forms.Form):
         if self.service.employees.all():
             self.employees = forms.ModelChoiceField(queryset=self.service.employees, required=False,
                                                     empty_label=_('anyone'))
+        else:
+            self.employees = forms.ModelChoiceField(queryset=Employee.objects.none(), required=False)
         super(ReservationForm, self).__init__(*args, **kwargs)
-        if self.service.employees.all():
-            self.fields['employees'] = self.employees
+        self.fields['employees'] = self.employees
 
 
 class NonRegisteredUserForm(forms.Form):
@@ -148,13 +156,13 @@ class GCalSettings(forms.Form):
         self.fields['calendar'] = forms.ChoiceField(
             widget=forms.RadioSelect(),
             choices=[
-                (None, _('Don\'t sync with Google Calendar')),
-                ('new', _('Create new calendar'))
-            ] +
-            [
-                (calendar['id'], calendar['summary'])
-                for calendar in calendars
-                if calendar['accessRole'] in ('writer', 'owner')
-            ],
+                        (None, _('Don\'t sync with Google Calendar')),
+                        ('new', _('Create new calendar'))
+                    ] +
+                    [
+                        (calendar['id'], calendar['summary'])
+                        for calendar in calendars
+                        if calendar['accessRole'] in ('writer', 'owner')
+                    ],
             label=''
         )

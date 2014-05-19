@@ -21,9 +21,11 @@
                 <div class="span4">
                     {{ form.time|as_bootstrap }}
                 </div>
-                <div class="span4">
-                    {{ form.employees|as_bootstrap }}
-                </div>
+                {% if form.employees.field.choices.queryset.all|length > 1 %}
+                    <div class="span4">
+                        {{ form.employees|as_bootstrap }}
+                    </div>
+                {% endif %}
             </div>
 
             <div id='calendar'></div>
@@ -48,6 +50,7 @@
         (function() {
             var cal = $('#calendar');
             var id = null;
+            // TODO show reserved only if all employees are busy
             var defEvents = {
                     url: '{% url 'calendarjson' %}',
                     type: 'GET',
