@@ -29,7 +29,6 @@ class ReservationForm(forms.Form):
     date = forms.DateField(widget=BootstrapDateInput(), initial=getDefaultReservationDate, label=_('Date'))
     time = forms.TimeField(widget=BootstrapTimeInput(), initial=getDefaultReservationTime, label=_('Time'))
     number = forms.CharField(required=False, label='')
-    #employees = forms.ModelChoiceField(queryset=None, required=False)
 
     def clean_number(self):
         data = self.cleaned_data['number']
@@ -116,8 +115,11 @@ class ReservationForm(forms.Form):
                 raise ValidationError(_('Sorry, the service isn\'t available at specified time.'))
 
         # Check reservations
-        # TODO multiple employees
         reservations = Reservation.objects.filter(service_provider=service_provider, date=self.cleaned_data.get('date'))
+        # if employee is chosen, only check against his reservations
+        if self.clean_employees() != '':
+            reservations = reservations.filter(employee=self.clean_employees().id)
+
         for res in reservations:
             resDt = datetime.datetime.combine(res.date, res.time)
             if is_overlapping(start, end, resDt, resDt + datetime.timedelta(minutes=res.service_duration)):
@@ -126,8 +128,9 @@ class ReservationForm(forms.Form):
         return data
 
     def clean_employees(self):
-        if 'employees' in self.data and self.data['employees'] != '' and self.data['employees'] is not None:
-            return Employee.objects.get(id=self.data['employees'])
+        if 'employees' in self.data:
+            if self.data['employees'] != '' and self.data['employees'] is not None:
+                return Employee.objects.get(id=self.data['employees'])
         return ''
 
     def __init__(self, request, *args, **kwargs):

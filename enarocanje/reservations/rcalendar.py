@@ -69,9 +69,13 @@ def getReservations(provider, start, end):
     reservations = Reservation.objects.filter(service_provider=provider, date__gte=start, date__lte=end)
     events = []
     for reservation in reservations:
+        if reservation.employee:
+            emp = reservation.employee.__unicode__()
+        else:
+            emp = 'NONE'
         dt = datetime.datetime.combine(reservation.date, reservation.time)
         events.append({
-            'title': ugettext(EVENT_TITLE_RESERVED),
+            'title': ugettext(EVENT_TITLE_RESERVED + " at " + emp),
             'start': encodeDatetime(dt),
             'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
             'color': EVENT_RESERVED_COLOR
@@ -83,6 +87,8 @@ def getReservations(provider, start, end):
 def getWorkingHours(provider, date):
     workinghrs = WorkingHours.get_for_day(provider, date.weekday())
     events = []
+
+    # TODO check when employees work
 
     # Check if provider is working on this date
     if workinghrs is None or Absence.is_absent_on(provider, date):
