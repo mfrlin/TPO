@@ -55,7 +55,8 @@
                     url: '{% url 'calendarjson' %}',
                     type: 'GET',
                         data: {
-                            'service_provider_id': '{{ service.service_provider_id }}'
+                            'service_provider_id': '{{ service.service_provider_id }}',
+                            'service_id': '{{ service.id }}'
                         }
             };
             $('#id_employees').change(function(){
@@ -237,7 +238,8 @@
                     url: '{% url 'calendarjson' %}',
                     type: 'GET',
                     data: {
-                        'service_provider_id': '{{ service.service_provider_id }}'
+                        'service_provider_id': '{{ service.service_provider_id }}',
+                        'service_id': '{{ service.id }}'
                     }
                 }
             });

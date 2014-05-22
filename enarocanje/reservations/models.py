@@ -13,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 from tasks import send_reminder
 
 from enarocanje.accountext.models import User, ServiceProvider
-from enarocanje.service.models import Service
 from enarocanje.customers.models import Customer
 from enarocanje.employees.models import Employee
 
@@ -23,7 +22,7 @@ add_introspection_rules([], ['^oauth2client\.django_orm\.CredentialsField'])
 class Reservation(models.Model):
     """Reservation model - who made a reservation and when"""
     user = models.ForeignKey(User, null=True)  # null for gcal imported reservations
-    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL,
+    service = models.ForeignKey('service.Service', null=True, on_delete=models.SET_NULL,
                                 related_name='service')  # service can be deleted
     date = models.DateField(null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
@@ -61,6 +60,11 @@ class Reservation(models.Model):
     def short_desc(self):
         """Default short description visible on reservation button"""
         return str(self.id)
+
+    def active_during(self, time):
+        start = datetime.datetime.combine(self.date, self.time)
+        end = start + datetime.timedelta(minutes=self.service_duration)
+        return time_in_range(start, end, time)
 
     class Meta:
         unique_together = ('service_provider', 'gcalid')
@@ -132,3 +136,10 @@ pre_save.connect(reservation_handler, sender=Reservation)
 class GCal(models.Model):
     id = models.ForeignKey(ServiceProvider, primary_key=True)
     credential = CredentialsField()
+
+
+def time_in_range(start, end, x):
+    if start <= end:
+        return start <= x < end
+    else:
+        return start <= x or x < end

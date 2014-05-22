@@ -143,19 +143,23 @@ def reservation(request, id):
                     # find free employees
                     reserveDt = datetime.datetime.combine(reserve.date, reserve.time)
                     free_emp = list(service.employees.all())
+                    for emp in free_emp:
+                        if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
+                            reserve.date.weekday()):
+                            free_emp.remove(emp)
                     for r in today_r:
                         rDt = datetime.datetime.combine(r.date, r.time)
-                        if is_overlapping(reserveDt,
-                                          reserveDt + datetime.timedelta(minutes=reserve.service_duration),
-                                          rDt, rDt + datetime.timedelta(minutes=reserve.service_duration)):
-                            free_emp.remove(r.employee)
+                        if r.active_during(reserveDt):
+                            if r.employee in free_emp:
+                                free_emp.remove(r.employee)
+
                     # choose random employee
-                    random_employee = free_emp[random.randint(1, len(free_emp)-1)]
+                    random_employee = free_emp[random.randint(0, len(free_emp) - 1)]
                     reserve.employee = random_employee
 
             # Save
             reserve.save()
-                # saving coupon is_valid
+            # saving coupon is_valid
             coupons = Coupon.objects.filter(service=service.id)
             coupon_is_used = False
             for coup in coupons:
