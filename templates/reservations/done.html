@@ -14,6 +14,9 @@
         {% if chosen_employee %}
             <b>{% trans "Employee" %}:</b> {{ chosen_employee }}<br/>
         {% endif %}
+        {% if random_employee %}
+            <b>{% trans "Employee" %}:</b> {{ random_employee }}<br/>
+        {% endif %}
     </p>
     {% if service.service_provider.reservation_confirmation_needed == True %}
 

@@ -69,6 +69,7 @@ def getReservations(provider, start, end):
     reservations = Reservation.objects.filter(service_provider=provider, date__gte=start, date__lte=end)
     events = []
     for reservation in reservations:
+        # remove this later
         if reservation.employee:
             emp = reservation.employee.__unicode__()
         else:
@@ -124,6 +125,24 @@ def getWorkingHours(provider, date):
             'end': encodeDatetime(datetime.datetime.combine(date, wrkbrk.time_to)),
             'color': EVENT_PAUSE_COLOR
         })
+
+    employees = Employee.objects.filter(employer=provider.id).all()
+    for e in employees:
+        cwh = e.working_hours.all()[0].get_for_day(e, date.weekday())
+        if cwh:
+            events.append({
+                'title': ugettext('Employee stops work'),
+                'start': encodeDatetime(datetime.datetime.combine(date, cwh.time_to)),
+                'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
+                'color': EVENT_PAUSE_COLOR
+            })
+        else:
+            events.append({
+                'title': ugettext('lazy bastard'),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                'color': EVENT_CLOSED_COLOR
+            })
 
     return events
 

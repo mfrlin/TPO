@@ -119,11 +119,19 @@ class ReservationForm(forms.Form):
         # if employee is chosen, only check against his reservations
         if self.clean_employees() != '':
             reservations = reservations.filter(employee=self.clean_employees().id)
+            slots = 1
+        else:
+            slots = list(self.service.employees.all()).__len__()
 
+        print slots
         for res in reservations:
             resDt = datetime.datetime.combine(res.date, res.time)
             if is_overlapping(start, end, resDt, resDt + datetime.timedelta(minutes=res.service_duration)):
+                slots -= 1
+            if slots == 0:
                 raise ValidationError(_('Sorry, your reservation is overlapping with another reservation.'))
+
+        print slots
 
         return data
 
