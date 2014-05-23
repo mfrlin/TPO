@@ -71,41 +71,47 @@ def getEvents(service, provider, start, end):
 
 def getReservations(service, provider, start, end):
     events = []
-    reservations = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=Employee.objects.all())
-    #for reservation in reservations:
-        #dt = datetime.datetime.combine(reservation.date, reservation.time)
-        # events.append({
-        #     'title': ugettext(EVENT_TITLE_RESERVED),
-        #     'start': encodeDatetime(dt),
-        #     'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
-        #     'color': EVENT_RESERVED_COLOR
-        # })
-
     working_employees = []
     for emp in service.employees.all():
         if EmployeeWorkingHours.objects.get(employee=emp).get_for_day(emp, start.date().weekday()) is not None:
             working_employees.append(emp)
+    #reservations = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=service.employees.all())
+    # for reservation in reservations:
+    #     dt = datetime.datetime.combine(reservation.date, reservation.time)
+    #     if reservation.employee:
+    #         emp = reservation.employee.__unicode__()
+    #     else:
+    #         emp = 'NONE'
+    #     events.append({
+    #         'title': ugettext(EVENT_TITLE_RESERVED + " at " + emp),
+    #         'start': encodeDatetime(dt),
+    #         'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
+    #         'color': EVENT_RESERVED_COLOR
+    #     })
 
-    terms = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=service.employees.all()).values(
-        'time').distinct()
+    today_res = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=working_employees)
+    active_during_termin = dict()
+    for r in today_res:
+        start = datetime.datetime.combine(start.date(), r.time)
+        end = start + datetime.timedelta(minutes=r.service_duration)
+        while start < end:
+            if r.active_during(start):
+                if not start in active_during_termin:
+                    active_during_termin[start] = 1
+                else:
+                    active_during_termin[start] += 1
 
-    for termin in terms:
-        dt = datetime.datetime.combine(start.date(), termin['time'])
-        termin_res = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=working_employees)
-        active_during_termin = []
-        for r in termin_res:
-            if r.active_during(dt):
-                active_during_termin.append(r)
+            start += datetime.timedelta(minutes=15)
 
-        if active_during_termin.__len__() >= list(working_employees).__len__():
-            dt = datetime.datetime.combine(start.date(), termin['time'])
+    for term in active_during_termin.keys():
+        # possibly group events
+        if active_during_termin[term] >= list(working_employees).__len__():
             events.append({
                 'title': ugettext(EVENT_TITLE_RESERVED),
-                'start': encodeDatetime(dt),
-                'end': encodeDatetime(dt + datetime.timedelta(minutes=service.duration)),
-                'color': EVENT_RESERVED_COLOR
+                'start': encodeDatetime(term),
+                'end': encodeDatetime(term + datetime.timedelta(minutes=15)),
+                'color': '#FF0000'
             })
-
     return events
 
 

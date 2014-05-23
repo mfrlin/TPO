@@ -55,7 +55,7 @@ class Reservation(models.Model):
     task_id = models.CharField(max_length=256, blank=True, null=True)
 
     def __unicode__(self):
-        return str(self.date) + " User: " + str(self.user) + " Service: " + str(self.service)
+        return str(self.date) + " User: " + str(self.user) + " Service: " + str(self.service) + " at: " + str(self.time)
 
     def short_desc(self):
         """Default short description visible on reservation button"""
