@@ -78,10 +78,13 @@ class EmployeeWorkingHours(models.Model):
     def week_days_long(self):
         return u', '.join(ugettext(DAYS_OF_WEEK_DICT[i]) for i in self.week_days_list())
 
+    def __unicode__(self):
+        return "from: %s to: %s on days: %s" % (self.time_from, self.time_to, self.week_days)
+
     @classmethod
-    def get_for_day(cls, service_provider, day_of_week):
+    def get_for_day(cls, employee, day_of_week):
         """Get working hours for a specific day_of_week (datetime.weekday())"""
-        for wh in cls.objects.filter(service_provider=service_provider):
+        for wh in cls.objects.filter(employee=employee):
             if str(day_of_week + 1) in wh.week_days_list():
                 return wh
 

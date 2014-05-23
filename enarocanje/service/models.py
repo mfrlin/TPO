@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _, ugettext
 
 from enarocanje.accountext.models import ServiceProvider, User
+from enarocanje.reservations.models import Reservation
 from enarocanje.employees.models import Employee
 
 
@@ -75,6 +76,9 @@ class Service(models.Model):
 
     def is_active(self):
         return self.active_until is None or self.active_until >= datetime.date.today()
+
+    def get_reservations(self):
+        return Reservation.objects.filter(service=self)
 
 
 class Discount(models.Model):

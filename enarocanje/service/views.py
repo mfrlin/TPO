@@ -363,8 +363,15 @@ def browse_providers(request):
         (sort[0], construct_url_providers(cat, q, sort[1], page), sort[1] == sor)
         for sort in ORDER_CHOICES_PROVIDER
     ]
-    last_reserved = Reservation.objects.order_by('-date', '-time')[:3]
-    last_reserved.reverse()
+    reserved = Reservation.objects.order_by('-date', '-time')
+    unique = []
+    for r in reserved:
+        if unique.__len__() >= 3:
+            break
+        if not r.service.id in unique:
+            unique.append(r.service.id)
+
+    last_reserved = Service.objects.filter(id__in=unique)
 
     if cat:
         providers = providers.filter(category_id=cat)

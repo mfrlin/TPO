@@ -42,6 +42,7 @@ class SignupForm(forms.Form):
 
 class ServiceProviderForm(ModelForm):
     logo = forms.ImageField(widget=ClearableImageInput(), required=False)
+    userpage_link = forms.CharField(required=False)
 
     class Meta:
         model = ServiceProvider
