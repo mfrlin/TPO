@@ -75,19 +75,22 @@ def getReservations(service, provider, start, end):
     for emp in service.employees.all():
         if EmployeeWorkingHours.objects.get(employee=emp).get_for_day(emp, start.date().weekday()) is not None:
             working_employees.append(emp)
-    #reservations = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=service.employees.all())
-    # for reservation in reservations:
-    #     dt = datetime.datetime.combine(reservation.date, reservation.time)
-    #     if reservation.employee:
-    #         emp = reservation.employee.__unicode__()
-    #     else:
-    #         emp = 'NONE'
-    #     events.append({
-    #         'title': ugettext(EVENT_TITLE_RESERVED + " at " + emp),
-    #         'start': encodeDatetime(dt),
-    #         'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
-    #         'color': EVENT_RESERVED_COLOR
-    #     })
+            # remains here for testing purposes
+
+            #reservations = Reservation.objects.filter(date__gte=start, date__lt=end,
+            #                                          employee__in=service.employees.all())
+            # for reservation in reservations:
+            #     dt = datetime.datetime.combine(reservation.date, reservation.time)
+            #     if reservation.employee:
+            #         emp = reservation.employee.__unicode__()
+            #     else:
+            #         emp = 'NONE'
+            #     events.append({
+            #         'title': ugettext(EVENT_TITLE_RESERVED + " at " + emp),
+            #         'start': encodeDatetime(dt),
+            #         'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
+            #         'color': EVENT_RESERVED_COLOR
+            #     })
 
     today_res = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=working_employees)
     active_during_termin = dict()
@@ -103,15 +106,21 @@ def getReservations(service, provider, start, end):
 
             start += datetime.timedelta(minutes=15)
 
+    overlaps = []
     for term in active_during_termin.keys():
-        # possibly group events
         if active_during_termin[term] >= list(working_employees).__len__():
-            events.append({
-                'title': ugettext(EVENT_TITLE_RESERVED),
-                'start': encodeDatetime(term),
-                'end': encodeDatetime(term + datetime.timedelta(minutes=15)),
-                'color': '#FF0000'
-            })
+            overlaps.append(term)
+            # testing purposes
+
+            # events.append({
+            #     'title': ugettext(EVENT_TITLE_RESERVED),
+            #     'start': encodeDatetime(term),
+            #     'end': encodeDatetime(term + datetime.timedelta(minutes=15)),
+            #     'color': '#FF0000'
+            # })
+    if overlaps:
+        events.extend(group_events(overlaps))
+
     return events
 
 
@@ -266,3 +275,38 @@ def getEmployeeWorkingHours(provider, employee, date):
     # TODO add break support
 
     return events
+
+
+def group_events(ls):
+    ls.sort()
+    groups = []
+    start = ls[0]
+    cur = start
+    cur_event = dict({'start': encodeDatetime(start), 'end': encodeDatetime(start + datetime.timedelta(minutes=15)),
+                      'title': ugettext(EVENT_TITLE_RESERVED), 'color': EVENT_RESERVED_COLOR})
+    ls.remove(start)
+    i = 0
+    length = ls.__len__()
+    while i <= length:
+        end = cur + datetime.timedelta(minutes=15)
+        if end in ls:
+            ls.remove(end)
+            cur_event['end'] = encodeDatetime(end + datetime.timedelta(minutes=15))
+            cur = end
+        else:
+            if ls:
+                cur = end + datetime.timedelta(minutes=15)
+                groups.append(cur_event)
+                cur_event = dict({'title': ugettext(EVENT_TITLE_RESERVED), 'color': EVENT_RESERVED_COLOR})
+                cur_event['start'] = encodeDatetime(cur)
+                cur_event['end'] = encodeDatetime(cur + datetime.timedelta(minutes=15))
+                i += 1
+        i += 1
+
+    groups.append(cur_event)
+    return groups
+
+
+
+
+
