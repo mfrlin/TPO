@@ -44,8 +44,6 @@
 
 {% block javascript %}
     {{ block.super }}
-    </script><script>
-    //just to enable syntax coloring in pycharm
     {% if minTime and maxTime %}
         (function() {
             var cal = $('#calendar');
@@ -248,6 +246,5 @@
                 cal.fullCalendar('refetchEvents');
             });
         })();
-        </script><script>
     {% endif %}
 {% endblock %}
