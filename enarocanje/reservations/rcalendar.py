@@ -31,8 +31,17 @@ def calendarjson(request):
         end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
     except:
         raise Http404
-
     return HttpResponse(json.dumps(getEvents(service, provider, start, end)))
+
+
+def reservations_calendar(request):
+    try:
+        provider = ServiceProvider.objects.get(id=request.GET.get('service_provider_id'))
+        start = datetime.datetime.fromtimestamp(int(request.GET.get('start')))
+        end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
+    except:
+        raise Http404
+    return HttpResponse(json.dumps(get_all_reservations(provider, start, end)))
 
 
 def encodeDatetime(dt):
@@ -273,6 +282,29 @@ def getEmployeeWorkingHours(provider, employee, date):
         })
 
     # TODO add break support
+
+    return events
+
+
+def get_all_reservations(provider, start, end):
+    events = []
+
+    for date in daterange(start.date(), end.date()):
+        events.extend(getWorkingHours(provider, date))
+
+    today_res = Reservation.objects.filter(date__gte=start, date__lt=end)
+    for reservation in today_res:
+        dt = datetime.datetime.combine(reservation.date, reservation.time)
+        text = EVENT_TITLE_RESERVED
+        if reservation.employee:
+            text += _(' at ') + reservation.employee.__unicode__()
+        events.append({
+            'title': ugettext(text),
+            'url': '/',
+            'start': encodeDatetime(dt),
+            'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
+            'color': EVENT_RESERVED_COLOR
+        })
 
     return events
 

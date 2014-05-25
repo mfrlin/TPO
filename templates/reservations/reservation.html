@@ -44,11 +44,12 @@
 
 {% block javascript %}
     {{ block.super }}
+    </script><script>
+    //just to enable syntax coloring in pycharm
     {% if minTime and maxTime %}
         (function() {
             var cal = $('#calendar');
             var id = null;
-            // TODO show reserved only if all employees are busy
             var defEvents = {
                     url: '{% url 'calendarjson' %}',
                     type: 'GET',
@@ -110,8 +111,6 @@
             }
 
             function viewDisplay(view) {
-                console.log(id);
-                console.log("viewDisplay");
                 var cur_date = new Date();
                 cur_date.setDate(date.getDate());
                 cur_date.setTime(date.getTime());
@@ -246,5 +245,6 @@
                 cal.fullCalendar('refetchEvents');
             });
         })();
+        </script><script>
     {% endif %}
 {% endblock %}
