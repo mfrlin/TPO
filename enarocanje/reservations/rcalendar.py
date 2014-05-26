@@ -41,7 +41,7 @@ def reservations_calendar(request):
         end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
     except:
         raise Http404
-    return HttpResponse(json.dumps(get_all_reservations(provider, start, end)))
+    return HttpResponse(json.dumps(get_all_reservations(None, provider, start, end)))
 
 
 def encodeDatetime(dt):
