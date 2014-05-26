@@ -116,7 +116,7 @@ def fillDatabase():
             c.save()
 
 
-fillDatabase()
+#fillDatabase()
 # user1 is a customer
 # users 2-9 are service providers
 # admin is staff and superuser
@@ -124,7 +124,7 @@ fillDatabase()
 
 # default site, for password reset
 site = Site.objects.all()[0]
-name = settings.BASE_URL.split('//')[1]
+name = settings.PRODUCTION_URL.split('//')[1]
 site.domain = name
 site.name = name
 site.save()

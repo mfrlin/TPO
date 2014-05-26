@@ -9,6 +9,7 @@ SOCIAL_LOGIN = False
 ROOT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 
 BASE_URL = 'http://localhost:80'
+PRODUCTION_URL = 'http://boc.fri.uni-lj.si'
 
 ADMINS = ()
 
