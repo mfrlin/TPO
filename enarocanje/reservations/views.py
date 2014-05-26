@@ -31,6 +31,7 @@ from forms import ReservationForm, NonRegisteredUserForm
 from rcalendar import getMinMaxTime
 from enarocanje.common.timeutils import is_overlapping
 from enarocanje.workinghours.models import EmployeeWorkingHours
+from enarocanje.employees.forms import EmployeeChoiceForm
 
 # Service reservations
 
@@ -111,7 +112,7 @@ def reservation(request, id):
 
         # Checking again if form for reservation is valid
         chosen_employee = data.get('employees')
-        print data.get('employees')
+        #print data.get('employees')
         emp_id = None
         if chosen_employee is not None and chosen_employee != '':
             emp_id = chosen_employee.id
@@ -143,19 +144,25 @@ def reservation(request, id):
                     # find free employees
                     reserveDt = datetime.datetime.combine(reserve.date, reserve.time)
                     free_emp = list(service.employees.all())
+                    free_emp_editable = list(service.employees.all())
                     for emp in free_emp:
+                        emp_time = EmployeeWorkingHours.objects.get(id=emp.id).get_for_day(emp, reserve.date.weekday())
                         if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
-                            reserve.date.weekday()):
-                            free_emp.remove(emp)
+                                                                   reserve.date.weekday()):
+                            free_emp_editable.remove(emp)
+                        if reserve.time < emp_time.time_from or reserveDt + datetime.timedelta(
+                                minutes=reserve.service_duration) > datetime.datetime.combine(reserve.date,
+                                                                                              emp_time.time_to):
+                            free_emp_editable.remove(emp)
                     for r in today_r:
                         rDt = datetime.datetime.combine(r.date, r.time)
                         if r.active_during(reserveDt):
                             if r.employee in free_emp:
-                                free_emp.remove(r.employee)
-
-                    # choose random employee
-                    random_employee = free_emp[random.randint(0, len(free_emp) - 1)]
-                    reserve.employee = random_employee
+                                free_emp_editable.remove(r.employee)
+                        # choose random employee
+                    if free_emp_editable:
+                        random_employee = free_emp_editable[random.randint(0, len(free_emp_editable) - 1)]
+                        reserve.employee = random_employee
 
             # Save
             reserve.save()
@@ -215,5 +222,8 @@ def reservation(request, id):
 
 @for_service_providers
 def myreservations(request):
-    res_confirm = request.user.service_provider.reservation_confirmation_needed
+    sp = request.user.service_provider
+    res_confirm = sp.reservation_confirmation_needed
+    minTime, maxTime = getMinMaxTime(sp)
+    form = EmployeeChoiceForm(provider=sp)
     return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
