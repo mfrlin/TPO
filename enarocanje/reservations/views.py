@@ -112,7 +112,6 @@ def reservation(request, id):
 
         # Checking again if form for reservation is valid
         chosen_employee = data.get('employees')
-        #print data.get('employees')
         emp_id = None
         if chosen_employee is not None and chosen_employee != '':
             emp_id = chosen_employee.id

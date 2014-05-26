@@ -2,11 +2,13 @@
 import os, sys
 import datetime, random
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
 
 from django.core.management import execute_from_command_line
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "enarocanje.settings")
 
+from django.contrib.sites.models import Site
 from enarocanje.service.models import Service, Discount, Category
 from enarocanje.accountext.models import User, ServiceProvider, Category as ProvCat
 from enarocanje.workinghours.models import WorkingHours, EmployeeWorkingHours
@@ -120,7 +122,14 @@ fillDatabase()
 # admin is staff and superuser
 # pass is admin
 
-execute_from_command_line(sys.argv)
+# default site, for password reset
+site = Site.objects.all()[0]
+name = settings.BASE_URL.split('//')[1]
+site.domain = name
+site.name = name
+site.save()
+
+#execute_from_command_line(sys.argv)
 
 
 
