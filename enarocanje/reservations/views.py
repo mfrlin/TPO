@@ -112,7 +112,7 @@ def reservation(request, id):
 
         # Checking again if form for reservation is valid
         chosen_employee = data.get('employees')
-        print data.get('employees')
+        #print data.get('employees')
         emp_id = None
         if chosen_employee is not None and chosen_employee != '':
             emp_id = chosen_employee.id
@@ -144,19 +144,25 @@ def reservation(request, id):
                     # find free employees
                     reserveDt = datetime.datetime.combine(reserve.date, reserve.time)
                     free_emp = list(service.employees.all())
+                    free_emp_editable = list(service.employees.all())
                     for emp in free_emp:
+                        emp_time = EmployeeWorkingHours.objects.get(id=emp.id).get_for_day(emp, reserve.date.weekday())
                         if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
-                            reserve.date.weekday()):
-                            free_emp.remove(emp)
+                                                                   reserve.date.weekday()):
+                            free_emp_editable.remove(emp)
+                        if reserve.time < emp_time.time_from or reserveDt + datetime.timedelta(
+                                minutes=reserve.service_duration) > datetime.datetime.combine(reserve.date,
+                                                                                              emp_time.time_to):
+                            free_emp_editable.remove(emp)
                     for r in today_r:
                         rDt = datetime.datetime.combine(r.date, r.time)
                         if r.active_during(reserveDt):
                             if r.employee in free_emp:
-                                free_emp.remove(r.employee)
-
-                    # choose random employee
-                    random_employee = free_emp[random.randint(0, len(free_emp) - 1)]
-                    reserve.employee = random_employee
+                                free_emp_editable.remove(r.employee)
+                        # choose random employee
+                    if free_emp_editable:
+                        random_employee = free_emp_editable[random.randint(0, len(free_emp_editable) - 1)]
+                        reserve.employee = random_employee
 
             # Save
             reserve.save()

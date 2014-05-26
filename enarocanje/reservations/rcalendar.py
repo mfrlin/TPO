@@ -73,7 +73,7 @@ def getEvents(service, provider, start, end):
 
     # Get working hours events
     for date in daterange(start.date(), end.date()):
-        events.extend(getWorkingHours(provider, date))
+        events.extend(getWorkingHours(service, provider, date))
 
     return events
 
@@ -81,11 +81,11 @@ def getEvents(service, provider, start, end):
 def getReservations(service, provider, start, end):
     events = []
     working_employees = []
+
     for emp in service.employees.all():
         if EmployeeWorkingHours.objects.get(employee=emp).get_for_day(emp, start.date().weekday()) is not None:
             working_employees.append(emp)
             # remains here for testing purposes
-
             #reservations = Reservation.objects.filter(date__gte=start, date__lt=end,
             #                                          employee__in=service.employees.all())
             # for reservation in reservations:
@@ -116,8 +116,16 @@ def getReservations(service, provider, start, end):
             start += datetime.timedelta(minutes=15)
 
     overlaps = []
+    currently_working = working_employees
     for term in active_during_termin.keys():
-        if active_during_termin[term] >= list(working_employees).__len__():
+        cur_emp = list(working_employees).__len__()
+        for emp in currently_working:
+            cwh = EmployeeWorkingHours.objects.get(id=emp.id)
+            if term + datetime.timedelta(minutes=service.duration) > datetime.datetime.combine(start.date(),
+                                                                                               cwh.time_to):
+                cur_emp -= 1
+
+        if active_during_termin[term] >= cur_emp:
             overlaps.append(term)
             # testing purposes
 
@@ -133,7 +141,7 @@ def getReservations(service, provider, start, end):
     return events
 
 
-def getWorkingHours(provider, date):
+def getWorkingHours(service, provider, date):
     workinghrs = WorkingHours.get_for_day(provider, date.weekday())
     events = []
 
@@ -174,24 +182,40 @@ def getWorkingHours(provider, date):
             'color': EVENT_PAUSE_COLOR
         })
 
-    # employees = Employee.objects.filter(employer=provider.id).all()
-    # for e in employees:
-    #     cwh = e.working_hours.all()[0].get_for_day(e, date.weekday())
-    #     if cwh:
-    #         events.append({
-    #             'title': ugettext('Employee stops work'),
-    #             'start': encodeDatetime(datetime.datetime.combine(date, cwh.time_to)),
-    #             'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
-    #             'color': EVENT_PAUSE_COLOR
-    #         })
-    #     else:
-    #         events.append({
-    #             'title': ugettext('lazy bastard'),
-    #             'start': encodeDatetime(date),
-    #             'end': encodeDatetime(date + datetime.timedelta(days=1)),
-    #             'color': EVENT_CLOSED_COLOR
-    #         })
+    if service is not None:
+        employees = Employee.objects.filter(id__in=service.employees.all(), employer=provider.id)
+    else:
+        employees = Employee.objects.filter(employer=provider.id).all()
+    first_arrive = datetime.time(23,59)
+    last_gone = datetime.time(0)
+    for e in employees:
+        cwh = e.working_hours.all()[0].get_for_day(e, date.weekday())
+        if cwh:
+            if cwh.time_to > last_gone:
+                last_gone = cwh.time_to
+            if cwh.time_from < first_arrive:
+                first_arrive = cwh.time_from
+                # events.append({
+                #     'title': ugettext('Employee stops work'),
+                #     'start': encodeDatetime(datetime.datetime.combine(date, cwh.time_to)),
+                #     'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
+                #     'color': EVENT_PAUSE_COLOR
+                # })
 
+    if first_arrive > workinghrs.time_from:
+        events.append({
+            'title': ugettext('No employees here yet'),
+            'start': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_from)),
+            'end': encodeDatetime(datetime.datetime.combine(date, first_arrive)),
+            'color': EVENT_PAUSE_COLOR
+        })
+
+    events.append({
+        'title': ugettext('All employees have left'),
+        'start': encodeDatetime(datetime.datetime.combine(date, last_gone)),
+        'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
+        'color': EVENT_PAUSE_COLOR
+    })
     return events
 
 
@@ -286,11 +310,11 @@ def getEmployeeWorkingHours(provider, employee, date):
     return events
 
 
-def get_all_reservations(provider, start, end):
+def get_all_reservations(service, provider, start, end):
     events = []
 
     for date in daterange(start.date(), end.date()):
-        events.extend(getWorkingHours(provider, date))
+        events.extend(getWorkingHours(service, provider, date))
 
     today_res = Reservation.objects.filter(date__gte=start, date__lt=end)
     for reservation in today_res:
@@ -328,6 +352,8 @@ def group_events(ls):
         else:
             if ls:
                 cur = end + datetime.timedelta(minutes=15)
+                while cur not in ls:
+                    cur = cur + datetime.timedelta(minutes=15)
                 groups.append(cur_event)
                 cur_event = dict({'title': ugettext(EVENT_TITLE_RESERVED), 'color': EVENT_RESERVED_COLOR})
                 cur_event['start'] = encodeDatetime(cur)
