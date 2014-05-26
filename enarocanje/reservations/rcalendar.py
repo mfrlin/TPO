@@ -41,7 +41,7 @@ def reservations_calendar(request):
         end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
     except:
         raise Http404
-    return HttpResponse(json.dumps(get_all_reservations(provider, start, end)))
+    return HttpResponse(json.dumps(get_all_reservations(None, provider, start, end)))
 
 
 def encodeDatetime(dt):
@@ -100,7 +100,6 @@ def getReservations(service, provider, start, end):
             #         'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
             #         'color': EVENT_RESERVED_COLOR
             #     })
-
     today_res = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=working_employees)
     active_during_termin = dict()
     for r in today_res:
@@ -186,7 +185,7 @@ def getWorkingHours(service, provider, date):
         employees = Employee.objects.filter(id__in=service.employees.all(), employer=provider.id)
     else:
         employees = Employee.objects.filter(employer=provider.id).all()
-    first_arrive = datetime.time(23,59)
+    first_arrive = datetime.time(23, 59)
     last_gone = datetime.time(0)
     for e in employees:
         cwh = e.working_hours.all()[0].get_for_day(e, date.weekday())
@@ -201,21 +200,20 @@ def getWorkingHours(service, provider, date):
                 #     'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
                 #     'color': EVENT_PAUSE_COLOR
                 # })
-
-    if first_arrive > workinghrs.time_from:
-        events.append({
-            'title': ugettext('No employees here yet'),
-            'start': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_from)),
-            'end': encodeDatetime(datetime.datetime.combine(date, first_arrive)),
-            'color': EVENT_PAUSE_COLOR
-        })
-
-    events.append({
-        'title': ugettext('All employees have left'),
-        'start': encodeDatetime(datetime.datetime.combine(date, last_gone)),
-        'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
-        'color': EVENT_PAUSE_COLOR
-    })
+    if employees:
+        if first_arrive > workinghrs.time_from:
+            events.append({
+                'title': ugettext('No employees here yet'),
+                'start': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_from)),
+                'end': encodeDatetime(datetime.datetime.combine(date, first_arrive)),
+                'color': EVENT_PAUSE_COLOR
+            })
+            events.append({
+                'title': ugettext('All employees have left'),
+                'start': encodeDatetime(datetime.datetime.combine(date, last_gone)),
+                'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
+                'color': EVENT_PAUSE_COLOR
+            })
     return events
 
 
