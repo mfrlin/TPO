@@ -208,6 +208,7 @@ def getWorkingHours(service, provider, date):
                 'end': encodeDatetime(datetime.datetime.combine(date, first_arrive)),
                 'color': EVENT_PAUSE_COLOR
             })
+        if last_gone < workinghrs.time_to:
             events.append({
                 'title': ugettext('All employees have left'),
                 'start': encodeDatetime(datetime.datetime.combine(date, last_gone)),
