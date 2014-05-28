@@ -17,7 +17,10 @@
                 {% if form.non_field_errors %}
                     {% include "bootstrap_toolkit/non_field_errors.html" %}
                 {% endif %}
-                {{ form|as_bootstrap }}
+                {{ form.name|as_bootstrap }}
+                {{ form.surname|as_bootstrap }}
+                {{ form.phone|as_bootstrap }}
+                {{ form.img|as_bootstrap }}
             </div>
             <div class="span7">
                 {{ form.description|as_bootstrap }}

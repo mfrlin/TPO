@@ -123,6 +123,8 @@ def getReservations(service, provider, start, end):
             if term + datetime.timedelta(minutes=service.duration) > datetime.datetime.combine(start.date(),
                                                                                                cwh.time_to):
                 cur_emp -= 1
+            elif datetime.datetime.combine(start.date(), cwh.time_from) < term:
+                cur_emp -= 1
 
         if active_during_termin[term] >= cur_emp:
             overlaps.append(term)

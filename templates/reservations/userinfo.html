@@ -6,13 +6,88 @@
 
 {% block reservation_content %}
 
-    <input type="hidden" name="step" value="2"/>
+    <div class="row">
+        <!--<div class="span4">
+            <h4>{% trans "Already have an account?" %}</h4>
 
-    {{ formNonRegisteredUser|as_bootstrap }}
+            <div id="loginForm">
+                <form class="login" method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    {{ loginForm|as_bootstrap }}
+                    {% if redirect_field_value %}
+                        {{ redirect_field_value }}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <div class="form-actions">
+                        <button class="btn btn-primary" type="submit" name="loginBtn">{% trans "Sign In" %}</button>
+                        <a class="btn" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-    <div class="form-actions">
-        <input type="submit" class="btn btn-primary" value="{% trans "Confirm" %}">
-        <a href="{% url 'service' service.id %}" class="btn">{% trans "Cancel" %}</a>
+
+        <div class="span4">
+            <h4><a href="#" id="signupLink">{% trans "Register" %}</a></h4>
+
+            <div id="signupForm">
+                <form id="signup_form" method="post" action="{% url 'account_signup' %}">
+                    {% csrf_token %}
+                    {{ signupForm|as_bootstrap }}
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <div class="form-actions">
+                        <button class="btn btn-primary" type="submit" name="signupBtn">{% trans "Sign Up" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>-->
+
+        <div class="span4">
+            <h4><a href="#" id="nonRegLink">{% trans "Continue without registration" %}</a></h4>
+
+            <div id="nonRegForm">
+                <input type="hidden" name="step" value="2"/>
+                {{ formNonRegisteredUser|as_bootstrap }}
+
+                <div class="form-actions">
+                    <input name="nonRegBtn" type="submit" class="btn btn-primary" value="{% trans "Confirm" %}">
+                    <a href="{% url 'service' service.id %}" class="btn">{% trans "Cancel" %}</a>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    </script><script>
+        //console.log("herp");
+        $('#signupForm').hide();
+        $('#nonRegForm').hide();
+        $('#signupLink').click(function () {
+            var form = $('#signupForm');
+            if (form.is(":visible")){
+                form.hide();
+            }
+            else{
+                form.show();
+            }
+        });
+        $('#nonRegLink').click(function () {
+            var form = $('#nonRegForm');
+            if (form.is(":visible")){
+                form.hide();
+            }
+            else{
+                form.show();
+            }
+        });
+
+    </script>
+    <script>
 
 {% endblock %}

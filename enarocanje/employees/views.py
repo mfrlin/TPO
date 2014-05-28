@@ -9,7 +9,7 @@ from enarocanje.accountext.decorators import for_service_providers
 from enarocanje.employees.models import Employee
 from enarocanje.employees.forms import EmployeeForm, EmployeeServicesForm
 from enarocanje.service.models import Service
-from enarocanje.workinghours.models import EmployeeWorkingHours
+from enarocanje.workinghours.models import EmployeeWorkingHours, WorkingHours
 from enarocanje.workinghours.forms import EmployeeWorkingHoursForm
 
 
@@ -31,10 +31,11 @@ def add(request):
             employee.employer = request.user.service_provider
             employee.save()
             # adding default working hours, ugly fix
+            spwh = WorkingHours.objects.get(id=request.user.service_provider.id)
             h = EmployeeWorkingHours()
             h.employee = employee
-            h.time_from = datetime.time(8)
-            h.time_to = datetime.time(16)
+            h.time_from = spwh.time_from
+            h.time_to = spwh.time_to
             h.week_days = "1,2,3,4,5"
             h.save()
             return HttpResponseRedirect(reverse(myemployees))

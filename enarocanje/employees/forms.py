@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Form, ModelMultipleChoiceField
+from django.forms import ModelForm, Form, ModelMultipleChoiceField, Textarea, TextInput
 from enarocanje.common.widgets import ClearableImageInput
 import django.forms as forms
 from django.utils.translation import ugettext_lazy as _
@@ -10,6 +10,7 @@ from enarocanje.employees.models import Employee
 
 class EmployeeForm(ModelForm):
     img = forms.ImageField(widget=ClearableImageInput(), required=False, label=_('Employee image'))
+    description = forms.CharField(widget=Textarea())
 
     class Meta:
         model = Employee

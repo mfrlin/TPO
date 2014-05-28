@@ -17,6 +17,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
+from allauth.account.forms import LoginForm, SignupForm
 
 from enarocanje.accountext.decorators import for_service_providers
 from enarocanje.accountext.models import User
@@ -60,7 +61,9 @@ def reservation(request, id):
 
     workingHours = WorkingHours.objects.filter(service_provider_id=service.service_provider_id)
 
-    formNonRegisteredUser = NonRegisteredUserForm()
+    formNonRegisteredUser = NonRegisteredUserForm(prefix='nonRegBtn')
+    loginForm = LoginForm(prefix='loginBtn')
+    signupForm = SignupForm(prefix='signupBtn')
 
     if step == '1':
         # Service, date, time
@@ -86,7 +89,14 @@ def reservation(request, id):
         return render_to_response('reservations/reservation.html', locals(), context_instance=RequestContext(request))
 
     if step == '2':
-        # User info
+        print request.POST
+        if 'nonRegBtn' in request.POST:
+            print "nonRegBtn"
+        if 'loginBtn' in request.POST:
+            print "loginBtn"
+        if 'signupBtn' in request.POST:
+            print "signupBtn"
+            # User info
         if data.get('date') is None or data.get('time') is None:
             raise Http404
         formNonRegisteredUser = NonRegisteredUserForm(request.POST)
@@ -147,7 +157,7 @@ def reservation(request, id):
                     for emp in free_emp:
                         emp_time = EmployeeWorkingHours.objects.get(id=emp.id).get_for_day(emp, reserve.date.weekday())
                         if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
-                                                                   reserve.date.weekday()):
+                                                                                                   reserve.date.weekday()):
                             free_emp_editable.remove(emp)
                         if reserve.time < emp_time.time_from or reserveDt + datetime.timedelta(
                                 minutes=reserve.service_duration) > datetime.datetime.combine(reserve.date,
@@ -191,8 +201,8 @@ def reservation(request, id):
                 subject = _('Confirmation of service reservation')
                 renderedToCustomer = render_to_string('emails/reservation_customer.html',
                                                       {'reservation': reserve, 'link': user_page_link})
-                send_mail(subject, renderedToCustomer, email_to2, [email_to1],
-                          fail_silently=False)
+                #send_mail(subject, renderedToCustomer, email_to2, [email_to1],
+                #          fail_silently=False)
 
             start = datetime.datetime.combine(reserve.date, reserve.time)
             gcal_params = urllib.urlencode({
