@@ -83,7 +83,7 @@ def getReservations(service, provider, start, end):
     working_employees = []
 
     for emp in service.employees.all():
-        if EmployeeWorkingHours.objects.get(employee=emp).get_for_day(emp, start.date().weekday()) is not None:
+        if EmployeeWorkingHours.get_for_day(emp, start.date().weekday()) is not None:
             working_employees.append(emp)
             # remains here for testing purposes
             #reservations = Reservation.objects.filter(date__gte=start, date__lt=end,
@@ -119,11 +119,9 @@ def getReservations(service, provider, start, end):
     for term in active_during_termin.keys():
         cur_emp = list(working_employees).__len__()
         for emp in currently_working:
-            cwh = EmployeeWorkingHours.objects.get(id=emp.id)
+            cwh = EmployeeWorkingHours.get_for_day(emp, start.weekday())
             if term + datetime.timedelta(minutes=service.duration) > datetime.datetime.combine(start.date(),
                                                                                                cwh.time_to):
-                cur_emp -= 1
-            elif datetime.datetime.combine(start.date(), cwh.time_from) < term:
                 cur_emp -= 1
 
         if active_during_termin[term] >= cur_emp:
