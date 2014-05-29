@@ -123,7 +123,7 @@ def manageabsence(request):
     return HttpResponseRedirect(reverse(myabsences))
 
 
-def addemp(request, id, path):
+def addemp(request, id):
     emp = Employee.objects.get(id=id)
     if request.method == 'POST':
         form = EmployeeWorkingHoursForm(request.POST, employee=emp)
@@ -132,6 +132,7 @@ def addemp(request, id, path):
             wh = form.save(commit=False)
             wh.employee = emp
             wh.save()
+            path = '/myemployees/edit/'+id
             return HttpResponseRedirect(path)
     else:
         initial = {}
@@ -147,7 +148,7 @@ def addemp(request, id, path):
 
 
 @for_service_providers
-def manageemp(request, id, path):
-    workinghours = get_object_or_404(EmployeeWorkingHours, id=id)
+def manageemp(request, emp_id, wh_id):
+    workinghours = get_object_or_404(EmployeeWorkingHours, id=wh_id)
     workinghours.delete()
-    return HttpResponseRedirect(path)
+    return HttpResponseRedirect('/myemployees/edit/'+emp_id)
