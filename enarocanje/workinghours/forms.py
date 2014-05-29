@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm, CheckboxSelectMultiple
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.utils.translation import ugettext_lazy as _, ugettext
+from django.forms.models import modelformset_factory
 
 from enarocanje.common.timeutils import is_overlapping
 from enarocanje.common.widgets import CSIMultipleChoiceField, BootstrapDateInput, BootstrapTimeInput
@@ -114,6 +115,7 @@ class EmployeeWorkingHoursForm(ModelForm):
     time_from = forms.TimeField(widget=BootstrapTimeInput(), label=_('Time from'))
     time_to = forms.TimeField(widget=BootstrapTimeInput(), label=_('Time to'))
     week_days = CSIMultipleChoiceField(widget=CheckboxSelectMultiple(), choices=DAYS_OF_WEEK, label='')
+    id = forms.CharField(widget=forms.HiddenInput, required=False)
 
     def clean_time_to(self):
         data = self.cleaned_data['time_to']
@@ -143,3 +145,5 @@ class EmployeeWorkingHoursForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.employee = kwargs.pop('employee')
         super(EmployeeWorkingHoursForm, self).__init__(*args, **kwargs)
+
+EmployeeWorkingHoursFormSet = modelformset_factory(EmployeeWorkingHours, extra=0)

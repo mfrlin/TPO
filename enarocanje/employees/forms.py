@@ -45,9 +45,7 @@ class EmployeeServicesForm(Form):
 class EmployeeChoiceForm(Form):
     def __init__(self, *args, **kwargs):
         qs = Employee.objects.filter(employer=kwargs.pop('provider'))
-        print qs
         self.employees = forms.ModelChoiceField(queryset=qs, required=False,
                                                 empty_label=_('all'))
         super(EmployeeChoiceForm, self).__init__(*args, **kwargs)
         self.fields['employees'] = self.employees
-

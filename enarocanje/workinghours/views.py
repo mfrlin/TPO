@@ -6,8 +6,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
 from enarocanje.accountext.decorators import for_service_providers
-from forms import WorkingHoursForm, WorkingHoursFormSet, AbsenceForm
-from models import WorkingHours, Absence
+from forms import WorkingHoursForm, WorkingHoursFormSet, AbsenceForm, EmployeeWorkingHoursForm
+from models import WorkingHours, Absence, Employee, EmployeeWorkingHours
 
 # Working hours
 
@@ -121,3 +121,33 @@ def manageabsence(request):
         if request.POST.get('action') == 'delete':
             absence.delete()
     return HttpResponseRedirect(reverse(myabsences))
+
+
+def addemp(request, id, path):
+    emp = Employee.objects.get(id=id)
+    if request.method == 'POST':
+        form = EmployeeWorkingHoursForm(request.POST, employee=emp)
+        valid = form.is_valid()
+        if valid:
+            wh = form.save(commit=False)
+            wh.employee = emp
+            wh.save()
+            return HttpResponseRedirect(path)
+    else:
+        initial = {}
+        if not EmployeeWorkingHours.objects.filter(employee=emp).exists():
+            initial['week_days'] = '1,2,3,4,5'
+        else:
+            t = EmployeeWorkingHours.objects.filter(employee=emp)
+            initial['week_days'] = t[0].week_days
+            initial['time_from'] = t[0].time_from
+            initial['time_to'] = t[0].time_to
+        form = EmployeeWorkingHoursForm(initial=initial, employee=emp)
+    return render_to_response('workinghours/addemp.html', locals(), context_instance=RequestContext(request))
+
+
+@for_service_providers
+def manageemp(request, id, path):
+    workinghours = get_object_or_404(EmployeeWorkingHours, id=id)
+    workinghours.delete()
+    return HttpResponseRedirect(path)

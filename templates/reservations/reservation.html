@@ -24,9 +24,8 @@
                 {% if form.employees.field.choices.queryset.all|length > 1 %}
                     <div class="span4">
                         {{ form.employees|as_bootstrap }}
-                        <div id="des"></div>
+                        <div id="des" style="position: absolute; right: 25%; width: 50%"></div><br>
                     </div>
-
                 {% endif %}
             </div>
 
@@ -73,8 +72,7 @@
                 if (id != ''){
                     var desc = $.get('/desc/',{'employee_id': id},
                         function(data){
-                            console.log(data);
-                            console.log($('#des').text(data));
+                            $('#des').text(data);
                         }
                     );
                    cal.fullCalendar('removeEvents');
