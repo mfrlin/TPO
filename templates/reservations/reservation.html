@@ -24,7 +24,9 @@
                 {% if form.employees.field.choices.queryset.all|length > 1 %}
                     <div class="span4">
                         {{ form.employees|as_bootstrap }}
+                        <div id="des"></div>
                     </div>
+
                 {% endif %}
             </div>
 
@@ -69,12 +71,19 @@
                     }
                 };
                 if (id != ''){
+                    var desc = $.get('/desc/',{'employee_id': id},
+                        function(data){
+                            console.log(data);
+                            console.log($('#des').text(data));
+                        }
+                    );
                    cal.fullCalendar('removeEvents');
                    cal.fullCalendar('removeEventSource', defEvents);
                    cal.fullCalendar('removeEventSource', events);
                    cal.fullCalendar('addEventSource', events);
                 }
                 else {
+                    $('#des').text('');
                     cal.fullCalendar('removeEvents');
                     cal.fullCalendar('removeEventSource', events);
                     cal.fullCalendar('addEventSource', defEvents);

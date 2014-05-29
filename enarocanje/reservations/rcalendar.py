@@ -366,6 +366,17 @@ def group_events(ls):
     return groups
 
 
+def getEmployeeDesc(request):
+    try:
+        employee = Employee.objects.get(id=request.GET.get('employee_id'))
+    except:
+        raise Http404
+    if employee.description is not None:
+        return HttpResponse(employee.description)
+    else:
+        return HttpResponse('')
+
+
 
 
 

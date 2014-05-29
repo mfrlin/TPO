@@ -10,6 +10,8 @@
 
     <h1>{% block content_title %}{% trans 'Edit Employee' %}{% endblock %}</h1>
 
+    {% block content_intro %}{% endblock %}
+
     <form method="POST" enctype="multipart/form-data" action="">
         {% csrf_token %}
         <div class="row">
