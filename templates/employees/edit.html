@@ -49,7 +49,7 @@
                         {{ wh.week_days|as_bootstrap }}
                     </div>
 
-                    <a class="btn btn-danger" href="{% url 'manageempworkinghours' wh.id.value request.path %}"
+                    <a class="btn btn-danger" href="{% url 'manageempworkinghours' employee.id wh.id.value %}"
                             style="position: relative;left: 3%">
                         {% trans "Delete" %}
                     </a>
@@ -59,7 +59,7 @@
 
             <div class="form-actions">
                 <a class="btn btn-primary"
-                   href="{% url 'addempworkinghours' employee.id request.path %}">{% trans "Add Working Hours" %}</a>
+                   href="{% url 'addempworkinghours' employee.id %}">{% trans "Add Working Hours" %}</a>
             </div>
         {% endif %}
 
