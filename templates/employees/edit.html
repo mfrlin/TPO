@@ -48,11 +48,10 @@
                     <div class="span8">
                         {{ wh.week_days|as_bootstrap }}
                     </div>
-
-                    <a class="btn btn-danger" href="{% url 'manageempworkinghours' employee.id wh.id.value %}"
-                            style="position: relative;left: 3%">
-                        {% trans "Delete" %}
-                    </a>
+                    <input type="hidden" name="employee" value="{{ employee.id }}"/>
+                    <input type="hidden" name="workinghours" value="{{ wh.id.value }}"/>
+                    <button class="btn btn-danger" type="submit" name="action"
+                            value="delete" style="position: relative; left: 3%">{% trans "Delete" %}</button>
                 </div>
                 <br>
             {% endfor %}

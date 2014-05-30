@@ -53,8 +53,10 @@ def edit(request, id):
     employee = get_object_or_404(Employee, employer=request.user.service_provider, id=id)
     hours = EmployeeWorkingHours.objects.filter(employee=employee)
     services = Service.objects.filter(service_provider=provider, employees__in=[employee.id])
-
     if request.method == 'POST':
+        if request.POST.get('action') == 'delete':
+            EmployeeWorkingHours.objects.get(id=request.POST.get('workinghours')).delete()
+            return HttpResponseRedirect('/myemployees/edit/'+id)
         form = EmployeeForm(request.POST, request.FILES, instance=employee)
         qs = EmployeeWorkingHours.objects.filter(employee=employee)
         EmployeeWorkingHoursFormSet.form = staticmethod(curry(EmployeeWorkingHoursForm, employee=employee))

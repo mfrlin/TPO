@@ -1,7 +1,7 @@
 {% load i18n %}
 {% if reservation.service.service_provider.reservation_confirmation_needed == True %}
     {% blocktrans %}You have a new reservation for your service. You can confirm or deny this reservation. Look to you
-        unconfirm reservation list please.
+        unconfirmed reservations list, please.
         Here is some information about this reservation:{% endblocktrans %}
     {% trans "Service" %}: {{ reservation.service.name }}
     {% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}

@@ -140,15 +140,8 @@ def addemp(request, id):
             initial['week_days'] = '1,2,3,4,5'
         else:
             t = EmployeeWorkingHours.objects.filter(employee=emp)
-            initial['week_days'] = t[0].week_days
-            initial['time_from'] = t[0].time_from
-            initial['time_to'] = t[0].time_to
+            #initial['week_days'] = t[0].week_days
+            #initial['time_from'] = t[0].time_from
+            #initial['time_to'] = t[0].time_to
         form = EmployeeWorkingHoursForm(initial=initial, employee=emp)
     return render_to_response('workinghours/addemp.html', locals(), context_instance=RequestContext(request))
-
-
-@for_service_providers
-def manageemp(request, emp_id, wh_id):
-    workinghours = get_object_or_404(EmployeeWorkingHours, id=wh_id)
-    workinghours.delete()
-    return HttpResponseRedirect('/myemployees/edit/'+emp_id)
