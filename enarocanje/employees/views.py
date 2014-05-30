@@ -33,7 +33,7 @@ def add(request):
             employee.employer = request.user.service_provider
             employee.save()
             # adding default working hours, ugly fix
-            spwh = WorkingHours.objects.get(id=request.user.service_provider.id)
+            spwh = WorkingHours.objects.get(service_provider=request.user.service_provider.id)
             h = EmployeeWorkingHours()
             h.employee = employee
             h.time_from = spwh.time_from
