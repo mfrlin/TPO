@@ -10,7 +10,7 @@ from enarocanje.employees.models import Employee
 
 class EmployeeForm(ModelForm):
     img = forms.ImageField(widget=ClearableImageInput(), required=False, label=_('Employee image'))
-    description = forms.CharField(widget=Textarea())
+    description = forms.CharField(widget=Textarea(), required=False)
 
     class Meta:
         model = Employee

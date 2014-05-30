@@ -201,8 +201,8 @@ def reservation(request, id):
                 subject = _('Confirmation of service reservation')
                 renderedToCustomer = render_to_string('emails/reservation_customer.html',
                                                       {'reservation': reserve, 'link': user_page_link})
-                #send_mail(subject, renderedToCustomer, email_to2, [email_to1],
-                #          fail_silently=False)
+                send_mail(subject, renderedToCustomer, email_to2, [email_to1],
+                          fail_silently=False)
 
             start = datetime.datetime.combine(reserve.date, reserve.time)
             gcal_params = urllib.urlencode({
