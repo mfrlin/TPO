@@ -19,6 +19,7 @@ from models import User, ServiceProvider
 def account_profile(request):
     if request.POST.get('action') == 'makeprovider' and not request.user.has_service_provider():
         request.user.service_provider = ServiceProvider.objects.create(name='Unnamed Service Provider')
+        request.user.service_provider.reservation_confirmation_needed = False
         request.user.service_provider.save()
         request.user.save()
         return HttpResponseRedirect('')

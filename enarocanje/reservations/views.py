@@ -155,7 +155,7 @@ def reservation(request, id):
                     free_emp = list(service.employees.all())
                     free_emp_editable = list(service.employees.all())
                     for emp in free_emp:
-                        emp_time = EmployeeWorkingHours.objects.get(id=emp.id).get_for_day(emp, reserve.date.weekday())
+                        emp_time = EmployeeWorkingHours.objects.get(employee=emp.id).get_for_day(emp, reserve.date.weekday())
                         if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
                                                                                                    reserve.date.weekday()):
                             free_emp_editable.remove(emp)
@@ -201,8 +201,8 @@ def reservation(request, id):
                 subject = _('Confirmation of service reservation')
                 renderedToCustomer = render_to_string('emails/reservation_customer.html',
                                                       {'reservation': reserve, 'link': user_page_link})
-                send_mail(subject, renderedToCustomer, email_to2, [email_to1],
-                          fail_silently=False)
+                #send_mail(subject, renderedToCustomer, email_to2, [email_to1],
+                #          fail_silently=False)
 
             start = datetime.datetime.combine(reserve.date, reserve.time)
             gcal_params = urllib.urlencode({
