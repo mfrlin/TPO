@@ -207,8 +207,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 SOCIALACCOUNT_AUTO_SIGNUP = False
 
 # Google API. todo enter your info.
-GOOGLE_CLIENT_ID = ''
-GOOGLE_CLIENT_SECRET = ''
+GOOGLE_CLIENT_ID = '236816371004-ctcv0b9q5qiiicukbqacg660r5bv6e00.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = 'a0DdhOL6lpkXHL_lBKtjop0s'
 GOOGLE_API_KEY = ''
 
 # Notifications
