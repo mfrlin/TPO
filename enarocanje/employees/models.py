@@ -14,6 +14,7 @@ class Employee(models.Model):
     employer = models.ForeignKey(ServiceProvider, null=True, verbose_name=_('Employer'))
     img = models.ImageField(upload_to='employee_images', width_field='img_width', height_field='img_height', null=True,
                             blank=True)
+    description = models.CharField(max_length=200, null=True, blank=True)
     img_width = models.PositiveIntegerField(null=True)
     img_height = models.PositiveIntegerField(null=True)
 

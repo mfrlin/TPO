@@ -10,6 +10,8 @@
 
     <h1>{% block content_title %}{% trans 'Edit Employee' %}{% endblock %}</h1>
 
+    {% block content_intro %}{% endblock %}
+
     <form method="POST" enctype="multipart/form-data" action="">
         {% csrf_token %}
         <div class="row">
@@ -17,28 +19,46 @@
                 {% if form.non_field_errors %}
                     {% include "bootstrap_toolkit/non_field_errors.html" %}
                 {% endif %}
-                {{ form|as_bootstrap }}
+                {{ form.name|as_bootstrap }}
+                {{ form.surname|as_bootstrap }}
+                {{ form.phone|as_bootstrap }}
+                {{ form.img|as_bootstrap }}
             </div>
             <div class="span7">
                 {{ form.description|as_bootstrap }}
             </div>
         </div>
-        {% if form_w %}
+        {% if forms %}
             <h2>{% trans "Working hours" %}</h2>
-            <div class="row">
-                <div class="span4">
-                    {% if form_w.non_field_errors %}
-                        {% include "bootstrap_toolkit/non_field_errors.html" %}
-                    {% endif %}
-                    {% for field in form_w.hidden_fields %}
-                        {{ field }}
-                    {% endfor %}
-                    {{ form_w.time_from|as_bootstrap }}
-                    {{ form_w.time_to|as_bootstrap }}
+            {{ forms.management_form }}
+            {% for wh in forms %}
+                <div class="row">
+                    <div class="span4">
+                        {% if wh.non_field_errors %}
+                            {% include "bootstrap_toolkit/non_field_errors.html" %}
+                        {% endif %}
+                        {% for field in wh.hidden_fields %}
+                            {{ field }}
+                        {% endfor %}
+                        {{ wh.time_from|as_bootstrap }}
+                        {{ wh.time_to|as_bootstrap }}
+
+                    </div>
+
+                    <div class="span8">
+                        {{ wh.week_days|as_bootstrap }}
+                    </div>
+                    <input type="hidden" name="employee" value="{{ employee.id }}"/>
+                    <input type="hidden" name="workinghours" value="{{ wh.id.value }}"/>
+                    <button class="btn btn-danger" type="submit" name="action"
+                            value="delete" style="position: relative; left: 3%">{% trans "Delete" %}</button>
                 </div>
-                <div class="span8">
-                    {{ form_w.week_days|as_bootstrap }}
-                </div>
+                <br>
+            {% endfor %}
+
+            <div class="form-actions">
+                <a class="btn btn-primary"
+                   href="{% url 'addempworkinghours' employee.id %}">{% trans "Add Working Hours" %}</a>
             </div>
         {% endif %}
 
@@ -62,9 +82,9 @@
 {% block javascript %}
     {{ block.super }}
     </script><script>
-    (function() {
-        $('.time-field').parent('').datetimepicker({pickDate: false, pickSeconds: false, language:
-            '{{ request.LANGUAGE_CODE }}'});
-    })();
-    </script><script>
+        (function () {
+            $('.time-field').parent('').datetimepicker({pickDate: false, pickSeconds: false, language: '{{ request.LANGUAGE_CODE }}'});
+        })();
+    </script>
+    <script>
 {% endblock %}
