@@ -25,6 +25,9 @@
                 <th>
                     {% trans 'Date' %}
                 </th>
+                <th>
+                    {% trans 'Price' %}
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -35,13 +38,16 @@
                         {{ reservation.service_name }}
                     </td>
                     <td data-title="{% trans 'Show up' %}">
-                        {{ reservation.is_deny }}
+                        {{ reservation.show_up }}
                     </td>
                     <td data-title="{% trans 'Employee' %}">
                         {{ reservation.employee.name }}
                     </td>
                     <td data-title="{% trans 'Date' %}">
                         {{ reservation.date }}
+                    </td>
+                    <td data-title="{% trans 'Price' %}">
+                        {{ reservation.service_price }}
                     </td>
                 </tr>
             {% endfor %}

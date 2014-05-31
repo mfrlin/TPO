@@ -36,6 +36,8 @@ class Reservation(models.Model):
     user_phone = models.CharField(_('phone number'), max_length=100, null=True)
     user_email = models.CharField(_('email address'), max_length=100, null=True)
 
+    show_up = models.BooleanField(default=False)
+
     # employee
     employee = models.ForeignKey(Employee, null=True)
 

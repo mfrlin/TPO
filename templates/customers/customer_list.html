@@ -38,6 +38,9 @@
                     <th>
                         {% trans 'Last reservation' %}
                     </th>
+                    <th>
+                        {% trans 'Number of reservations' %}
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -59,6 +62,9 @@
                         </td>
                         <td data-title="{% trans 'Last reservation' %}">
                             {{ customer.last_reservation }}
+                        </td>
+                        <td data-title="{% trans 'Number of reservations' %}">
+                            {{ customer.num_reservations }}
                         </td>
                         <td data-title="{% trans 'Actions' %}">
                             <a class="btn" href={% url 'customers-edit' customer.id %}>{% trans "Edit" %}</a>
