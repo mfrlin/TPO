@@ -32,6 +32,7 @@ from rcalendar import getMinMaxTime
 from enarocanje.common.timeutils import is_overlapping
 from enarocanje.workinghours.models import EmployeeWorkingHours
 from enarocanje.employees.forms import EmployeeChoiceForm
+from enarocanje.service.forms import ServiceChoiceForm
 
 # Service reservations
 
@@ -225,4 +226,13 @@ def myreservations(request):
     res_confirm = sp.reservation_confirmation_needed
     minTime, maxTime = getMinMaxTime(sp)
     form = EmployeeChoiceForm(provider=sp)
+    return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
+
+@for_service_providers
+def calendar(request):
+    sp = request.user.service_provider
+    res_confirm = sp.reservation_confirmation_needed
+    minTime, maxTime = getMinMaxTime(sp)
+    form =  EmployeeChoiceForm(provider=sp)
+    form2 = ServiceChoiceForm(provider=sp)
     return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))

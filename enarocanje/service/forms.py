@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm
+from django.forms import ModelForm, Form
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.utils.translation import ugettext_lazy as _
 
@@ -94,3 +94,12 @@ class CommentForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
         self.fields['body'].label = ''
+
+class ServiceChoiceForm(Form):
+    def __init__(self, *args, **kwargs):
+        qs = Service.objects.filter(service_provider=kwargs.pop('provider'))
+        print qs
+        self.services = forms.ModelChoiceField(queryset=qs, required=False,
+                                                empty_label=_('all'))
+        super(ServiceChoiceForm, self).__init__(*args, **kwargs)
+        self.fields['services'] = self.services
