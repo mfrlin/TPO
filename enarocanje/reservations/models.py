@@ -13,8 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 from tasks import send_reminder
 
 from enarocanje.accountext.models import User, ServiceProvider
-from enarocanje.service.models import Service
 from enarocanje.customers.models import Customer
+from enarocanje.employees.models import Employee
 
 add_introspection_rules([], ['^oauth2client\.django_orm\.CredentialsField'])
 
@@ -22,7 +22,7 @@ add_introspection_rules([], ['^oauth2client\.django_orm\.CredentialsField'])
 class Reservation(models.Model):
     """Reservation model - who made a reservation and when"""
     user = models.ForeignKey(User, null=True)  # null for gcal imported reservations
-    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL,
+    service = models.ForeignKey('service.Service', null=True, on_delete=models.SET_NULL,
                                 related_name='service')  # service can be deleted
     date = models.DateField(null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
@@ -35,6 +35,9 @@ class Reservation(models.Model):
     user_fullname = models.CharField(_('name'), max_length=60, null=True)
     user_phone = models.CharField(_('phone number'), max_length=100, null=True)
     user_email = models.CharField(_('email address'), max_length=100, null=True)
+
+    # employee
+    employee = models.ForeignKey(Employee, null=True)
 
     # Backup fields if the service is changed or deleted
     service_provider = models.ForeignKey(ServiceProvider, related_name='reservations')
@@ -52,23 +55,29 @@ class Reservation(models.Model):
     task_id = models.CharField(max_length=256, blank=True, null=True)
 
     def __unicode__(self):
-        return str(self.date) + " User: " + str(self.user) + " Service: " + str(self.service)
+        return str(self.date) + " User: " + str(self.user) + " Service: " + str(self.service) + " at: " + str(self.time)
 
     def short_desc(self):
         """Default short description visible on reservation button"""
         return str(self.id)
+
+    def active_during(self, time):
+        start = datetime.datetime.combine(self.date, self.time)
+        end = start + datetime.timedelta(minutes=self.service_duration)
+        return time_in_range(start, end, time)
 
     class Meta:
         unique_together = ('service_provider', 'gcalid')
 
 
 def customer_handler(sender, instance, **kwargs):
-    date = datetime.datetime.combine(instance.date, instance.time)
     if instance.user:
+        print(instance.user)
         c, created = Customer.objects.get_or_create(user=instance.user, service=instance.service_provider)
     else:
         c, created = Customer.objects.get_or_create(email=instance.user_email, service=instance.service_provider)
     if created:
+        c.provider = instance.service_provider
         c.name = instance.user_fullname
         c.phone = instance.user_phone
         c.email = instance.user_email
@@ -115,3 +124,10 @@ pre_save.connect(reservation_handler, sender=Reservation)
 class GCal(models.Model):
     id = models.ForeignKey(ServiceProvider, primary_key=True)
     credential = CredentialsField()
+
+
+def time_in_range(start, end, x):
+    if start <= end:
+        return start <= x < end
+    else:
+        return start <= x or x < end

@@ -20,109 +20,109 @@
 
     <h1>{% trans "Gallery" %}</h1>
     <form method="POST" enctype="multipart/form-data" action="" class="" id="gallery_form">
-        {% csrf_token %}
+    {% csrf_token %}
 
-        <div class="row" style="margin-left:0px">
-            {% for img in gallery %}
-                <div class="col-lg-3 col-md-4 col-xs-6 real-gallery-image">
-                    <a class="fancybox thumbnail" href="{{ MEDIA_URL }}{{ img.image.url }}"
-                       data-fancybox-group="gallery" title="{{ img.image }}">
-                        <img src="{{ MEDIA_URL }}{{ img.image.url }}" class="img-responsive" alt="" width="140"
-                             height="140"/>
-                    </a>
-                    {% if edit_gallery %}
-                        <label class="checkbox">
-                            <input type="checkbox" class="img-selected" name="img_id" value="{{ img.id }}">
-                        </label>
-                    {% endif %}
-                </div>
-            {% endfor %}
+    <div class="row" style="margin-left:0px">
+        {% for img in gallery %}
+            <div class="col-lg-3 col-md-4 col-xs-6 real-gallery-image">
+                <a class="fancybox thumbnail" href="{{ MEDIA_URL }}{{ img.image.url }}"
+                   data-fancybox-group="gallery" title="{{ img.image }}">
+                    <img src="{{ MEDIA_URL }}{{ img.image.url }}" class="img-responsive" alt="" width="140"
+                         height="140"/>
+                </a>
+                {% if edit_gallery %}
+                    <label class="checkbox">
+                        <input type="checkbox" class="img-selected" name="img_id" value="{{ img.id }}">
+                    </label>
+                {% endif %}
+            </div>
+        {% endfor %}
 
-				<div id="gallery_anchor" style="display:hidden"></div>
+        <div id="gallery_anchor" style="display:hidden"></div>
 
-            {% if service_provider.display_generic_gallery %}
-                {% if generic_gallery %}
-                    {% with title=generic_gallery.title image_list=generic_gallery.values %}
+        {% if service_provider.display_generic_gallery %}
+            {% if generic_gallery %}
+                {% with title=generic_gallery.title image_list=generic_gallery.values %}
+                    {% for image_link in image_list %}
+                        <div class="col-lg-3 col-md-4 col-xs-6 generic">
+                            <a class="fancybox thumbnail"
+                               href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
+                               data-fancybox-group="gallery" title="{{ generic_gallery_id_name }}/{{ image_link }}">
+                                <img src="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
+                                     class="img-responsive" alt="" width="140" height="140"/>
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+            {% endif %}
+        {% endif %}
+    </div>
+
+
+
+    {% if edit_gallery %}
+        {% if gallery %}
+            <button class="btn btn-danger" type="submit" name="action"
+                    value="delete">{% trans "Delete selected" %}</button>
+            <button class="btn btn-danger" type="submit" name="action"
+                    value="delete_all">{% trans "Delete all images" %}</button>
+        {% endif %}
+
+        {% if generic_gallery %}
+            {% with title=generic_gallery.title image_list=generic_gallery.values %}
+                <hr/>
+                <h3>{% trans "Generic gallery photos" %}</h3>
+                <div class="row-fluid">
+                    <div class="span12">
+
                         {% for image_link in image_list %}
                             <div class="col-lg-3 col-md-4 col-xs-6 generic">
                                 <a class="fancybox thumbnail"
                                    href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
-                                   data-fancybox-group="gallery" title="{{ generic_gallery_id_name }}/{{ image_link }}">
-                                    <img src="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
+                                   data-fancybox-group="gallery"
+                                   title="{{ generic_gallery_id_name }}/{{ image_link }}">
+                                    <img src="
+                                                {{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
                                          class="img-responsive" alt="" width="140" height="140"/>
                                 </a>
                             </div>
                         {% endfor %}
-                    {% endwith %}
-                {% endif %}
-            {% endif %}
-        </div>
 
-
-
-        {% if edit_gallery %}
-            {% if gallery %}
-                <button class="btn btn-danger" type="submit" name="action"
-                        value="delete">{% trans "Delete selected" %}</button>
-                <button class="btn btn-danger" type="submit" name="action"
-                        value="delete_all">{% trans "Delete all images" %}</button>
-            {% endif %}
-
-            {% if generic_gallery %}
-                {% with title=generic_gallery.title image_list=generic_gallery.values %}
-                    <hr/>
-                    <h3>{% trans "Generic gallery photos" %}</h3>
-                    <div class="row-fluid">
-                        <div class="span12">
-
-                            {% for image_link in image_list %}
-                                <div class="col-lg-3 col-md-4 col-xs-6 generic">
-                                    <a class="fancybox thumbnail"
-                                       href="{{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
-                                       data-fancybox-group="gallery"
-                                       title="{{ generic_gallery_id_name }}/{{ image_link }}">
-                                        <img src="
-                                                {{ GENERIC_GALLERY_URL }}{{ generic_gallery_id_name }}/{{ image_link }}"
-                                             class="img-responsive" alt="" width="140" height="140"/>
-                                    </a>
-                                </div>
-                            {% endfor %}
-
-                        </div>
-
-                        <div class="set_generic">
-                            {% if not service_provider.display_generic_gallery %}
-                                <button class="btn btn-success" type="submit" name="action"
-                                        value="enable_generic_gallery">{% trans "Enable" %} {{ title }} {% trans "generic gallery" %}</button>
-                            {% else %}
-                                <button class="btn btn-danger" type="submit" name="action"
-                                        value="disable_generic_gallery">{% trans "Disable" %} {{ title }} {% trans "generic gallery" %}</button>
-                            {% endif %}
-
-                        </div>
                     </div>
-                {% endwith %}
-            {% endif %}
-            <hr/>
+
+                    <div class="set_generic">
+                        {% if not service_provider.display_generic_gallery %}
+                            <button class="btn btn-success" type="submit" name="action"
+                                    value="enable_generic_gallery">{% trans "Enable" %} {{ title }} {% trans "generic gallery" %}</button>
+                        {% else %}
+                            <button class="btn btn-danger" type="submit" name="action"
+                                    value="disable_generic_gallery">{% trans "Disable" %} {{ title }} {% trans "generic gallery" %}</button>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endwith %}
         {% endif %}
+        <hr/>
+    {% endif %}
 
 
-        <br style="clear: both"/><br/>
+    <br style="clear: both"/><br/>
 
-        {% if edit_gallery %}
+    {% if edit_gallery %}
 
-            <script type="text/javascript">
-				var media_url = "{{ MEDIA_URL }}";
-				var provider_id = {{ service_provider.id }};
-            </script>
+        <script type="text/javascript">
+            var media_url = "{{ MEDIA_URL }}";
+            var provider_id = {{ service_provider.id }};
+        </script>
 
-            <div class="form-actions">
+        <div class="form-actions">
 
-				<span class="btn btn-default fileinput-button"  id="image_uploader_folder_button">
+				<span class="btn btn-default fileinput-button" id="image_uploader_folder_button">
 					<i class="icon-folder-open"></i>
 					<span>{% trans "Add folder" %}</span>
-					<input id="image_uploader_folder" class="image-upload-bundle" type="file" name="images[]" multiple 
-						directory webkitdirectory mozdirectory odirectory>
+					<input id="image_uploader_folder" class="image-upload-bundle" type="file" name="images[]" multiple
+                           directory webkitdirectory mozdirectory odirectory>
 				</span>
 				
 				<span class="btn btn-default fileinput-button">
@@ -131,113 +131,115 @@
 					<input id="image_uploader_files" class="image-upload-bundle" type="file" name="images[]" multiple>
 				</span>
 
-				
-				<div class="row-fluid" style="margin-top:10px;display:none;" id="uploaded_files_list">
-					<div class="span12 well well-small white-bg clearfix " style="margin-bottom:5px;">
-						<p>{% trans "Uploaded images" %}:</p>
-						<div class="row-fluid">
-							
-							<div  id="image_list" class="span12" style="margin-left:10px">
-								
-							</div>
-						</div>
-						<div class="row-fluid">
-							<div  class="progress clearfix">
-								<div id="uploadprogress" class="bar"></div>
-							</div>
-							
-							<button id="upload_files" class="btn btn-success" name="action">{% trans "Upload files" %}</button>
-						</div>
-					</div>
-				</div>
 
-                <input name="captured_photo" id="captured_photo" type="hidden"/>
-			
-				<button type="button" id="take_photo_camera" class="btn btn-primary" style="display:none"
-				value="camera">{%trans "Direct"%} {% trans "camera" %}</button>
-		
-				{% if error_msg %}
-					<div class="alert alert-error">
-					  <button type="button" class="close" data-dismiss="alert">&times;</button>
-					  <strong>{% trans "Camera photo error" %}: </strong> {{error_msg}}
-					</div>
-				{% endif %}
-		
-                <div id="camera_display" style="display:none;margin-top:10px" class="row-fluid ">
-					<div class="span12 well well-small white-bg clearfix">
-						<p>{% trans "Click on video to capture image and then click upload photo" %}</p>
+            <div class="row-fluid" style="margin-top:10px;display:none;" id="uploaded_files_list">
+                <div class="span12 well well-small white-bg clearfix " style="margin-bottom:5px;">
+                    <p>{% trans "Uploaded images" %}:</p>
 
-						<div class="row-fluid">
-							<button type="submit" id="upload_photo" style="display:none" class="btn btn-primary"
-									name="action" value="upload_photo">{% trans "Upload photo" %}</button>
-						</div>
-						<div class="row-fluid">
-							<div class="btn-block">
-								<video id="video" width="240" height="240" autoplay></video>
-							</div>
-						</div>
-					</div>
+                    <div class="row-fluid">
+
+                        <div id="image_list" class="span12" style="margin-left:10px">
+
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="progress clearfix" style="max-width: 25%">
+                            <div id="uploadprogress" class="bar"></div>
+                        </div>
+
+                        <button id="upload_files" class="btn btn-success"
+                                name="action">{% trans "Upload files" %}</button>
+                    </div>
                 </div>
             </div>
 
-            <canvas id="canvastt" width="500" height="500" style="display:none"></canvas>
+            <input name="captured_photo" id="captured_photo" type="hidden"/>
 
+            <button type="button" id="take_photo_camera" class="btn btn-primary" style="display:none"
+                    value="camera">{% trans "Direct" %} {% trans "camera" %}</button>
 
-            <div class="row-fluid">
-                <div class="span6 ">
-                    <h3>{% trans "Basic instructions" %}</h3>
-
-                    <p>{% trans "Please follow these tips" %}</p>
-                    <ul class="basic_ins">
-                        <li>{% trans "We recommend that you use professional photo services for best photos. We picked cheapest and the best service from our database." %}</li>
-                        <li>{% trans "Photos should be taken in well lit room." %}</li>
-                        <li>{% trans "Reduce image resolution in image program." %}</li>
-                        <li>{% trans "Remove unnecessary alpha channel." %}</li>
-                        <li>{% trans "Upload photos using regular upload or via folder upload(only supported in chrome)." %}</li>
-                    </ul>
-
+            {% if error_msg %}
+                <div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>{% trans "Camera photo error" %}: </strong> {{ error_msg }}
                 </div>
-                <div class="span2 "></div>
-                <div class="span4 " style="padding-left:30px">
-                    <h3>{% trans "Photo services" %}</h3>
-                    {% if foto_services %}
-                        {% for service in foto_services %}
-                            <div class="row">
-                                <div class="span12">
-                                    <div class="span12 obrobe" style="margin-bottom:10px;height:100px">
-                                        <img src="{{ service.service_provider.logo_url }}" {{ service.service_provider|logowh:"32,48" }}
-                                             class="logotip"/>
+            {% endif %}
 
-                                        <div class="obrobe-content" style="margin-left:50px">
-                                            <h3 class="obrobe-title"><a href="{% url 'service' service.id %}"
-                                                                        style="color: black">{{ service.name }}</a></h3>
+            <div id="camera_display" style="display:none;margin-top:10px" class="row-fluid ">
+                <div class="span12 well well-small white-bg clearfix">
+                    <p>{% trans "Click on video to capture image and then click upload photo" %}</p>
 
-                                            {% if service.service_provider.has_location and location %}
-                                                <p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
-                                            {% endif %}
-                                            {% if service.price %}
-                                                <p class="obrobe-extra">
-                                                    <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
-                                                    {% if service.get_discount %}
-                                                        <b>{% trans "Discounted until" %}:</b>
-                                                        {{ service.get_discount.valid_to }}
-                                                    {% endif %}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-                                        <br style="clear:left"/>
+                    <div class="row-fluid">
+                        <button type="submit" id="upload_photo" style="display:none" class="btn btn-primary"
+                                name="action" value="upload_photo">{% trans "Upload photo" %}</button>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="btn-block">
+                            <video id="video" width="240" height="240" autoplay></video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="canvastt" width="500" height="500" style="display:none"></canvas>
+
+
+        <div class="row-fluid">
+            <div class="span6 ">
+                <h3>{% trans "Basic instructions" %}</h3>
+
+                <p>{% trans "Please follow these tips" %}</p>
+                <ul class="basic_ins">
+                    <li>{% trans "We recommend that you use professional photo services for best photos. We picked cheapest and the best service from our database." %}</li>
+                    <li>{% trans "Photos should be taken in well lit room." %}</li>
+                    <li>{% trans "Reduce image resolution in image program." %}</li>
+                    <li>{% trans "Remove unnecessary alpha channel." %}</li>
+                    <li>{% trans "Upload photos using regular upload or via folder upload (only supported in chrome)." %}</li>
+                </ul>
+
+            </div>
+            <div class="span2 "></div>
+            <div class="span4 " style="padding-left:30px">
+                <h3>{% trans "Photo services" %}</h3>
+                {% if foto_services %}
+                    {% for service in foto_services %}
+                        <div class="row">
+                            <div class="span12">
+                                <div class="span12 obrobe" style="margin-bottom:10px;height:100px">
+                                    <img src="{{ service.service_provider.logo_url }}" {{ service.service_provider|logowh:"32,48" }}
+                                         class="logotip"/>
+
+                                    <div class="obrobe-content" style="margin-left:50px">
+                                        <h3 class="obrobe-title"><a href="{% url 'service' service.id %}"
+                                                                    style="color: black">{{ service.name }}</a></h3>
+
+                                        {% if service.service_provider.has_location and location %}
+                                            <p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
+                                        {% endif %}
+                                        {% if service.price %}
+                                            <p class="obrobe-extra">
+                                                <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+                                                {% if service.get_discount %}
+                                                    <b>{% trans "Discounted until" %}:</b>
+                                                    {{ service.get_discount.valid_to }}
+                                                {% endif %}
+                                            </p>
+                                        {% endif %}
                                     </div>
+                                    <br style="clear:left"/>
                                 </div>
                             </div>
-                        {% endfor %}
-                    {% else %}
-                        {% trans "No services available" %}
-                    {% endif %}
-                </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% trans "No services available" %}
+                {% endif %}
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
     </form>
-	<!--<input id="image_uploader" multiple="multiple" name="images" type="file" accept="image/*" directory="" webkitdirectory="" mozdirectory="">-->
+    <!--<input id="image_uploader" multiple="multiple" name="images" type="file" accept="image/*" directory="" webkitdirectory="" mozdirectory="">-->
     <script src="/static/js/gallery.js?_=1"></script>
 {% endblock %}
 

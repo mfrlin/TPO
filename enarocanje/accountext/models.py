@@ -47,9 +47,9 @@ class ServiceProvider(models.Model):
 
     subscription_end_date = models.DateTimeField(
         default=datetime.datetime.now() + datetime.timedelta(days=30, hours=0, minutes=0, seconds=0))
-    subscription_mail_sent = models.BooleanField()
+    subscription_mail_sent = models.NullBooleanField(null=True, blank=True)
 
-    display_generic_gallery = models.BooleanField(_('Display generic gallery'))
+    display_generic_gallery = models.NullBooleanField(_('Display generic gallery'), null=True, blank=True)
 
     visit_us = models.TextField(_('Visit us'), null=True, blank=True)
     description = models.TextField(_('description'), null=True, blank=True)
@@ -57,7 +57,7 @@ class ServiceProvider(models.Model):
     userpage_link = models.CharField(_('User link'), max_length=40, validators=[validate_slug],
                                      unique=True, null=True)
     
-    reservation_confirmation_needed = models.BooleanField()
+    reservation_confirmation_needed = models.NullBooleanField(null=True, blank=True)
 
     lat = models.FloatField(null=True)
     lng = models.FloatField(null=True)

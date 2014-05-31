@@ -9,9 +9,12 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+    {%  if link %}
+        {% trans 'Our location and other information are here' %}: {{ link }}
+    {% endif %}
 {% endif %}
 {% if reservation.is_confirmed == True %}
-    {% blocktrans %}Your reservation was successful!
+    {% blocktrans %}Your reservation was confirmed!
         Here is some information about you reservation:{% endblocktrans %}
     {% trans "Service" %}: {{ reservation.service.name }}
     {% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}
@@ -20,6 +23,22 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+    {%  if link %}
+        {% trans 'Our location and other information are here' %}: {{ link }}
+    {% endif %}
+{% elif reservation.is_confirmed == False %}
+    {% blocktrans %}Your reservation must be confirmed by the provider,
+        please wait for confirmation:{% endblocktrans %}
+    {% trans "Service" %}: {{ reservation.service.name }}
+    {% trans "Duration" %}: {{ reservation.service.duration_with_unit }}{% if reservation.service.price %}
+    {% trans "Price" %}: {{ reservation.service.price_with_unit }}{% endif %}
+    {% trans "Date" %}: {{ reservation.date }}
+    {% trans "Time" %}: {{ reservation.time }}
+    {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
+    {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
+    {%  if link %}
+        {% trans 'Our location and other information are here' %}: {{ link }}
+    {% endif %}
 {% endif %}
 
 {% if reservation.is_deny == True %}

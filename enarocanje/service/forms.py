@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from enarocanje.common.timeutils import is_overlapping
 from enarocanje.common.widgets import BootstrapDateInput
-from models import Service, Discount, Comment
+from models import Service, Discount, Comment, Employee
 
 
 class DiscountForm(ModelForm):
@@ -45,6 +45,7 @@ class DiscountBaseFormSet(BaseInlineFormSet):
 class ServiceForm(ModelForm):
     """Form for adding and editing services"""
     active_until = forms.DateField(widget=BootstrapDateInput(), required=False, label=_('Active until'))
+    employees = forms.MultipleChoiceField(required=False)
 
     class Meta:
         model = Service
@@ -53,10 +54,14 @@ class ServiceForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ServiceForm, self).__init__(*args, **kwargs)
+        qs = Employee.objects.all().filter(employer=self.instance.service_provider_id)
+        self.employees = forms.ModelMultipleChoiceField(queryset=qs, label=_('Employees'),
+                                                        widget=forms.SelectMultiple, required=False)
         self.fields['duration'].label = _('Duration (in minutes)')
         self.fields['price'].label = _('Price (in EUR)')
+        self.fields['employees'] = self.employees
 
-    # self.fields['discount'].label = _('Discount (%)')
+        # self.fields['discount'].label = _('Discount (%)')
 
 
 DiscountFormSet = inlineformset_factory(Service, Discount, form=DiscountForm, formset=DiscountBaseFormSet, extra=1)
@@ -64,9 +69,9 @@ DiscountFormSet = inlineformset_factory(Service, Discount, form=DiscountForm, fo
 
 class FilterForm(forms.Form):
     ACTIVE_CHOICES = (
-    ('all', _('All')),
-    ('active', _('Active')),
-    ('inactive', _('Inactive'))
+        ('all', _('All')),
+        ('active', _('Active')),
+        ('inactive', _('Inactive'))
     )
 
     active = forms.ChoiceField(choices=ACTIVE_CHOICES, label='')

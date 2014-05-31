@@ -181,36 +181,36 @@ td.scheduleNonworking {
     margin-top: 20px;
 }
 
-.textContent{
+.textContent {
     padding: 0 15% 0 15%;
 }
 
 /* for myservices, because bootstrap draws a slight top border */
-.cleanForm{
+.cleanForm {
     border-top: none;
 }
 
 /* for gallery, 6.4.14 by t20jm */
 
-.col-lg-3.col-md-4.col-xs-6{
+.col-lg-3.col-md-4.col-xs-6 {
     margin: 0 20px 30px;
     width: 150px;
     height: 150px;
     float: left;
 }
 
-.generic{
+.generic {
     padding: 20px 0 0 20px;
 }
 
-.fancybox.thumbnail > img{
+.fancybox.thumbnail > img {
     max-height: 140px;
     max-width: 140px;
     width: auto;
     height: auto;
 }
 
-.checkbox{
+.checkbox {
     margin: 0;
     z-index: 100;
     position: relative;
@@ -218,34 +218,34 @@ td.scheduleNonworking {
     left: 5px;
 }
 
-.set_generic{
+.set_generic {
     padding: 5px 0 0 10px;
 }
 
-.basic_ins{
+.basic_ins {
     list-style-type: initial;
 }
 
-.basic_ins > li{
+.basic_ins > li {
     display: block;
     margin-bottom: 5px;
 }
 
-.obrobe.last_reserved{
+.obrobe.last_reserved {
     height: 130px;
     margin-bottom: 15px;
     word-wrap: break-word;
 }
 
-.nav-header.last_reserved{
+.nav-header.last_reserved {
     color: #000000;
 }
 
-.well.white-bg{
-	background-color:white
+.well.white-bg {
+    background-color: white
 }
 
-.span4.service_checkbox > ul{
+.span4.service_checkbox > ul {
     list-style: none;
     position: relative;
     left: -20px;
@@ -253,16 +253,16 @@ td.scheduleNonworking {
 
 /* newsletter */
 
-.nl_subject{
+.nl_subject {
     width: 350px;
 }
 
-.nl_content{
+.nl_content {
     width: 350px;
     height: 250px;
 }
 
-.nl_message{
+.nl_message {
     padding: 5px;
     height: 15px;
     font-size: 18px;
@@ -270,6 +270,15 @@ td.scheduleNonworking {
 
 /* custom label for subscription */
 
-.label.custom_label{
-   color: #666;
+.label.label-custom {
+    background-color: #ffffff;
+    color: #000;
+}
+
+.userpage_url {
+    display: inline;
+    float: right;
+    font-size: 20px;
+    margin: 20px 5% 0 0;
+    padding: 10px;
 }

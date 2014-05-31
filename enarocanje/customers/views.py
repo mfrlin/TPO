@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from .models import Customer
 from .forms import CustomerForm
 from enarocanje.accountext.decorators import for_service_providers
+from enarocanje.reservations.models import Reservation
 
 
 class ListCustomerView(ListView):
@@ -28,8 +29,17 @@ class ListCustomerView(ListView):
             return query.order_by('-last_reservation')
 
 
+class ListCustomerReservations(ListView):
+    model = Reservation
+    template_name = 'customers/reservations_list.html'
 
-
+    def get_queryset(self):
+        try:
+            print(self.request.GET)
+            user = Customer.objects.get(pk=self.kwargs.get('pk', -1)).user
+        except:
+            user = -1
+        return Reservation.objects.filter(user=user)
 
 class EditCustomerView(UpdateView):
     model = Customer
@@ -60,7 +70,6 @@ def managecustomer(request):
     if request.method == 'POST':
         customer = get_object_or_404(Customer, service=request.user.service_provider,
                                      id=request.POST.get('service'))
-        print customer
         if request.POST.get('action') == 'delete':
             customer.delete()
     return HttpResponseRedirect(reverse('mycustomers'))

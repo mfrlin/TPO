@@ -31,7 +31,9 @@
 
 {% block javascript %}
     {{ block.super }}
+    </script><script>
     (function() {
-    $('.date-field').parent().datetimepicker({pickTime: false, language: '{{ request.LANGUAGE_CODE }}'});
+        $('.date-field').parent('').datetimepicker({pickTime: false, language: '{{ request.LANGUAGE_CODE }}'});
     })();
+    </script><script>
 {% endblock %}

@@ -40,9 +40,9 @@ def account_profile(request):
     if request.user.service_provider:
         lat = request.user.service_provider.lat
         lng = request.user.service_provider.lng
-        
-        
-        user_page_link = '%s/u/%s' % (settings.BASE_URL, request.user.service_provider.userpage_link)
+
+        if request.user.service_provider.userpage_link:
+            user_page_link = '%s/u/%s' % (settings.BASE_URL, request.user.service_provider.userpage_link)
     
     if request.method == "POST":
         form = SignupForm(request.POST, initial=initial)
@@ -55,6 +55,8 @@ def account_profile(request):
         elif request.user.service_provider:
             if form.is_valid() and service_provider_form.is_valid():
                 form.save(request.user)
+                data = service_provider_form.cleaned_data
+                print data['userpage_link']
                 service_provider_form.save()
                 request.session['django_language'] = request.user.language
                 return HttpResponseRedirect('')

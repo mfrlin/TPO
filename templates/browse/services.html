@@ -9,7 +9,13 @@
 
 {% block content_browse %}
     {% if selected_provider %}
-        <h1>{{ selected_provider.name }}</h1>
+        <h1 style="display: inline">{{ selected_provider.name }}</h1>
+        {% if selected_provider.userpage_link %}
+            <a href="/u/{{ selected_provider.userpage_link }}"
+               class="userpage_url btn btn-info">{% trans 'Our user page' %}</a>
+            <br/>
+        {% endif %}
+        <br>
         {{ selected_provider.full_address }}<br/>
         <br/>
     {% endif %}
@@ -63,15 +69,13 @@
                                     {% if service.service_provider.has_location and location %}
                                         <p>{{ service.service_provider|distance:location }} {% trans "away" %}</p>
                                     {% endif %}
-                                    {% comment %}{% if service.price %}{% endcomment %}
-                                        <p class="obrobe-extra">
-                                            <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
-                                            {% if service.get_discount %}
-                                                <b>{% trans "Discounted until" %}:</b>
-                                                {{ service.get_discount.valid_to }}
-                                            {% endif %}
-                                        </p>
-                                    {% comment %}{% endif %}{% endcomment %}
+                                    <p class="obrobe-extra">
+                                        <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+                                        {% if service.get_discount %}
+                                            <b>{% trans "Discounted until" %}:</b>
+                                            {{ service.get_discount.valid_to }}
+                                        {% endif %}
+                                    </p>
                                 </div>
                                 <br style="clear:left"/>
                             </div>

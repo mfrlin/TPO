@@ -45,7 +45,11 @@
                 {% for customer in object_list %}
                     <tr>
                         <td data-title="{% trans 'Name' %}">
-                            {{ customer.name }}
+                            {% if customer.user %}
+                                <a href="{% url 'customers-reservations' pk=customer.id %}">{{ customer.name }}</a>
+                            {% else %}
+                                {{ customer.user_id }}
+                            {% endif %}
                         </td>
                         <td data-title="{% trans 'E-mail' %}">
                             {{ customer.email }}

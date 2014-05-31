@@ -12,6 +12,9 @@
         <b>{% trans "Service" %}:</b> {{ service.name }}<br/>
         <b>{% trans "Duration" %}:</b> {{ service.duration_with_unit }}<br/>
         <b>{% trans "Price" %}:</b> {{ service.price_with_unit }}<br/>
+        {% if chosen_employee %}
+            <b>{% trans "Employee" %}:</b> {{ chosen_employee }}<br/>
+        {% endif %}
     </p>
     <p>
         <b>{% trans "Date" %}:</b> {{ data.date }}<br/>

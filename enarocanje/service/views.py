@@ -34,6 +34,7 @@ from models import Service, Category, Discount, Comment
 import enarocanje.common.config as config
 # List of services for editing
 
+
 @for_service_providers
 def async_file_upload(request, id):
     #print '='*10,"async_file_upload",'='*10
@@ -64,8 +65,6 @@ def async_file_upload(request, id):
 
     json_payload = dict()
     json_payload['files'] = [file]
-
-    #print '='*35
 
     return HttpResponse(json.dumps(json_payload), content_type="application/json", status=status)
 
@@ -364,8 +363,15 @@ def browse_providers(request):
         (sort[0], construct_url_providers(cat, q, sort[1], page), sort[1] == sor)
         for sort in ORDER_CHOICES_PROVIDER
     ]
-    last_reserved = Reservation.objects.order_by('-date', '-time')[:3]
-    last_reserved.reverse()
+    reserved = Reservation.objects.order_by('-date', '-time')
+    unique = []
+    for r in reserved:
+        if unique.__len__() >= 3:
+            break
+        if not r.service.id in unique:
+            unique.append(r.service.id)
+
+    last_reserved = Service.objects.filter(id__in=unique)
 
     if cat:
         providers = providers.filter(category_id=cat)
