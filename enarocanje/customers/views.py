@@ -39,7 +39,7 @@ class ListCustomerReservations(ListView):
             user = Customer.objects.get(pk=self.kwargs.get('pk', -1)).user
         except:
             user = -1
-        return Reservation.objects.filter(user=user)
+        return Reservation.objects.filter(user=user, service_provider=self.request.user.service_provider)
 
 class EditCustomerView(UpdateView):
     model = Customer
