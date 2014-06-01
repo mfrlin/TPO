@@ -36,8 +36,6 @@ class Reservation(models.Model):
     user_phone = models.CharField(_('phone number'), max_length=100, null=True)
     user_email = models.CharField(_('email address'), max_length=100, null=True)
 
-    show_up = models.BooleanField(default=False)
-
     # employee
     employee = models.ForeignKey(Employee, null=True)
 
@@ -73,16 +71,28 @@ class Reservation(models.Model):
 
 
 def customer_handler(sender, instance, **kwargs):
+    date = datetime.datetime.combine(instance.date, instance.time)
     if instance.user:
-        print(instance.user)
-        c, created = Customer.objects.get_or_create(user=instance.user, service=instance.service_provider)
+        c, created = Customer.objects.get_or_create(user_id=instance.user, last_reservation=date,
+                                                    service_id=instance.service_provider.id)
+        if created:
+            c.provider = instance.service_provider
+            c.name = instance.user_fullname
+            c.phone = instance.user_phone
+            c.email = instance.user_email
+            c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
+        c.num_reservations += 1
+        c.save()
     else:
-        c, created = Customer.objects.get_or_create(email=instance.user_email, service=instance.service_provider)
-    if created:
-        c.provider = instance.service_provider
-        c.name = instance.user_fullname
-        c.phone = instance.user_phone
-        c.email = instance.user_email
+        c = Customer.objects.filter(name=instance.user_fullname)
+        if c:
+            c = c[0]
+        else:
+            c = Customer()
+            c.provider = instance.service_provider
+            c.name = instance.user_fullname
+            c.phone = instance.user_phone
+            c.email = instance.user_email
     c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
     c.num_reservations += 1
     c.save()
