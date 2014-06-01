@@ -45,6 +45,8 @@ class Reservation(models.Model):
     service_duration = models.PositiveIntegerField(_('duration'))
     service_price = models.DecimalField(_('price'), max_digits=7, decimal_places=2, null=True, blank=True)
 
+    show_up = models.BooleanField()
+
     # Comments email
     emailsent = models.BooleanField(default=False)
 

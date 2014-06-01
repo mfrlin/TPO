@@ -263,3 +263,9 @@ def reservation_list(request):
     form_employee = EmployeeChoiceForm(provider=sp)
     return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
 """
+
+@for_service_providers
+def myreservations_list(request):
+    #sp = request.user.service_provider
+    reservations = Reservation.objects.filter(service_provider=request.user.service_provider)
+    return render_to_response('myreservations/myreservations.html', locals(), context_instance=RequestContext(request))

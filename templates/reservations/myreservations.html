@@ -55,52 +55,55 @@
                         }
             };
             
-            //var filter_flag = false;
-            
-            $('#id_employees').change(function(){
-                var id = $(this).val();
-                var events = {
-                    url: '/timetable/',
-                    type: 'GET',
-                    data: {
-                       //'service_provider_id': '{{ user.service_provider.id }}',
-                       'employee_id': id,
-                    }
-                };
-                if (id != ''){
-					//cal.fullCalendar('removeEvents');
-					//cal.fullCalendar('removeEventSource', defEvents);
-					cal.fullCalendar('removeEventSource', events);
-					cal.fullCalendar('addEventSource', events);
-                }
-                else {
-                    //cal.fullCalendar('removeEvents');
-                    cal.fullCalendar('removeEventSource', events);
-                    //cal.fullCalendar('addEventSource', defEvents);
-                }
-            });
-            $('#id_services').change(function(){
-                var id = $(this).val();
-                var events = {
-                    url: '/timetable/',
-                    type: 'GET',
-                    data: {
-                       //'service_provider_id': '{{ user.service_provider.id }}',
-                       'service_id': id,
-                    }
-                };
-                if (id != ''){
-					//cal.fullCalendar('removeEvents');
-					//cal.fullCalendar('removeEventSource', defEvents);
-					cal.fullCalendar('removeEventSource', events);
-					cal.fullCalendar('addEventSource', events);
-                }
-                else {
-                   	//cal.fullCalendar('removeEvents');
-                    cal.fullCalendar('removeEventSource', events);
-                    //cal.fullCalendar('addEventSource', defEvents);
-                }
-            });
+            if ( $('#id_employees').length ) {
+	            $('#id_employees').change(function(){
+	                var id = $(this).val();
+	                var events = {
+	                    url: '/timetable/',
+	                    type: 'GET',
+	                    data: {
+	                       //'service_provider_id': '{{ user.service_provider.id }}',
+	                       'employee_id': id,
+	                    }
+	                };
+	                if (id != ''){
+						//cal.fullCalendar('removeEvents');
+						//cal.fullCalendar('removeEventSource', defEvents);
+						cal.fullCalendar('removeEventSource', events);
+						cal.fullCalendar('addEventSource', events);
+	                }
+	                else {
+	                    //cal.fullCalendar('removeEvents');
+	                    cal.fullCalendar('removeEventSource', events);
+	                    //cal.fullCalendar('addEventSource', defEvents);
+	                }
+	            })
+	        };
+	        
+	        if ( $('#id_services').length ) {
+	            $('#id_services').change(function(){
+	                var id = $(this).val();
+	                var events = {
+	                    url: '/timetable/',
+	                    type: 'GET',
+	                    data: {
+	                       //'service_provider_id': '{{ user.service_provider.id }}',
+	                       'service_id': id,
+	                    }
+	                };
+	                if (id != ''){
+						//cal.fullCalendar('removeEvents');
+						//cal.fullCalendar('removeEventSource', defEvents);
+						cal.fullCalendar('removeEventSource', events);
+						cal.fullCalendar('addEventSource', events);
+	                }
+	                else {
+	                   	//cal.fullCalendar('removeEvents');
+	                    cal.fullCalendar('removeEventSource', events);
+	                    //cal.fullCalendar('addEventSource', defEvents);
+	                }
+	            })
+            };
 
             var date = new Date(), selectedEvent = null;
             function updateDate(ndate) {
