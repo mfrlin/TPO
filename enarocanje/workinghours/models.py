@@ -16,6 +16,17 @@ DAYS_OF_WEEK = (
 DAYS_OF_WEEK_DICT = dict(DAYS_OF_WEEK)
 
 
+DAYS_OF_WEEK_INT = (
+    (1, _('Monday')),
+    (2, _('Tuesday')),
+    (3, _('Wednesday')),
+    (4, _('Thursday')),
+    (5, _('Friday')),
+    (6, _('Saturday')),
+    (7, _('Sunday')),
+)
+DAYS_OF_WEEK_DICT_INT = dict(DAYS_OF_WEEK_INT)
+
 class WorkingHours(models.Model):
     service_provider = models.ForeignKey(ServiceProvider, related_name='working_hours')
     time_from = models.TimeField(_('time from'))

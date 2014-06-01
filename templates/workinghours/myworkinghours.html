@@ -1,11 +1,20 @@
-{% extends 'main.html' %}
+﻿{% extends 'main.html' %}
 
 {% load url from future %}
 {% load i18n %}
+{% load workinghours %}
 
 {% block main_nav_myworkinghours %}active{% endblock %}
 
 {% block content %}
+<style>
+	input.error {
+		background-color:#F2DEDE;
+		border-color:#B94A48;
+		color:#B94A48;
+	};
+
+</style>
 
     <h1>{% trans 'My Working Hours' %}</h1>
 
@@ -18,55 +27,131 @@
         </li>
     </ul>
 
+<form method="POST" action="{% url 'myworkinghours' %}">
+	{% csrf_token %}
     <div id="no-more-tables">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>
-                    {% trans 'Week days' %}
-                </th>
-                <th>
-                    {% trans 'Time' %}
-                </th>
-                <th>
-                    {% trans 'Breaks' %}
-                </th>
-                <th>
-                    {% trans 'Actions' %}
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for wh in workinghours %}
-                <tr>
-                    <td data-title="{% trans 'Week days' %}">{{ wh.week_days_long }}</td>
-                    <td data-title="{% trans 'Time' %}">{{ wh.time_from|time:"H:i" }} - {{ wh.time_to|time:"H:i" }}</td>
-                    <td data-title="{% trans 'Breaks' %}">
-                        {% for break in wh.breaks.all %}
-                            {{ break.time_from|time:"H:i" }} -
-                            {{ break.time_to|time:"H:i" }}{% if not forloop.last %}, {% endif %}
-                        {% empty %}
-                            &nbsp;
-                        {% endfor %}
-                    </td>
-                    <td data-title="{% trans 'Actions' %}">
-                        <a href="{% url 'editworkinghours' wh.id %}" class="btn">{% trans "Edit" %}</a>
+		{% for err_msg in error_msg %}
+		<div class="alert alert-error">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>Error!</strong> {{err_msg}}
+		</div>
+		{% endfor %}
+	
+		<table class="table">
+			<thead>
+				<th>
+					{% trans 'Week days' %}
+				</th>
+				<th>
+					{% trans 'Time' %}
+				</th>
+			</thead>
+			<tbody id="data_ctrls">
 
-                        <form method="POST" action="{% url 'manageworkinghours' %}" style="display: inline">
-                            {% csrf_token %}
-                            <input type="hidden" name="workinghours" value="{{ wh.id }}"/>
-                            <button class="btn btn-danger" type="submit" name="action"
-                                    value="delete">{% trans "Delete" %}</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+				{% for key, value in days_of_week_dict_int.items %}
+			
+					<tr>
+						<td>{{ value }} </td>
+						
+						<td>
+							<div class="span12 week_times">
+							
+									{% for value in working_hours_blocks|get_item:key %}
+
+									<div class="edit-time-block row-fluid">
+										<div class="input-append input-prepend ">
+											<div class="input-append" style="display:inline-block;">
+												<span class="add-on"><i class="icon-time"></i></span>
+												<input class="input-small time-field" data-format="hh:mm" name="time_from_{{key}}" value="{{value.0|time:"H:i"}}" type="text" />
+											</div>
+											
+											<span class="add-on" style="padding-left:0px;padding-right:0px">-</span>
+										
+											<div class="input-append" style="display:inline-block;">
+												<input class="input-small time-field" data-format="hh:mm" name="time_to_{{key}}" value="{{value.1|time:"H:i"}}" type="text" />
+												<span class="add-on"><i class="icon-time"></i></span>
+											</div>
+											
+											<a class="btn btn-danger remove_wblock"><i class="icon-remove"></i></a>
+										</div>
+										<div class="error_container alert-error alert" style="display:none;width:250px;">
+										
+										</div>
+									</div>
+									
+									{% endfor %}
+
+									<a class="btn btn-default add_wblock" week_id="{{key}}"><i class="icon-plus"></i></a>
+
+							</div>
+						</td>
+					</tr>
+				
+				{% endfor %}
+			</tbody>
+		</table>
+
     </div>
 
-    <div class="form-actions">
-        <a class="btn btn-primary" href="{% url 'addworkinghours' %}">{% trans "Add Working Hours" %}</a>
+
+
+    <div class="form-actions prep_save_erro">
+        <button type="submit" value="save" name="action_type" id="save_btn" class="btn btn-primary">{% trans "Save" %}</button>
     </div>
 
+	</form>
+
+	<script type="plain/x-tmpl" id="time_block_template">
+		<div class="edit-time-block row-fluid" id="XK_<%=seq_id%>">
+			<div class="input-append input-prepend ">
+				<div class="input-append" style="display:inline-block;">
+					<span class="add-on"><i class="icon-time"></i></span>
+					<input class="input-small time-field" data-format="hh:mm" name="time_from_<%=key%>" value="{{value.0|time:"H:i"}}" type="text" />
+				</div>
+				
+				<span class="add-on" style="padding-left:0px;padding-right:0px">-</span>
+			
+				<div class="input-append" style="display:inline-block;">
+					<input class="input-small time-field" data-format="hh:mm" name="time_to_<%=key%>" value="{{value.1|time:"H:i"}}" type="text" />
+					<span class="add-on"><i class="icon-time"></i></span>
+				</div>
+			
+				<a class="btn btn-danger remove_wblock"><i class="icon-remove"></i></a>
+			</div>
+			<div class="error_container alert-error alert" style="display:none;width:250px;">
+			
+			</div>
+		</div>
+	</script>
+	
+	<script type="plain/x-tmpl" id="error_msg_template">
+		<p class="text-error">{% trans "Please enter valid time format Hours:Minutes" %}</p>
+	</script>
+
+	<script type="plain/x-tmpl" id="error_msg_template_gt">
+		<p class="text-error"><strong>{% trans "Time block is invalid" %}</strong>: {% trans "First value is bigger than second!" %}</p>
+	</script>
+
+	<script type="plain/x-tmpl" id="error_msg_template_eq">
+		<p class="text-error"><strong>{% trans "Time block is invalid" %}</strong>: {% trans "Time block span is zero minutes!" %}</p>
+	</script>
+
+	<script type="plain/x-tmpl" id="error_msg_template_overlap">
+		<p class="text-error"><strong>{% trans "Time block is invalid" %}</strong>: {% trans "Time block is overlaping with another!" %}</p>
+	</script>
+
+	<script type="plain/x-tmpl" id="error_msg_template_page_errors">
+		<div class="alert alert-error page_save_error">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>{% trans "Can not save! Page contains errors!"  %}</strong>
+		</div>
+	
+		
+	</script>
+
+{% endblock %}
+
+
+{% block extra_body %}
+    <script src="/static/js/myworkinghours.js"></script>
 {% endblock %}
