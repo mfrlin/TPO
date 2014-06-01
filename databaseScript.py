@@ -116,7 +116,7 @@ def fillDatabase():
             c.save()
 
 
-#fillDatabase()
+fillDatabase()
 # user1 is a customer
 # users 2-9 are service providers
 # admin is staff and superuser
