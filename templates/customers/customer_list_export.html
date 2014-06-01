@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% load customers %}
+
+{% block main_nav_customers %}active{% endblock %}
+
+{% block content %}
+
+    <h1>{% trans 'Export customers to mailchimp' %}</h1>
+	<form method="POST" href="{% url 'export_customers' %}">
+		{% csrf_token %}
+		
+		{{ export_list | as_bootstrap}}
+		
+		{% if status %}
+			{% trans "Exported "%} {{status.add_count}} {% trans " new records!"%}
+		{% endif %}
+	
+    <div class="form-actions">
+        <button class="btn btn-primary" name="action" value="export" >{% trans "Export customers" %}</button>
+    </div>
+	</form>	
+
+{% endblock %}

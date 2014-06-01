@@ -2,6 +2,8 @@
 
 {% load url from future %}
 {% load i18n %}
+{% load banana_tags %}
+{% load customers %}
 
 {% block main_nav_customers %}active{% endblock %}
 
@@ -12,6 +14,7 @@
 
     <div class="form-actions">
         <a class="btn btn-primary" href="{% url 'customers-new' %}">{% trans "Add customer" %}</a>
+        <a class="btn btn-info" href="{% url 'export_customers' %}">{% trans "Export to mailchimp" %}</a>
     </div>
 
     {% if object_list %}

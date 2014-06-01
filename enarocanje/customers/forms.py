@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_lazy as _
+
 from django import forms
 from .models import Customer
 
@@ -10,3 +12,6 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ['name', 'email', 'phone', 'last_reservation']
+        
+class ExportListForm(forms.Form):
+    selected_list_id = forms.ChoiceField(label=_('Select list'))

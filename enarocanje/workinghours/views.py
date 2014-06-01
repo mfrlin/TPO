@@ -24,9 +24,6 @@ def convert_time_block_h_to_int(blck):
 def check_overlap((StartA, EndA), (StartB, EndB)):   
     return (StartA <= EndB)  and  (EndA >= StartB)
 
-
-
-
 @for_service_providers
 def myworkinghours(request):
     days_of_week_dict_int = DAYS_OF_WEEK_DICT_INT
