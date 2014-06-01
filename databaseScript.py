@@ -109,7 +109,7 @@ def fillDatabase():
             h.time_to = datetime.time(21)
             h.week_days = "1,2,3,4,5"
             h.save()
-            name = "Customer_"+str(s)
+            name = "Customer_" + str(s)
             c = Customer(name=name, service=p,
                          phone=random.randint(100000, 999999), email=name + '@gmail.com',
                          last_reservation=datetime.datetime.now())
@@ -146,6 +146,11 @@ g.client_id = "236816371004-c46h64qimvsqffbrdt8k5o5hq90iigjh.apps.googleusercont
 g.key = ''
 g.secret = "n6NuvZ1_jAqKq_r6V6pWQ8Ii"
 g.save()
+
+for app in SocialApp.objects.all():
+    app.sites.add(site)
+    app.save()
+
 
 
 #execute_from_command_line(sys.argv)
