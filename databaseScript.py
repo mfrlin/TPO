@@ -105,11 +105,11 @@ def fillDatabase():
             e.save()
             h = EmployeeWorkingHours()
             h.employee = e
-            h.time_from = datetime.time(8)
-            h.time_to = datetime.time(16)
+            h.time_from = datetime.time(9)
+            h.time_to = datetime.time(21)
             h.week_days = "1,2,3,4,5"
             h.save()
-            name = "Customer_"+str(s)
+            name = "Customer_" + str(s)
             c = Customer(name=name, service=p,
                          phone=random.randint(100000, 999999), email=name + '@gmail.com',
                          last_reservation=datetime.datetime.now())
@@ -128,6 +128,30 @@ name = settings.PRODUCTION_URL.split('//')[1]
 site.domain = name
 site.name = name
 site.save()
+
+from allauth.socialaccount.models import SocialApp
+
+fb = SocialApp()
+fb.provider = "facebook"
+fb.name = "Facebook"
+fb.client_id = "207371922661306"
+fb.key = ''
+fb.secret = "67e595cb85d9836c305fe4b9985180df"
+fb.save()
+
+g = SocialApp()
+g.provider = "google"
+g.name = "Google"
+g.client_id = "236816371004-c46h64qimvsqffbrdt8k5o5hq90iigjh.apps.googleusercontent.com"
+g.key = ''
+g.secret = "n6NuvZ1_jAqKq_r6V6pWQ8Ii"
+g.save()
+
+for app in SocialApp.objects.all():
+    app.sites.add(site)
+    app.save()
+
+
 
 #execute_from_command_line(sys.argv)
 

@@ -282,3 +282,10 @@ td.scheduleNonworking {
     margin: 20px 5% 0 0;
     padding: 10px;
 }
+
+#des {
+    width: 180%;
+    position: relative;
+    right: 130%;
+    word-break: break-all;
+}

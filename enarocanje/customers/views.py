@@ -76,8 +76,8 @@ class ListCustomerView(ListView):
         provider = self.request.user.service_provider
         sort_by = self.request.GET.get('sort_by', 'name')
         search_by = self.request.GET.get('search_by', '')
-        name = Q(name__regex=search_by)
-        email = Q(email__regex=search_by)
+        name = Q(name__iregex=search_by)
+        email = Q(email__iregex=search_by)
         phone = Q(phone__regex=search_by)
         if search_by:
             query = Customer.objects.filter(name | email | phone, service=provider)
@@ -89,7 +89,11 @@ class ListCustomerView(ListView):
         else:
             return query.order_by('-last_reservation')
 
-    
+    def get_context_data(self, **kwargs):
+        context = super(ListCustomerView, self).get_context_data(**kwargs)
+        if self.request.GET.get('search_by'):
+            context['search_by'] = self.request.GET.get('search_by')
+        return context
 
 
 
@@ -104,6 +108,7 @@ class ListCustomerReservations(ListView):
         except:
             user = -1
         return Reservation.objects.filter(user=user, service_provider=self.request.user.service_provider)
+
 
 class EditCustomerView(UpdateView):
     model = Customer

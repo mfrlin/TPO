@@ -19,12 +19,17 @@
 
     {% if object_list %}
         <ul class="nav nav-pills">
-            <li class="active"><a href="?sort_by=last_reserved">sort by last reserved</a></li>
-            <li class="active"><a href="?sort_by=name">sort by name</a></li>
+            <li class="active"><a href="?sort_by=last_reserved&search_by={{ search_by }}">
+                {% trans 'sort by last reserved' %}</a>
+            </li>
+            <li class="active"><a href="?sort_by=name&search_by={{ search_by }}">
+                {% trans 'sort by name' %}
+            </a></li>
         </ul>
-        <form method="GET">
-            <label for="search_by">Search</label>
-            <input type="text" name="search_by" id="search_by">
+        <form method="GET" action="#">
+            <input type="text" name="search_by" id="search_by" value="{{ search_by }}">
+            <button class="btn" type="submit"
+                    style="position: relative;bottom: 6px; left: 12px">{% trans "Search" %}</button>
         </form>
         <div>
             <table class="table">
@@ -87,7 +92,17 @@
         </div>
 
     {% else %}
-        {% trans 'You currently have no customers to display.' %}
+        {% if search_by %}
+            <form method="GET" action="#">
+            <input type="text" name="search_by" id="search_by" value="{{ search_by }}">
+            <button class="btn" type="submit"
+                    style="position: relative;bottom: 6px; left: 12px">{% trans "Search" %}</button>
+            </form>
+            {% trans 'This query produced no results.' %}
+        {% else %}
+            {% trans 'You currently have no customers to display.' %}
+        {% endif %}
+
     {% endif %}
 
 
