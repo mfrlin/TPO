@@ -116,7 +116,7 @@ def fillDatabase():
             c.save()
 
 
-fillDatabase()
+#fillDatabase()
 # user1 is a customer
 # users 2-9 are service providers
 # admin is staff and superuser
@@ -128,6 +128,25 @@ name = settings.PRODUCTION_URL.split('//')[1]
 site.domain = name
 site.name = name
 site.save()
+
+from allauth.socialaccount.models import SocialApp
+
+fb = SocialApp()
+fb.provider = "facebook"
+fb.name = "Facebook"
+fb.client_id = "207371922661306"
+fb.key = ''
+fb.secret = "67e595cb85d9836c305fe4b9985180df"
+fb.save()
+
+g = SocialApp()
+g.provider = "google"
+g.name = "Google"
+g.client_id = "236816371004-c46h64qimvsqffbrdt8k5o5hq90iigjh.apps.googleusercontent.com"
+g.key = ''
+g.secret = "n6NuvZ1_jAqKq_r6V6pWQ8Ii"
+g.save()
+
 
 #execute_from_command_line(sys.argv)
 
