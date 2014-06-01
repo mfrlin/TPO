@@ -1,0 +1,62 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block main_nav_customers %}active{% endblock %}
+
+{% block content %}
+
+    <h1>{% trans 'Customer Reservations' %}</h1>
+
+    {% if object_list %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    {% trans 'Service Name' %}
+                </th>
+                <th>
+                    {% trans 'Show up' %}
+                </th>
+                <th>
+                    {% trans 'Employee' %}
+                </th>
+                <th>
+                    {% trans 'Date' %}
+                </th>
+                <th>
+                    {% trans 'Price' %}
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for reservation in object_list %}
+                <tr>
+                    <td data-title="{% trans 'Service Name' %}">
+                        {{ reservation.service_name }}
+                    </td>
+                    <td data-title="{% trans 'Show up' %}">
+                        {{ reservation.show_up }}
+                    </td>
+                    <td data-title="{% trans 'Employee' %}">
+                        {{ reservation.employee.name }}
+                    </td>
+                    <td data-title="{% trans 'Date' %}">
+                        {{ reservation.date }}
+                    </td>
+                    <td data-title="{% trans 'Price' %}">
+                        {{ reservation.service_price }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        {% trans 'No reservations to display.' %}
+    {% endif %}
+
+
+{% endblock %}

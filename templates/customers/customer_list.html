@@ -19,7 +19,9 @@
             <li class="active"><a href="?sort_by=last_reserved">sort by last reserved</a></li>
             <li class="active"><a href="?sort_by=name">sort by name</a></li>
         </ul>
-
+        <form method="GET">
+            <input type="text" name="search_by">
+        </form>
         <div>
             <table class="table">
                 <thead>
@@ -36,6 +38,9 @@
                     <th>
                         {% trans 'Last reservation' %}
                     </th>
+                    <th>
+                        {% trans 'Number of reservations' %}
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -43,7 +48,11 @@
                 {% for customer in object_list %}
                     <tr>
                         <td data-title="{% trans 'Name' %}">
-                            {{ customer.name }}
+                            {% if customer.user %}
+                                <a href="{% url 'customers-reservations' pk=customer.id %}">{{ customer.name }}</a>
+                            {% else %}
+                                {{ customer.user_id }}
+                            {% endif %}
                         </td>
                         <td data-title="{% trans 'E-mail' %}">
                             {{ customer.email }}
@@ -53,6 +62,9 @@
                         </td>
                         <td data-title="{% trans 'Last reservation' %}">
                             {{ customer.last_reservation }}
+                        </td>
+                        <td data-title="{% trans 'Number of reservations' %}">
+                            {{ customer.num_reservations }}
                         </td>
                         <td data-title="{% trans 'Actions' %}">
                             <a class="btn" href={% url 'customers-edit' customer.id %}>{% trans "Edit" %}</a>

@@ -67,6 +67,19 @@ def getMinMaxTime(provider):
 
 def getEvents(service, provider, start, end):
     events = []
+    now = datetime.datetime.now()
+    # if start.date() < now.date() or end.date() < now.date():
+    #     print start.date()
+    #     print end.date()
+    #     print now.date()
+    #     return [
+    #         {
+    #             'title': ugettext('In the PAST!'),
+    #             'start': encodeDatetime(start),
+    #             'end': encodeDatetime(end),
+    #             'color': '#444444'
+    #         }
+    #     ]
 
     # Get reservation events
     events.extend(getReservations(service, provider, start, end))
@@ -144,7 +157,25 @@ def getWorkingHours(service, provider, date):
     workinghrs = WorkingHours.get_for_day(provider, date.weekday())
     events = []
 
-    # TODO check when employees work and prevent from reserving then
+    now = datetime.datetime.now()
+    if date < now.date():
+        return [
+            {
+                'title': ugettext('In the past'),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(datetime.datetime.combine(date, datetime.time(23, 59))),
+                'color': '#444444'
+            }
+        ]
+    elif date == now.date():
+        events.append(
+            {
+                'title': ugettext('In the past'),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(datetime.datetime.combine(date, now.time())),
+                'color': '#444444'
+            }
+        )
 
     # Check if provider is working on this date
     if workinghrs is None or Absence.is_absent_on(provider, date):
@@ -188,7 +219,8 @@ def getWorkingHours(service, provider, date):
     first_arrive = datetime.time(23, 59)
     last_gone = datetime.time(0)
     for e in employees:
-        cwh = e.working_hours.all()[0].get_for_day(e, date.weekday())
+        if e.working_hours.all():
+            cwh = e.working_hours.all()[0].get_for_day(e, date.weekday())
         if cwh:
             if cwh.time_to > last_gone:
                 last_gone = cwh.time_to
@@ -201,20 +233,34 @@ def getWorkingHours(service, provider, date):
                 #     'color': EVENT_PAUSE_COLOR
                 # })
     if employees:
-        if first_arrive > workinghrs.time_from:
-            events.append({
-                'title': ugettext('No employees here yet'),
-                'start': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_from)),
-                'end': encodeDatetime(datetime.datetime.combine(date, first_arrive)),
-                'color': EVENT_PAUSE_COLOR
-            })
-        if last_gone < workinghrs.time_to:
-            events.append({
-                'title': ugettext('All employees have left'),
-                'start': encodeDatetime(datetime.datetime.combine(date, last_gone)),
-                'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
-                'color': EVENT_PAUSE_COLOR
-            })
+        if first_arrive == datetime.time(23, 59) and last_gone == datetime.time(0):
+            return [{
+                'title': ugettext('No employees scheduled but we are still open. Huh.'),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                'color': EVENT_CLOSED_COLOR
+            }]
+            # events.append({
+            #     'title': ugettext('No employees scheduled but we are still open. Huh.'),
+            #     'start': encodeDatetime(date),
+            #     'end': encodeDatetime(date + datetime.timedelta(days=1)),
+            #     'color': EVENT_CLOSED_COLOR
+            # })
+        else:
+            if first_arrive > workinghrs.time_from:
+                events.append({
+                    'title': ugettext('No employees here yet'),
+                    'start': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_from)),
+                    'end': encodeDatetime(datetime.datetime.combine(date, first_arrive)),
+                    'color': EVENT_PAUSE_COLOR
+                })
+            if last_gone < workinghrs.time_to:
+                events.append({
+                    'title': ugettext('All employees have left'),
+                    'start': encodeDatetime(datetime.datetime.combine(date, last_gone)),
+                    'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
+                    'color': EVENT_PAUSE_COLOR
+                })
     return events
 
 
@@ -262,6 +308,26 @@ def getEmployeeWorkingHours(provider, employee, date):
     workinghrs = EmployeeWorkingHours.get_for_day(employee, date.weekday())
     events = []
 
+    now = datetime.datetime.now()
+    if date < now.date():
+        return [
+            {
+                'title': ugettext('In the past'),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(datetime.datetime.combine(date, datetime.time(23, 59))),
+                'color': '#444444'
+            }
+        ]
+    elif date == now.date():
+        events.append(
+            {
+                'title': ugettext('In the past'),
+                'start': encodeDatetime(date),
+                'end': encodeDatetime(datetime.datetime.combine(date, now.time())),
+                'color': '#444444'
+            }
+        )
+
     # TODO add employee absence support
     if sp_workinghrs is None or Absence.is_absent_on(provider, date):
         return [
@@ -303,8 +369,6 @@ def getEmployeeWorkingHours(provider, employee, date):
             'end': encodeDatetime(datetime.datetime.combine(date, wrkbrk.time_to)),
             'color': EVENT_PAUSE_COLOR
         })
-
-    # TODO add break support
 
     return events
 
@@ -373,6 +437,14 @@ def getEmployeeDesc(request):
         return HttpResponse(employee.description)
     else:
         return HttpResponse('')
+
+
+def findEventByColor(events, color):
+    for l in events:
+        if l['color'] == color:
+            return l
+        else:
+            return None
 
 
 

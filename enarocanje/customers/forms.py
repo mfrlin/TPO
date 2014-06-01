@@ -5,7 +5,7 @@ from enarocanje.common.widgets import BootstrapDateInput
 
 
 class CustomerForm(forms.ModelForm):
-    last_reservation = forms.DateField(required=True, widget=BootstrapDateInput)
+    last_reservation = forms.DateField(required=False, widget=BootstrapDateInput)
 
     class Meta:
         model = Customer
