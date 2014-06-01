@@ -55,7 +55,8 @@
                     type: 'GET',
                     data: {
                        'service_provider_id': '{{ user.service_provider.id }}',
-                       'employee_id': id
+                       'employee_id': id,
+                        'past': 'true'
                     }
                 };
                 if (id != ''){
