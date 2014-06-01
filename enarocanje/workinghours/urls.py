@@ -2,9 +2,9 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('enarocanje.workinghours.views',
                        url(r'^myworkinghours/$', 'myworkinghours', name='myworkinghours'),
-                       url(r'^myworkinghours/add$', 'add', name='addworkinghours'),
+                       #url(r'^myworkinghours/add$', 'add', name='addworkinghours'),
                        url(r'^myworkinghours/addemp/(?P<id>\d+)$', 'addemp', name='addempworkinghours'),
-                       url(r'^myworkinghours/edit/(?P<id>\d+)$', 'edit', name='editworkinghours'),
+                       #url(r'^myworkinghours/edit/(?P<id>\d+)$', 'edit', name='editworkinghours'),
                        url(r'^myworkinghours/manage$', 'manage', name='manageworkinghours'),
 
                        url(r'^myabsences/$', 'myabsences', name='myabsences'),
