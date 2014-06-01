@@ -118,9 +118,7 @@
             }
 
             function viewDisplay(view) {
-                var cur_date = new Date();
-                cur_date.setDate(date.getDate());
-                cur_date.setTime(date.getTime());
+                var cur_date = new Date(date.getTime());
                 if (view.start <= new Date()) {
                     $("#calendar .fc-button-prev").addClass('fc-state-disabled');
                 } else {
@@ -143,21 +141,45 @@
                 }
                 var dt = date-cur_date;
                 // so selection gets cleared on date change
-                if (dt >= 86400000 || dt < 0){
+                /*if (dt >= 86400000 || dt < 0){
                     cal.fullCalendar('removeEventSource', selectedEvent);
                 }
                 else {
                     updateDate(date);
-                }
+                }*/
                 datePicker.data('datetimepicker').setLocalDate(date);
                 timePicker.data('datetimepicker').setLocalDate(date);
+                //console.log(cal.fullCalendar('clientEvents'));
             }
 
             function dayClick(ndate, allDay, jsEvent, view) {
-                updateDate(ndate);
-                $('#calendar').fullCalendar('gotoDate', date);
-                datePicker.data('datetimepicker').setLocalDate(date);
-                timePicker.data('datetimepicker').setLocalDate(date);
+                var cur_date = new Date();
+                var ndate_dur = new Date(ndate.getTime());
+                ndate_dur.setMinutes(ndate_dur.getMinutes() + {{ service.duration }});
+                var ev = cal.fullCalendar('clientEvents');
+                var overlap = false;
+                ev.forEach(function(entry){
+                    if (entry['color']){
+                        if (ndate >= entry.start && ndate_dur < entry.end){
+                            //console.log("if 1");
+                            overlap = true;
+                        }
+                        else if (ndate >= entry.start && ndate < entry.end){
+                            //console.log("if 2");
+                            overlap = true;
+                        }
+                        else if (ndate_dur > entry.start && ndate < entry.start){
+                            //console.log("if 3");
+                            overlap = true;
+                        }
+                    }
+                });
+                if (ndate > cur_date && !overlap){
+                    updateDate(ndate);
+                    $('#calendar').fullCalendar('gotoDate', date);
+                    datePicker.data('datetimepicker').setLocalDate(date);
+                    timePicker.data('datetimepicker').setLocalDate(date);
+                }
             }
 
             var now = new Date();
