@@ -105,8 +105,8 @@ def fillDatabase():
             e.save()
             h = EmployeeWorkingHours()
             h.employee = e
-            h.time_from = datetime.time(8)
-            h.time_to = datetime.time(16)
+            h.time_from = datetime.time(9)
+            h.time_to = datetime.time(21)
             h.week_days = "1,2,3,4,5"
             h.save()
             name = "Customer_"+str(s)

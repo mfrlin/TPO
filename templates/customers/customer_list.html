@@ -13,15 +13,15 @@
     <div class="form-actions">
         <a class="btn btn-primary" href="{% url 'customers-new' %}">{% trans "Add customer" %}</a>
     </div>
-
     {% if object_list %}
         <ul class="nav nav-pills">
             <li class="active"><a href="?sort_by=last_reserved">sort by last reserved</a></li>
             <li class="active"><a href="?sort_by=name">sort by name</a></li>
         </ul>
-        <form method="GET">
-            <label for="search_by">Search</label>
+        <form method="GET" action="#">
             <input type="text" name="search_by" id="search_by">
+            <button class="btn" type="submit"
+                    style="position: relative;bottom: 6px; left: 12px">{% trans "Search" %}</button>
         </form>
         <div>
             <table class="table">
