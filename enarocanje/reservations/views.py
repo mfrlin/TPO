@@ -251,6 +251,7 @@ def calendar(request):
     form_service = ServiceChoiceForm(provider=sp)
     return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
 
+"""
 @for_service_providers
 def reservation_list(request):
     sp = request.user.service_provider
@@ -261,3 +262,4 @@ def reservation_list(request):
     form_service = ServiceChoiceForm(provider=sp)
     form_employee = EmployeeChoiceForm(provider=sp)
     return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
+"""

@@ -17,9 +17,6 @@
         <li class="active">
         	<a href="{% url 'calendar' %}">{% trans 'Calendar' %}</a>
         </li>
-        <li class="active">
-        	<a href="{% url 'reservation_list' %}">{% trans 'Reservation list' %}</a>
-        </li>
         {% if res_confirm %}
             <li>
                 <a href="{% url 'myunconfirmedreservations' %}">{% trans 'Unconfirmed reservations' %}</a>
@@ -32,12 +29,6 @@
         </div>
         <div class="span4">
             {{ form_service|as_bootstrap }}
-        </div>
-        <div class="span4">
-        	{{ form_time|as_bootstrap }}
-        </div>
-        <div class="span4">
-        	{{ form_user|as_bootstrap }}
         </div>
     </div>
     {% if user.service_provider %}
