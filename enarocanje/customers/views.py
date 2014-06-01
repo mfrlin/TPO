@@ -33,6 +33,12 @@ class ListCustomerView(ListView):
         else:
             return query.order_by('-last_reservation')
 
+    def get_context_data(self, **kwargs):
+        context = super(ListCustomerView, self).get_context_data(**kwargs)
+        if self.request.GET.get('search_by'):
+            context['search_by'] = self.request.GET.get('search_by')
+        return context
+
 
 class ListCustomerReservations(ListView):
     model = Reservation
