@@ -9,6 +9,8 @@ from .forms import CustomerForm
 from enarocanje.accountext.decorators import for_service_providers
 from enarocanje.reservations.models import Reservation
 
+from django.db.models import Q
+
 
 class ListCustomerView(ListView):
     model = Customer
@@ -18,8 +20,11 @@ class ListCustomerView(ListView):
         provider = self.request.user.service_provider
         sort_by = self.request.GET.get('sort_by', 'name')
         search_by = self.request.GET.get('search_by', '')
+        name = Q(name__regex=search_by)
+        email = Q(email__regex=search_by)
+        phone = Q(phone__regex=search_by)
         if search_by:
-            query = Customer.objects.filter(service=provider, name__regex=search_by)
+            query = Customer.objects.filter(name | email | phone, service=provider)
         else:
             query = Customer.objects.filter(service=provider)
         if sort_by == 'name':
