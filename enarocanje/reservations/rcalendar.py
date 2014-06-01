@@ -188,7 +188,8 @@ def getWorkingHours(service, provider, date):
     first_arrive = datetime.time(23, 59)
     last_gone = datetime.time(0)
     for e in employees:
-        cwh = e.working_hours.all()[0].get_for_day(e, date.weekday())
+        if e.working_hours.all():
+            cwh = e.working_hours.all()[0].get_for_day(e, date.weekday())
         if cwh:
             if cwh.time_to > last_gone:
                 last_gone = cwh.time_to
