@@ -17,6 +17,9 @@
         <li class="active">
         	<a href="{% url 'calendar' %}">{% trans 'Calendar' %}</a>
         </li>
+        <li class="active">
+        	<a href="{% url 'reservation_list' %}">{% trans 'Reservation list' %}</a>
+        </li>
         {% if res_confirm %}
             <li>
                 <a href="{% url 'myunconfirmedreservations' %}">{% trans 'Unconfirmed reservations' %}</a>
@@ -29,6 +32,12 @@
         </div>
         <div class="span4">
             {{ form_service|as_bootstrap }}
+        </div>
+        <div class="span4">
+        	{{ form_time|as_bootstrap }}
+        </div>
+        <div class="span4">
+        	{{ form_user|as_bootstrap }}
         </div>
     </div>
     {% if user.service_provider %}
@@ -55,7 +64,7 @@
                         }
             };
             
-            var filter_flag = false;
+            //var filter_flag = false;
             
             $('#id_employees').change(function(){
                 var id = $(this).val();
@@ -63,8 +72,8 @@
                     url: '/timetable/',
                     type: 'GET',
                     data: {
-                       'service_provider_id': '{{ user.service_provider.id }}',
-                       'employee_id': id
+                       //'service_provider_id': '{{ user.service_provider.id }}',
+                       'employee_id': id,
                     }
                 };
                 if (id != ''){
@@ -76,7 +85,7 @@
                 else {
                     //cal.fullCalendar('removeEvents');
                     cal.fullCalendar('removeEventSource', events);
-                    cal.fullCalendar('addEventSource', defEvents);
+                    //cal.fullCalendar('addEventSource', defEvents);
                 }
             });
             $('#id_services').change(function(){
@@ -85,8 +94,8 @@
                     url: '/timetable/',
                     type: 'GET',
                     data: {
-                       'service_provider_id': '{{ user.service_provider.id }}',
-                       'service_id': id
+                       //'service_provider_id': '{{ user.service_provider.id }}',
+                       'service_id': id,
                     }
                 };
                 if (id != ''){
@@ -98,7 +107,7 @@
                 else {
                    	//cal.fullCalendar('removeEvents');
                     cal.fullCalendar('removeEventSource', events);
-                    cal.fullCalendar('addEventSource', defEvents);
+                    //cal.fullCalendar('addEventSource', defEvents);
                 }
             });
 
