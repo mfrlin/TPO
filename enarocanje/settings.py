@@ -14,7 +14,7 @@ PRODUCTION_URL = 'http://boc.fri.uni-lj.si'
 PJ_BASE_URL = 'http://192.168.56.101:8000'
 
 #comment this out
-BASE_URL = PJ_BASE_URL
+#BASE_URL = PJ_BASE_URL
 
 
 ADMINS = ()
