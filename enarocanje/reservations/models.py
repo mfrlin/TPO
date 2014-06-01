@@ -93,7 +93,6 @@ def customer_handler(sender, instance, **kwargs):
             c.name = instance.user_fullname
             c.phone = instance.user_phone
             c.email = instance.user_email
-            c.service = instance.service_provider
     c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
     c.num_reservations += 1
     c.save()
