@@ -14,7 +14,6 @@ from enarocanje.workinghours.models import EmployeeWorkingHours, WorkingHours
 from enarocanje.workinghours.forms import EmployeeWorkingHoursForm, EmployeeWorkingHoursFormSet
 
 
-
 @for_service_providers
 def myemployees(request):
     #sp = request.user.service_provider
@@ -33,15 +32,20 @@ def add(request):
             employee.employer = request.user.service_provider
             employee.save()
             # adding default working hours, ugly fix
-           
-            for wh in WorkingHours.objects.filter(service_provider=request.user.service_provider.id):
-                h = EmployeeWorkingHours()
-                h.employee = employee
-                h.time_from = wh.time_from
-                h.time_to = wh.time_to
-                h.week_days = wh.week_days
-                h.save()
-                
+
+            h = EmployeeWorkingHours()
+            h.employee = employee
+
+            spwh = WorkingHours.objects.filter(service_provider=request.user.service_provider.id)[0]
+            if spwh:
+                h.time_from = spwh.time_from
+                h.time_to = spwh.time_to
+                h.week_days = spwh.week_days
+            else:
+                h.time_from = datetime.time(9, 0)
+                h.time_to = datetime.time(21, 0)
+                h.week_days = [1, 2, 3, 4, 5]
+
             return HttpResponseRedirect(reverse(myemployees))
     else:
         form = EmployeeForm()
@@ -58,7 +62,7 @@ def edit(request, id):
     if request.method == 'POST':
         if request.POST.get('action') == 'delete':
             EmployeeWorkingHours.objects.get(id=request.POST.get('workinghours')).delete()
-            return HttpResponseRedirect('/myemployees/edit/'+id)
+            return HttpResponseRedirect('/myemployees/edit/' + id)
         form = EmployeeForm(request.POST, request.FILES, instance=employee)
         qs = EmployeeWorkingHours.objects.filter(employee=employee)
         EmployeeWorkingHoursFormSet.form = staticmethod(curry(EmployeeWorkingHoursForm, employee=employee))

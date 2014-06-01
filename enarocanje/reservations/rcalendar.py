@@ -86,7 +86,7 @@ def getEvents(service, provider, start, end):
 
     # Get working hours events
     for date in daterange(start.date(), end.date()):
-        events.extend(getWorkingHours(service, provider, date))
+        events.extend(getWorkingHours(service, provider, date, True))
 
     return events
 
@@ -153,29 +153,30 @@ def getReservations(service, provider, start, end):
     return events
 
 
-def getWorkingHours(service, provider, date):
+def getWorkingHours(service, provider, date, past):
     workinghrs = WorkingHours.get_for_day(provider, date.weekday())
     events = []
 
-    now = datetime.datetime.now()
-    if date < now.date():
-        return [
-            {
-                'title': ugettext('In the past'),
-                'start': encodeDatetime(date),
-                'end': encodeDatetime(datetime.datetime.combine(date, datetime.time(23, 59))),
-                'color': '#444444'
-            }
-        ]
-    elif date == now.date():
-        events.append(
-            {
-                'title': ugettext('In the past'),
-                'start': encodeDatetime(date),
-                'end': encodeDatetime(datetime.datetime.combine(date, now.time())),
-                'color': '#444444'
-            }
-        )
+    if past:
+        now = datetime.datetime.now()
+        if date < now.date():
+            return [
+                {
+                    'title': ugettext('In the past'),
+                    'start': encodeDatetime(date),
+                    'end': encodeDatetime(datetime.datetime.combine(date, datetime.time(23, 59))),
+                    'color': '#444444'
+                }
+            ]
+        elif date == now.date():
+            events.append(
+                {
+                    'title': ugettext('In the past'),
+                    'start': encodeDatetime(date),
+                    'end': encodeDatetime(datetime.datetime.combine(date, now.time())),
+                    'color': '#444444'
+                }
+            )
 
     # Check if provider is working on this date
     if workinghrs is None or Absence.is_absent_on(provider, date):
@@ -235,11 +236,11 @@ def getWorkingHours(service, provider, date):
     if employees:
         if first_arrive == datetime.time(23, 59) and last_gone == datetime.time(0):
             return [{
-                'title': ugettext('No employees scheduled but we are still open. Huh.'),
-                'start': encodeDatetime(date),
-                'end': encodeDatetime(date + datetime.timedelta(days=1)),
-                'color': EVENT_CLOSED_COLOR
-            }]
+                        'title': ugettext('No employees scheduled but we are still open. Huh.'),
+                        'start': encodeDatetime(date),
+                        'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                        'color': EVENT_CLOSED_COLOR
+                    }]
             # events.append({
             #     'title': ugettext('No employees scheduled but we are still open. Huh.'),
             #     'start': encodeDatetime(date),
@@ -273,11 +274,14 @@ def getEmployeeTimetable(request):
     end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
     emp = Employee.objects.get(id=emp_id)
     sp = ServiceProvider.objects.get(id=sp_id)
+    past = True
+    if request.GET.get('past') == 'true':
+        past = False
 
-    return HttpResponse(json.dumps(getEmpEvents(sp, emp, start, end)))
+    return HttpResponse(json.dumps(getEmpEvents(sp, emp, start, end, past)))
 
 
-def getEmpEvents(provider, employee, start, end):
+def getEmpEvents(provider, employee, start, end, past):
     events = []
 
     # Get reservation events
@@ -285,7 +289,7 @@ def getEmpEvents(provider, employee, start, end):
 
     # Get working hours events
     for date in daterange(start.date(), end.date()):
-        events.extend(getEmployeeWorkingHours(provider, employee, date))
+        events.extend(getEmployeeWorkingHours(provider, employee, date, past))
     return events
 
 
@@ -303,30 +307,31 @@ def getEmployeeReservations(employee, start, end):
     return events
 
 
-def getEmployeeWorkingHours(provider, employee, date):
+def getEmployeeWorkingHours(provider, employee, date, past):
     sp_workinghrs = WorkingHours.get_for_day(provider, date.weekday())
     workinghrs = EmployeeWorkingHours.get_for_day(employee, date.weekday())
     events = []
 
-    now = datetime.datetime.now()
-    if date < now.date():
-        return [
-            {
-                'title': ugettext('In the past'),
-                'start': encodeDatetime(date),
-                'end': encodeDatetime(datetime.datetime.combine(date, datetime.time(23, 59))),
-                'color': '#444444'
-            }
-        ]
-    elif date == now.date():
-        events.append(
-            {
-                'title': ugettext('In the past'),
-                'start': encodeDatetime(date),
-                'end': encodeDatetime(datetime.datetime.combine(date, now.time())),
-                'color': '#444444'
-            }
-        )
+    if past:
+        now = datetime.datetime.now()
+        if date < now.date():
+            return [
+                {
+                    'title': ugettext('In the past'),
+                    'start': encodeDatetime(date),
+                    'end': encodeDatetime(datetime.datetime.combine(date, datetime.time(23, 59))),
+                    'color': '#444444'
+                }
+            ]
+        elif date == now.date():
+            events.append(
+                {
+                    'title': ugettext('In the past'),
+                    'start': encodeDatetime(date),
+                    'end': encodeDatetime(datetime.datetime.combine(date, now.time())),
+                    'color': '#444444'
+                }
+            )
 
     # TODO add employee absence support
     if sp_workinghrs is None or Absence.is_absent_on(provider, date):
@@ -377,7 +382,7 @@ def get_all_reservations(service, provider, start, end):
     events = []
 
     for date in daterange(start.date(), end.date()):
-        events.extend(getWorkingHours(service, provider, date))
+        events.extend(getWorkingHours(service, provider, date, False))
 
     today_res = Reservation.objects.filter(date__gte=start, date__lt=end)
     for reservation in today_res:
