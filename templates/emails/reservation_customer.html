@@ -9,7 +9,7 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
-    {%  if link %}
+    {% if link %}
         {% trans 'Our location and other information are here' %}: {{ link }}
     {% endif %}
 {% endif %}
@@ -23,10 +23,10 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
-    {%  if link %}
+    {% if link %}
         {% trans 'Our location and other information are here' %}: {{ link }}
     {% endif %}
-{% elif reservation.is_confirmed == False %}
+{% elif reservation.is_confirmed == False and reservation.service.service_provider.reservation_confirmation_needed == True %}
     {% blocktrans %}Your reservation must be confirmed by the provider,
         please wait for confirmation:{% endblocktrans %}
     {% trans "Service" %}: {{ reservation.service.name }}
@@ -36,7 +36,7 @@
     {% trans "Time" %}: {{ reservation.time }}
     {% trans "Service provider name" %}: {{ reservation.service.service_provider.name }}
     {% trans "Service provider phone" %}: {{ reservation.service_provider.user.phone }}
-    {%  if link %}
+    {% if link %}
         {% trans 'Our location and other information are here' %}: {{ link }}
     {% endif %}
 {% endif %}
