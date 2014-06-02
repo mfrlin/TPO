@@ -23,100 +23,100 @@ from django.utils.translation import ugettext_lazy as _
 
 import csv, re
 
+
 @for_service_providers
 def import_customers(request):
     row_choice = ChoiceRowForm();
 
     if request.POST.get('action') == 'upload':
-        
-        
+
+
         form = UploadFileForm(request.POST, request.FILES)
-        
+
         if form.is_valid():
-          
-            usrs2 = list(csv.reader(request.FILES.get('file'), delimiter=str(form.cleaned_data['delimiter'])[0], quotechar=str(form.cleaned_data['quote'])[0]))
-            max_col_count = max(map(len,usrs2))
-            
+
+            usrs2 = list(csv.reader(request.FILES.get('file'), delimiter=str(form.cleaned_data['delimiter'])[0],
+                                    quotechar=str(form.cleaned_data['quote'])[0]))
+            max_col_count = max(map(len, usrs2))
+
             usrs = []
             for v in usrs2:
-                dt = max_col_count-len(v)
-                if(dt>0):
-                    v = v + ['']*dt
-            
+                dt = max_col_count - len(v)
+                if dt > 0:
+                    v = v + [''] * dt
+
                 usrs.append(v)
-            
+
             row_count = len(usrs)
-            
-                
+
+
     elif request.POST.get('action') == 'import':
         form = UploadFileForm()
-        
+
         data_num = request.POST.get('data_num')
-        
+
         col_num = int(request.POST.get('max_col_count'))
-        
 
         mapping = {}
         for j in range(col_num):
-            mapping[j] = request.POST.get('id_selected_mapping_'+str(j))
-        
-        inv_mapping = dict(map(lambda x: (x[1],x[0],), mapping.items()))
-        
+            mapping[j] = request.POST.get('id_selected_mapping_' + str(j))
+
+        inv_mapping = dict(map(lambda x: (x[1], x[0],), mapping.items()))
+
         cc_updated = 0
         cc_created = 0
         cc_failed = 0
         for i in range(int(data_num)):
-            if not request.POST.get('use_'+str(i+1)):
+            if not request.POST.get('use_' + str(i + 1)):
                 continue
 
-            dasta = {'name': None,'email':None,'phone':None}
+            dasta = {'name': None, 'email': None, 'phone': None}
 
             for j in range(col_num):
-                val = request.POST.get('row_'+str(i+1)+'_col_' + str(j+1))
-                
-                if mapping[j]=='0':
+                val = request.POST.get('row_' + str(i + 1) + '_col_' + str(j + 1))
+
+                if mapping[j] == '0':
                     dasta['name'] = val
-                elif mapping[j]=='1':
+                elif mapping[j] == '1':
                     dasta['email'] = val
-                elif mapping[j]=='2':
+                elif mapping[j] == '2':
                     dasta['phone'] = val
-                
-                #print mapping[j],j,val
-            
-            
-            if dasta['email']==None or (dasta['email'] != None and not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", dasta['email'])):
+
+                    #print mapping[j],j,val
+
+            if dasta['email'] is None or (
+                    dasta['email'] is not None and not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$",
+                                                            dasta['email'])):
                 msg = _("Invalid emails")
-                cc_failed+=1
+                cc_failed += 1
                 continue
-            
-           
+
             try:
-                customer = Customer.objects.get(service=request.user.service_provider,email=dasta['email'])
+                customer = Customer.objects.get(service=request.user.service_provider, email=dasta['email'])
             except:
                 customer = None
-                
-                
+
             if not customer:
                 customer = Customer()
                 customer.service = request.user.service_provider
                 customer.name = dasta['name']
                 customer.phone = dasta['phone']
                 customer.email = dasta['email']
-                
+
                 customer.save()
-                
+
                 cc_created += 1
             else:
                 customer.name = dasta['name']
                 customer.phone = dasta['phone']
-                
+
                 customer.save()
-                
+
                 cc_updated += 1
-        status = True 
+        status = True
     else:
         form = UploadFileForm()
-    
+
     return render_to_response('customers/customer_list_import.html', locals(), context_instance=RequestContext(request))
 
 
@@ -129,19 +129,19 @@ def export_customers(request):
 
     api_key = mc_stuff['access_token']
     dc = mc_stuff['dc']
-    
-    mc_ = mailchimp.Mailchimp(apikey=api_key+'-'+dc)
+
+    mc_ = mailchimp.Mailchimp(apikey=api_key + '-' + dc)
 
     try:
         mc_.helper.ping()
     except mailchimp.Error:
         print "Invalid API key"
-        
-        return HttpResponseRedirect(reverse('mycustomers')) 
-    
+
+        return HttpResponseRedirect(reverse('mycustomers'))
+
     lists = mc_.lists.list()
-    
-    ll = (map(lambda x: (x['id'],x['name']), lists[u'data'] ))
+
+    ll = (map(lambda x: (x['id'], x['name']), lists[u'data']))
 
     if request.POST.get('action') == 'export':
         export_list = ExportListForm(request.POST)
@@ -150,15 +150,15 @@ def export_customers(request):
             provider = request.user.service_provider
 
             query = Customer.objects.filter(service=provider)
-            
+
             batch = []
-            
+
             for c in query:
-                batch.append({'email':{'email':c.email},'email_type':'html','merge_vars':{}})
-                
+                batch.append({'email': {'email': c.email}, 'email_type': 'html', 'merge_vars': {}})
+
             #batch_subscribe(export_list.selected_list_id)
             list_id = (export_list.cleaned_data['selected_list_id'])
-            
+
             status = mc_.lists.batch_subscribe(list_id, batch)
 
     else:
