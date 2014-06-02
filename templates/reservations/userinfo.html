@@ -26,16 +26,18 @@
                     <div class="form-actions">
                         <button class="btn btn-primary" type="submit" name="loginBtn">{% trans "Sign In" %}</button>
                         <a class="btn" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+             
+						<a href="#signupForm" class="btn btn-primary" id="signupLink" data-toggle="collapse" data-parent="#signupForm">{% trans "Register" %}</a>
                     </div>
                 </form>
             </div>
         </div>
 
 
-        <div class="span4">
-            <h4><a href="#" id="signupLink">{% trans "Register" %}</a></h4>
+        <div class="span4 collapse"  id="signupForm">
+            <h4>{% trans "Register" %}</h4>
 
-            <div id="signupForm">
+            <div>
                 <form id="signup_form" method="post" action="{% url 'reservation' service.id %}">
                     {% csrf_token %}
                     {{ signupForm|as_bootstrap }}
@@ -56,8 +58,9 @@
 
         <div class="span4">
             <!--<h4><a href="#" id="nonRegLink">{% trans "Continue without registration" %}</a></h4>-->
+			<h4><a href="#nonRegForm" id="nonRegLink" data-toggle="collapse" data-parent="#nonRegForm">{% trans "Continue without registration" %}</a></h4>
 
-            <div id="nonRegForm">
+            <div id="nonRegForm" class="collapse">
                 <input type="hidden" name="step" value="2"/>
                 {{ formNonRegisteredUser|as_bootstrap }}
 
