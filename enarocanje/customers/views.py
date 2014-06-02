@@ -122,7 +122,7 @@ def import_customers(request):
 
 @for_service_providers
 def export_customers(request):
-    if(not 'mailchimp_details' in request.session):
+    if not 'mailchimp_details' in request.session:
         return HttpResponseRedirect(Bananas_OAuth().authorize_url())
 
     mc_stuff = request.session['mailchimp_details']
@@ -160,14 +160,13 @@ def export_customers(request):
             list_id = (export_list.cleaned_data['selected_list_id'])
             
             status = mc_.lists.batch_subscribe(list_id, batch)
-            
-            
 
     else:
         export_list = ExportListForm()
         export_list.fields['selected_list_id'].choices = ll
 
     return render_to_response('customers/customer_list_export.html', locals(), context_instance=RequestContext(request))
+
 
 class ListCustomerView(ListView):
     model = Customer
@@ -195,7 +194,6 @@ class ListCustomerView(ListView):
         if self.request.GET.get('search_by'):
             context['search_by'] = self.request.GET.get('search_by')
         return context
-
 
 
 class ListCustomerReservations(ListView):

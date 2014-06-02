@@ -95,10 +95,11 @@ class CommentForm(ModelForm):
         super(CommentForm, self).__init__(*args, **kwargs)
         self.fields['body'].label = ''
 
+
 class ServiceChoiceForm(Form):
     def __init__(self, *args, **kwargs):
         qs = Service.objects.filter(service_provider=kwargs.pop('provider'))
         self.services = forms.ModelChoiceField(queryset=qs, required=False,
-                                                empty_label=_('all'))
+                                               empty_label=_('all'))
         super(ServiceChoiceForm, self).__init__(*args, **kwargs)
         self.fields['services'] = self.services

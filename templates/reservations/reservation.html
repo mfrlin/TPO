@@ -98,8 +98,18 @@
                 selectedEvent = [{
                     title: '{% trans 'Your reservation' %}',
                     start: date,
-                    end: dateEnd
+                    end: dateEnd,
+                    editable: true
                 }];
+                /*selectedEvent = {events:[
+                    {
+                    title: '{% trans 'Your reservation' %}',
+                    start: date,
+                    end: dateEnd
+                }
+                ],
+                    editable: true
+                };*/
                 cal.fullCalendar('addEventSource', selectedEvent);
             }
 
@@ -111,6 +121,18 @@
                 $('#calendar').fullCalendar('gotoDate', date);
             }
 
+            function isOverlapping(event){
+                var array = cal.fullCalendar('clientEvents');
+                for(i in array){
+                    if(array[i].title != event.title){
+                        if(!(array[i].start >= event.end || array[i].end <= event.start)){
+                            return true;
+                        }
+                    }
+                }
+            return false;
+}
+
             function changeTime(ev) {
                 date.setHours(ev.localDate.getHours());
                 date.setMinutes(ev.localDate.getMinutes());
@@ -119,7 +141,6 @@
             }
 
             function viewDisplay(view) {
-                var cur_date = new Date(date.getTime());
                 if (view.start <= new Date()) {
                     $("#calendar .fc-button-prev").addClass('fc-state-disabled');
                 } else {
@@ -140,14 +161,6 @@
                         date.setDate(date.getDate() - 1);
                     }
                 }
-                var dt = date-cur_date;
-                // so selection gets cleared on date change
-                /*if (dt >= 86400000 || dt < 0){
-                    cal.fullCalendar('removeEventSource', selectedEvent);
-                }
-                else {
-                    updateDate(date);
-                }*/
                 datePicker.data('datetimepicker').setLocalDate(date);
                 timePicker.data('datetimepicker').setLocalDate(date);
                 //console.log(cal.fullCalendar('clientEvents'));
@@ -220,6 +233,8 @@
                 maxTime: '{{ maxTime|time:"H:i" }}',
 
                 editable: false,
+                disableResizing: true,
+                eventDurationEditable: false,
                 allDayDefault: false,
                 allDaySlot: false,
                 height: 100000,
@@ -267,6 +282,11 @@
                     data: {
                         'service_provider_id': '{{ service.service_provider_id }}',
                         'service_id': '{{ service.id }}'
+                    }
+                },
+                eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                    if (isOverlapping(event)){
+                        revertFunc();
                     }
                 }
             });
