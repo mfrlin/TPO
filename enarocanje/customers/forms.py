@@ -28,3 +28,11 @@ class CustomerChoiceForm(Form):
 
 class ExportListForm(forms.Form):
     selected_list_id = forms.ChoiceField(label=_('Select list'))
+
+class ChoiceRowForm(forms.Form):
+    selected_list_id = forms.ChoiceField(choices=[(0,_("Name")),(1,_("Email")),(2,_("Phone number"))])
+
+class UploadFileForm(forms.Form):
+    delimiter = forms.CharField(max_length=1, initial=',')
+    quote = forms.CharField(max_length=1, initial='"')
+    file  = forms.FileField(widget=forms.FileInput())

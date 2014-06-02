@@ -15,6 +15,7 @@
     <div class="form-actions">
         <a class="btn btn-primary" href="{% url 'customers-new' %}">{% trans "Add customer" %}</a>
         <a class="btn btn-info" href="{% url 'export_customers' %}">{% trans "Export to mailchimp" %}</a>
+        <a class="btn btn-info" href="{% url 'import_customers' %}">{% trans "Import" %}</a>
     </div>
 
     {% if object_list %}
