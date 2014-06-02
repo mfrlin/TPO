@@ -75,7 +75,7 @@ class Reservation(models.Model):
 def customer_handler(sender, instance, **kwargs):
     date = datetime.datetime.combine(instance.date, instance.time)
     if instance.user:
-        c, created = Customer.objects.get_or_create(user_id=instance.user, last_reservation=date,
+        c, created = Customer.objects.get_or_create(user_id=instance.user.id, last_reservation=date,
                                                     service_id=instance.service_provider.id)
         if created:
             c.provider = instance.service_provider

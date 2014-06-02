@@ -98,7 +98,6 @@ class CommentForm(ModelForm):
 class ServiceChoiceForm(Form):
     def __init__(self, *args, **kwargs):
         qs = Service.objects.filter(service_provider=kwargs.pop('provider'))
-        print qs
         self.services = forms.ModelChoiceField(queryset=qs, required=False,
                                                 empty_label=_('all'))
         super(ServiceChoiceForm, self).__init__(*args, **kwargs)

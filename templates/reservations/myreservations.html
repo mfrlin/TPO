@@ -62,20 +62,20 @@
 	                    url: '/timetable/',
 	                    type: 'GET',
 	                    data: {
-	                       //'service_provider_id': '{{ user.service_provider.id }}',
+	                       'service_provider_id': '{{ user.service_provider.id }}',
 	                       'employee_id': id,
 	                    }
 	                };
 	                if (id != ''){
-						//cal.fullCalendar('removeEvents');
-						//cal.fullCalendar('removeEventSource', defEvents);
+						cal.fullCalendar('removeEvents');
+						cal.fullCalendar('removeEventSource', defEvents);
 						cal.fullCalendar('removeEventSource', events);
 						cal.fullCalendar('addEventSource', events);
 	                }
 	                else {
-	                    //cal.fullCalendar('removeEvents');
+	                    cal.fullCalendar('removeEvents');
 	                    cal.fullCalendar('removeEventSource', events);
-	                    //cal.fullCalendar('addEventSource', defEvents);
+	                    cal.fullCalendar('addEventSource', defEvents);
 	                }
 	            })
 	        };
@@ -87,20 +87,20 @@
 	                    url: '/timetable/',
 	                    type: 'GET',
 	                    data: {
-	                       //'service_provider_id': '{{ user.service_provider.id }}',
+	                       'service_provider_id': '{{ user.service_provider.id }}',
 	                       'service_id': id,
 	                    }
 	                };
 	                if (id != ''){
-						//cal.fullCalendar('removeEvents');
-						//cal.fullCalendar('removeEventSource', defEvents);
+						cal.fullCalendar('removeEvents');
+						cal.fullCalendar('removeEventSource', defEvents);
 						cal.fullCalendar('removeEventSource', events);
 						cal.fullCalendar('addEventSource', events);
 	                }
 	                else {
-	                   	//cal.fullCalendar('removeEvents');
+	                   	cal.fullCalendar('removeEvents');
 	                    cal.fullCalendar('removeEventSource', events);
-	                    //cal.fullCalendar('addEventSource', defEvents);
+	                    cal.fullCalendar('addEventSource', defEvents);
 	                }
 	            })
             };
@@ -198,8 +198,8 @@
             cal.fullCalendar({
                 header: {
                     left: 'prev,next, today',
-                    center: '',
-                    right: 'agendaWeek,agendaDay'
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
                 },
 
                 /* sets the current view */
@@ -216,7 +216,7 @@
                 editable: false,
                 allDayDefault: false,
                 allDaySlot: false,
-                height: 100000,
+                //height: 100000,
                 slotMinutes: 15,
 
                 /* callbacks */
