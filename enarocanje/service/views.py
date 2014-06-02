@@ -213,7 +213,7 @@ def add(request):
             return HttpResponseRedirect(reverse(myservices))
     else:
         # on get request create empty form
-        form = ServiceForm()
+        form = ServiceForm(instance=request.user)
         formset = DiscountFormSet()
         # render form - new (get request) or invalid with error messages (post request)
     return render_to_response('service/add.html', locals(), context_instance=RequestContext(request))

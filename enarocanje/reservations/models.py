@@ -39,6 +39,8 @@ class Reservation(models.Model):
     # employee
     employee = models.ForeignKey(Employee, null=True)
 
+    show_up = models.NullBooleanField(null=True)
+
     # Backup fields if the service is changed or deleted
     service_provider = models.ForeignKey(ServiceProvider, related_name='reservations')
     service_name = models.CharField(_('name'), max_length=100)

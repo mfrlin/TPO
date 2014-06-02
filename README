@@ -29,3 +29,8 @@ Celery task queue:
 
 	First start rabbitmq and then celery worker.
 
+MailChimp solution for ssl cert verify problem...
+	#Backup old cert
+	sudo mv /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt.old
+	#replace with this one
+	sudo mv ./cacert.pem /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt

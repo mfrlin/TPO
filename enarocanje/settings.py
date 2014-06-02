@@ -11,6 +11,12 @@ ROOT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 BASE_URL = 'http://localhost:80'
 PRODUCTION_URL = 'http://boc.fri.uni-lj.si'
 
+PJ_BASE_URL = 'http://192.168.56.101:8000'
+
+#comment this out
+#BASE_URL = PJ_BASE_URL
+
+
 ADMINS = ()
 
 MANAGERS = ()
@@ -145,6 +151,7 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'banana_py',
     'bootstrap_toolkit',
     'south',
     'enarocanje.accountext',
@@ -155,6 +162,8 @@ INSTALLED_APPS = (
     'enarocanje.employees',
     'enarocanje.mynewsletter',
     'enarocanje.customers',
+    'certifi',
+    
 )
 
 # A sample logging configuration. The only tangible logging
@@ -214,6 +223,13 @@ GOOGLE_API_KEY = ''
 # Notifications
 DEFAULT_FROM_EMAIL = 'info@eorderservice.com'
 
+MAILCHIMP_CLIENT_ID = '664322933601'
+MAILCHIMP_CLIENT_SECRET = '74119706a17d36b316d7ceae09217cfa'
+MAILCHIMP_REDIRECT_URI = PJ_BASE_URL+'/bananas/ripe/'
+MAILCHIMP_COMPLETE_URI = PJ_BASE_URL+'/mycustomers/export'
+
+#print MAILCHIMP_REDIRECT_URI
+
 try:
     from local_settings import *
 except ImportError:
@@ -224,3 +240,12 @@ if SOCIAL_LOGIN:
         'allauth.socialaccount.providers.google',
         'allauth.socialaccount.providers.facebook',
     )
+
+#import ssl
+
+#context = ssl.SSLContext(ssl.PROTOCOL_SSLv3)
+#context.verify_mode = ssl.CERT_REQUIRED
+
+#context.load_verify_locations('cacert.pem') # works
+
+

@@ -9,3 +9,6 @@ pyrfc3339
 Pillow
 celery
 python-dateutil
+mailchimp
+banana_py
+certifi

@@ -54,7 +54,7 @@ class ServiceForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ServiceForm, self).__init__(*args, **kwargs)
-        qs = Employee.objects.all().filter(employer=self.instance.service_provider_id)
+        qs = Employee.objects.filter(employer=self.instance.service_provider_id)
         self.employees = forms.ModelMultipleChoiceField(queryset=qs, label=_('Employees'),
                                                         widget=forms.SelectMultiple, required=False)
         self.fields['duration'].label = _('Duration (in minutes)')
