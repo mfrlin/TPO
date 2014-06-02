@@ -3,51 +3,64 @@
 {% load url from future %}
 {% load i18n %}
 {% load bootstrap_toolkit %}
+{% load reservation %}
 
 {% block reservation_content %}
 
     <div class="row">
-        <!--<div class="span4">
+        <div class="span4">
             <h4>{% trans "Already have an account?" %}</h4>
 
             <div id="loginForm">
                 <form class="login" method="POST" action="{% url 'account_login' %}">
                     {% csrf_token %}
+					
                     {{ loginForm|as_bootstrap }}
                     {% if redirect_field_value %}
                         {{ redirect_field_value }}
                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                     {% endif %}
+					
+					<input type="hidden" name="step" value="2"/>
+					
                     <div class="form-actions">
                         <button class="btn btn-primary" type="submit" name="loginBtn">{% trans "Sign In" %}</button>
                         <a class="btn" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+             
+						<a href="#signupForm" class="btn btn-primary" id="signupLink" data-toggle="collapse" data-parent="#signupForm">{% trans "Register" %}</a>
                     </div>
                 </form>
             </div>
         </div>
 
 
-        <div class="span4">
-            <h4><a href="#" id="signupLink">{% trans "Register" %}</a></h4>
+        <div class="span4 collapse"  id="signupForm">
+            <h4>{% trans "Register" %}</h4>
 
-            <div id="signupForm">
-                <form id="signup_form" method="post" action="{% url 'account_signup' %}">
+            <div>
+                <form id="signup_form" method="post" action="{% url 'reservation' service.id %}">
                     {% csrf_token %}
                     {{ signupForm|as_bootstrap }}
                     {% if redirect_field_value %}
                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                     {% endif %}
+					
+					<input type="hidden" name="step" value="2"/>
+					
+					<input type="hidden" name="data" value="{{ data|encode_data }}"/>
+					
                     <div class="form-actions">
                         <button class="btn btn-primary" type="submit" name="signupBtn">{% trans "Sign Up" %}</button>
                     </div>
                 </form>
             </div>
-        </div>-->
+        </div>
 
         <div class="span4">
             <!--<h4><a href="#" id="nonRegLink">{% trans "Continue without registration" %}</a></h4>-->
+			<h4><a href="#nonRegForm" id="nonRegLink" data-toggle="collapse" data-parent="#nonRegForm">{% trans "Continue without registration" %}</a></h4>
 
-            <div id="nonRegForm">
+            <div id="nonRegForm" class="collapse">
                 <input type="hidden" name="step" value="2"/>
                 {{ formNonRegisteredUser|as_bootstrap }}
 

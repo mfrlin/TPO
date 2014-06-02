@@ -35,32 +35,49 @@ from enarocanje.workinghours.models import EmployeeWorkingHours
 from enarocanje.employees.forms import EmployeeChoiceForm
 from enarocanje.service.forms import ServiceChoiceForm
 
+#from allauth.account.auth_backends import
 
 # Service reservations
 
 
 def reservation(request, id):
     service = get_object_or_404(Service, id=id)
+    
     chosen_employee = None
     emp_size = 0
     if not service.is_active():
         raise Http404
     minTime, maxTime = getMinMaxTime(service.service_provider)
 
-    if request.method != 'POST':
+    #step2 = request.session['_step'] if '_step' in request.session
+    step2 = request.GET.get('step',None)
+
+    # POST
+    step = request.POST.get('step', None)
+    
+    data = None
+    if step:
+        try:
+            data = pickle.loads(base64.b64decode(request.POST.get('data')))  # Serializes an object from request
+           
+        except:
+            raise Http404
+    elif step2:
+        step = step2
+        
+        if 'reservation_data' in request.session:
+            data = request.session['reservation_data'] 
+        else:
+            step = None
+
+    if (request.method != 'POST' and data is None) or step is None:
         #form = ReservationForm(request, workingHours=None, service=None)
         form = ReservationForm(request, workingHours=None, service=service)
         data = {'service_provider_id': service.service_provider_id, 'service_id': service.id}
         return render_to_response('reservations/reservation.html', locals(), context_instance=RequestContext(request))
-
-    # POST
-    step = request.POST.get('step', '1')
-
-    try:
-        data = pickle.loads(base64.b64decode(request.POST.get('data')))  # Serializes an object from request
-    except:
-        raise Http404
-
+    
+    
+    
     workingHours = WorkingHours.objects.filter(service_provider_id=service.service_provider_id)
 
     #formNonRegisteredUser = NonRegisteredUserForm(prefix='nonRegBtn')
@@ -92,27 +109,60 @@ def reservation(request, id):
         return render_to_response('reservations/reservation.html', locals(), context_instance=RequestContext(request))
 
     if step == '2':
-        # print request.POST
-        # if 'nonRegBtn' in request.POST:
-        #     print "nonRegBtn"
-        # if 'loginBtn' in request.POST:
-        #     print "loginBtn"
-        # if 'signupBtn' in request.POST:
-        #     print "signupBtn"
-        #     # User info
         if data.get('date') is None or data.get('time') is None:
             raise Http404
-        formNonRegisteredUser = NonRegisteredUserForm(request.POST)
-        print formNonRegisteredUser
-        print formNonRegisteredUser.is_valid()
-        if formNonRegisteredUser.is_valid():
-            data['name'] = formNonRegisteredUser.cleaned_data['name']
-            data['phone'] = formNonRegisteredUser.cleaned_data['phone']
-            data['email'] = formNonRegisteredUser.cleaned_data['email']
-            return render_to_response('reservations/confirmation.html', locals(),
-                                      context_instance=RequestContext(request))
+    
+        # print request.POST
+
+
+        if 'signupBtn' in request.POST:
+            signupForm = SignupForm(request.POST, prefix='signupBtn')
+            
+            if signupForm.is_valid():
+                userr = signupForm.save(request)
+                
+                data['user_id'] = userr.id
+                data['name'] = userr.get_full_name()
+                data['phone'] = userr.phone
+                data['email'] = userr.email
+                
+                return render_to_response('reservations/confirmation.html', locals(),
+                                          context_instance=RequestContext(request))
+
+
+        if 'loginBtn' in request.POST:
+            loginForm = LoginForm(request.POST, prefix='loginBtn')
+
+            if loginForm.is_valid(): #
+                data['user_id'] = loginForm.user.id
+                data['name'] = loginForm.user.get_full_name()
+                data['phone'] = loginForm.user.phone
+                data['email'] = loginForm.user.email
+               
+                request.session['reservation_data'] = data
+                
+                
+                return loginForm.login(request, redirect_url=reverse('reservation',args=[service.id])+"?step=2a")
+
+        if 'nonRegBtn' in request.POST:
+  
+            formNonRegisteredUser = NonRegisteredUserForm(request.POST)
+            print formNonRegisteredUser
+            print formNonRegisteredUser.is_valid()
+            if formNonRegisteredUser.is_valid():
+                data['name'] = formNonRegisteredUser.cleaned_data['name']
+                data['phone'] = formNonRegisteredUser.cleaned_data['phone']
+                data['email'] = formNonRegisteredUser.cleaned_data['email']
+                return render_to_response('reservations/confirmation.html', locals(),
+                                          context_instance=RequestContext(request))
 
         return render_to_response('reservations/userinfo.html', locals(), context_instance=RequestContext(request))
+
+    if step == '2a':
+        if request.user.is_authenticated():
+    
+            return render_to_response('reservations/confirmation.html', locals(),
+                                          context_instance=RequestContext(request))
 
     if step == '3':
         # Confirmation
