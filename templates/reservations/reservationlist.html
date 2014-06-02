@@ -8,14 +8,14 @@
 
 {% block content %}
 
-    <h1>{% trans 'Calendar' %}</h1>
+    <h1>{% trans 'Reservation list' %}</h1>
 
     <ul class="nav nav-tabs">
         <li>
             <a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
         </li>
         <li class="active">
-        	<a href="{% url 'calendar' %}">{% trans 'Calendar' %}</a>
+        	<a href="{% url 'reservationlist' %}">{% trans 'Reservation list' %}</a>
         </li>
         {% if res_confirm %}
             <li>
