@@ -2,6 +2,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from django import forms
 from .models import Customer
+from django.forms import Form
+
 
 from enarocanje.common.widgets import BootstrapDateInput
 
@@ -13,5 +15,16 @@ class CustomerForm(forms.ModelForm):
         model = Customer
         fields = ['name', 'email', 'phone', 'last_reservation']
         
+
+class CustomerChoiceForm(Form):
+    def __init__(self, *args, **kwargs):
+        qs = Customer.objects.filter(service=kwargs.pop('provider'))
+        print qs
+        self.customers = forms.ModelChoiceField(queryset=qs, required=False,
+                                                empty_label=_('all'))
+        super(CustomerChoiceForm, self).__init__(*args, **kwargs)
+        self.fields['customers'] = self.customers
+
+
 class ExportListForm(forms.Form):
     selected_list_id = forms.ChoiceField(label=_('Select list'))

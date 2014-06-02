@@ -14,6 +14,9 @@
         <li class="active">
             <a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
         </li>
+        <li class="active">
+        	<a href="{% url 'calendar' %}">{% trans 'Calendar' %}</a>
+        </li>
         {% if res_confirm %}
             <li>
                 <a href="{% url 'myunconfirmedreservations' %}">{% trans 'Unconfirmed reservations' %}</a>
@@ -22,7 +25,10 @@
     </ul>
     <div class="row">
         <div class="span4">
-            {{ form|as_bootstrap }}
+            {{ form_employee|as_bootstrap }}
+        </div>
+        <div class="span4">
+            {{ form_service|as_bootstrap }}
         </div>
     </div>
     {% if user.service_provider %}
@@ -71,6 +77,32 @@
                     cal.fullCalendar('addEventSource', defEvents);
                 }
             });
+            if ( $('#id_services').length ) {
+	            $('#id_services').change(function(){
+	                var id = $(this).val();
+	                var events = {
+	                    url: '/timetable/',
+	                    type: 'GET',
+	                    data: {
+	                       'service_provider_id': '{{ user.service_provider.id }}',
+	                       'service_id': id,
+	                       'past': 'true'
+	                    }
+	                };
+	                if (id != ''){
+	                   cal.fullCalendar('removeEvents');
+	                   cal.fullCalendar('removeEventSource', defEvents);
+	                   cal.fullCalendar('removeEventSource', events);
+	                   cal.fullCalendar('addEventSource', events);
+	                }
+	                else {
+	                    cal.fullCalendar('removeEvents');
+	                    cal.fullCalendar('removeEventSource', events);
+	                    cal.fullCalendar('addEventSource', defEvents);
+	                }
+            	})
+            };
+
 
             var date = new Date(), selectedEvent = null;
             function updateDate(ndate) {
@@ -165,8 +197,8 @@
             cal.fullCalendar({
                 header: {
                     left: 'prev,next, today',
-                    center: '',
-                    right: 'agendaWeek,agendaDay'
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
                 },
 
                 /* sets the current view */
@@ -183,7 +215,7 @@
                 editable: false,
                 allDayDefault: false,
                 allDaySlot: false,
-                height: 100000,
+                //height: 100000,
                 slotMinutes: 15,
 
                 /* callbacks */

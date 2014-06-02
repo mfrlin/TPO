@@ -2067,6 +2067,7 @@ function BasicView(element, calendar, viewName) {
 				.appendTo(element);
 	}
 
+	// most important function -- builds the whole calendar, given the parameters
 	function buildTable(showNumbers) {
 		var html = '';
 		var i, j;
@@ -2082,6 +2083,9 @@ function BasicView(element, calendar, viewName) {
 		        "<thead>" +
 		        "<tr>";
 
+		// dodano -- Simon
+		// html += "<th class='fc-month " + headerClass + "'/>";
+		
 		if (showWeekNumbers) {
 			html += "<th class='fc-week-number " + headerClass + "'/>";
 		}
@@ -2094,10 +2098,10 @@ function BasicView(element, calendar, viewName) {
 		html += "</tr>" +
 		        "</thead>" +
 		        "<tbody>";
-
+		
 		for (i=0; i<rowCnt; i++) {
 			html += "<tr class='fc-week'>";
-
+			
 			if (showWeekNumbers) {
 				html += "<td class='fc-week-number " + contentClass + "'>" +
 				        "<div/>" +
