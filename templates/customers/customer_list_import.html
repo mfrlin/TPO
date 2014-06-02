@@ -1,0 +1,94 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% load customers %}
+
+{% block main_nav_customers %}active{% endblock %}
+
+{% block content %}
+
+    <h1>{% trans 'Import customers' %}</h1>
+
+	
+	{% if usrs %}
+		<div class="well white-bg">
+			<p>{% trans "Select rows to import!" %}</p>
+		
+			<form method="POST" action="{% url 'import_customers' %}"  enctype="multipart/form-data">
+				{% csrf_token %}
+			
+				<input type="hidden" name="data_num" value="{{row_count}}" />
+				<input type="hidden" name="max_col_count" value="{{max_col_count}}" />
+			
+				<table class="table table-condensed table-striped">
+
+				{% for csv_row in usrs %}
+					{% if forloop.first %}
+						<tr>
+							<td></td>
+							{% for idx in max_col_count|get_range %}
+								<td>
+									
+									<select id="id_selected_mapping_{{idx}}" name="id_selected_mapping_{{idx}}">
+										<option value="" selected="selected">{% trans "None" %}</option>
+										<option value="0">{% trans "Name" %}</option>
+										<option value="1">{% trans "Email" %}</option>
+										<option value="2">{% trans "Phone number" %}</option>
+									</select>
+									
+								</td>
+							{% endfor %}
+						</tr>
+					{% endif %}
+					<tr>
+						<td>
+							<input type="hidden" name="data_num_col_{{forloop.counter}}" value="{{csv_row|length}}" />
+							
+								<input type="checkbox" checked="checked" name="use_{{forloop.counter}}" />
+							
+						</td>
+						{% for col in csv_row %}
+							<td>
+								<input type="text" name="row_{{forloop.parentloop.counter}}_col_{{forloop.counter}}" value="{{col}}"/>
+							</td>
+						{% endfor %}
+					</tr>
+					
+				{% endfor %}
+				
+				</table>
+				
+				<div class="form-actions">
+					<button class="btn btn-primary" type="submit" name="action" value="import" >{% trans "Import" %}</button>
+				</div>
+			</form>
+			
+		</div>
+	{% endif %}
+
+	{% if status %}
+		<p>{% trans "Imported "%} {{cc_created}} {% trans " new records!"%}</p>
+		<p>{% trans "Updated "%} {{cc_updated}} {% trans " records!"%}</p>
+		
+		{% if cc_failed %}
+		<div class="alert alert-danger">{% trans "Failed to import "%} {{cc_failed}} {% trans "records due to: "%} {{msg}}!</div>
+		{% endif %}
+	{% endif %}
+	
+	<form method="POST" action="{% url 'import_customers' %}"  enctype="multipart/form-data">
+		{% csrf_token %}
+		<div class="form-actions">
+			<a data-toggle="collapse" data-parent="#custom_settings" href="#custom_settings">{% trans "Advanced settings" %}</a>
+			<div class="collapse" id="custom_settings">
+				{{form.delimiter | as_bootstrap }}
+				{{form.quote | as_bootstrap }}
+			</div>
+			{{form.file | as_bootstrap }}
+			<button class="btn btn-primary" type="submit" name="action" value="upload" >{% trans "Upload" %}</button>
+		</div>
+	</form>	
+
+{% endblock %}
