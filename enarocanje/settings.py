@@ -16,6 +16,7 @@ PJ_BASE_URL = 'http://192.168.56.101:8000'
 #comment this out
 #BASE_URL = PJ_BASE_URL
 
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ADMINS = ()
 
