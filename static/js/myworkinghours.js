@@ -26,7 +26,7 @@ $(document).ready(function () {
 
         //console.log(time_block_template({"key":week_id}));
 
-        var block_div = $(this).before(time_block_template({"seq_id": sq_id, "key": week_id}));
+        var block_div = $(this).before(time_block_template({"seq_id": sq_id, "key": week_id, "from":"", "to":""}));
 
         timeFields($("#XK_" + sq_id));
         //timeFields(block_div);
@@ -34,6 +34,39 @@ $(document).ready(function () {
         //console.log(block_div);
 
         sq_id++;
+
+    });
+
+
+    ctrls.on("click", "a.clone_wblock", function (e) {
+        e.preventDefault();
+
+        var week_id = $(this).attr("week_id");
+
+		
+		//console.log($(this).closest(".week_times"));
+
+		var time_blck_vals = timeBlockValues($(this).closest(".week_times"));
+
+		//console.log();
+		for(var i=1;i<=7;i++){
+			if(i==week_id){
+				continue;
+			}
+		
+			var week_blck = $("#week_id_"+i);
+		
+			$.each(time_blck_vals, function(j,v){
+				//console.log(j,v);
+				
+				var data = time_block_template({"seq_id": sq_id, "key": i, "from":v[0], "to":v[1]});
+				
+				week_blck.prepend(data);
+				
+				sq_id++;
+			});
+			
+		}
 
     });
 
@@ -124,6 +157,29 @@ $(document).ready(function () {
 
         return status;
     };
+
+	var timeBlockValue = function (edit_time_block){
+		var inputs = edit_time_block.find("input.time-field");
+	
+        var f_input = $(inputs.get(0));
+        var s_input = $(inputs.get(1));
+		
+		
+		
+		return [f_input.val(),s_input.val()];
+	}
+	
+	var timeBlockValues = function(week_block){
+		vals = []
+		
+		//console.log(week_block.find(".edit-time-block"));
+		week_block.find(".edit-time-block").each(function(i,v){
+			//console.log(v);
+			vals.push(timeBlockValue($(v)));
+		});
+		
+		return vals;
+	}
 
     var timeBlockCheck = function (edit_time_block, input) {
         var error_block = edit_time_block.find(".error_container");
