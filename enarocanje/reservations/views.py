@@ -295,25 +295,18 @@ def myreservations(request):
 
 
 @for_service_providers
-def reservationList(request):
+def reservation_list(request):
     # TODO list of reservations
+    reservations = Reservation.objects.filter(service_provider=request.user.service_provider)
     return render_to_response('reservations/reservationlist.html', locals(), context_instance=RequestContext(request))
 
-"""
 @for_service_providers
-def reservation_list(request):
-    sp = request.user.service_provider
-    res_confirm = sp.reservation_confirmation_needed
-    minTime, maxTime = getMinMaxTime(sp)
-    #form_time = TimeChoiceForm(provider=sp)
-    #form_user = CustomerChoiceForm(provider=sp)
-    form_service = ServiceChoiceForm(provider=sp)
-    form_employee = EmployeeChoiceForm(provider=sp)
-    return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
-"""
-
-@for_service_providers
-def myreservations_list(request):
-    #sp = request.user.service_provider
-    reservations = Reservation.objects.filter(service_provider=request.user.service_provider)
-    return render_to_response('myreservations/myreservations.html', locals(), context_instance=RequestContext(request))
+def manage(request):
+    if request.method == 'POST':
+        reservation = get_object_or_404(Reservation, service_provider=request.user.service_provider,
+                                     id=request.POST.get('service'))
+        if request.POST.get('action') == 'confirm':
+            reservation.confirm_reservation()
+        if request.POST.get('action') == 'deny':
+            reservation.deny_reservation()
+    return HttpResponseRedirect(reverse(reservation_list))

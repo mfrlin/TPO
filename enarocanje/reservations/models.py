@@ -47,8 +47,6 @@ class Reservation(models.Model):
     service_duration = models.PositiveIntegerField(_('duration'))
     service_price = models.DecimalField(_('price'), max_digits=7, decimal_places=2, null=True, blank=True)
 
-    show_up = models.BooleanField()
-
     # Comments email
     emailsent = models.BooleanField(default=False)
 
@@ -60,6 +58,14 @@ class Reservation(models.Model):
 
     def __unicode__(self):
         return str(self.date) + " User: " + str(self.user) + " Service: " + str(self.service) + " at: " + str(self.time)
+
+    def confirm_reservation(self):
+        self.is_confirmed = True
+        self.save()
+        
+    def deny_reservation(self):
+        self.is_deny = True
+        self.save()
 
     def short_desc(self):
         """Default short description visible on reservation button"""
