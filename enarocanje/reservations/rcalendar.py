@@ -268,24 +268,36 @@ def getWorkingHours(service, provider, date, past):
 # for employees
 
 def getEmployeeTimetable(request):
+    service = None
+    emp = None
     emp_id = request.GET.get('employee_id')
     sp_id = request.GET.get('service_provider_id')
+    sp = ServiceProvider.objects.get(id=sp_id)
+    emp_id = request.GET.get('employee_id')
+    if emp_id:
+        emp = Employee.objects.get(id=emp_id)
+    s_id = request.GET.get('service_id')
+    if s_id:
+        service = Service.objects.get(id=s_id)
+
     start = datetime.datetime.fromtimestamp(int(request.GET.get('start')))
     end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
-    emp = Employee.objects.get(id=emp_id)
-    sp = ServiceProvider.objects.get(id=sp_id)
+
+    if not emp_id and not s_id:
+        return get_all_reservations(None, sp, start, end)
+
     past = True
     if request.GET.get('past') == 'true':
         past = False
 
-    return HttpResponse(json.dumps(getEmpEvents(sp, emp, start, end, past)))
+    return HttpResponse(json.dumps(getEmpEvents(sp, emp, service, start, end, past)))
 
 
-def getEmpEvents(provider, employee, start, end, past):
+def getEmpEvents(provider, employee, service, start, end, past):
     events = []
 
     # Get reservation events
-    events.extend(getEmployeeReservations(employee, start, end))
+    events.extend(getEmployeeReservations(employee, service, start, end))
 
     # Get working hours events
     for date in daterange(start.date(), end.date()):
@@ -293,9 +305,13 @@ def getEmpEvents(provider, employee, start, end, past):
     return events
 
 
-def getEmployeeReservations(employee, start, end):
+def getEmployeeReservations(employee, service, start, end):
     reservations = Reservation.objects.filter(employee=employee, date__gte=start, date__lte=end)
+    if service:
+        reservations = reservations.filter(service=service)
+
     events = []
+
     for reservation in reservations:
         dt = datetime.datetime.combine(reservation.date, reservation.time)
         events.append({

@@ -199,6 +199,7 @@ def reservation(request, id):
             reserve.service_name = service.name
             reserve.service_duration = service.duration
             reserve.service_price = service.discounted_price()
+            reserve.show_up = False
             if chosen_employee is not None and chosen_employee != '':
                 reserve.employee = chosen_employee
             else:

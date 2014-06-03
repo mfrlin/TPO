@@ -15,7 +15,7 @@
             <a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
         </li>
         <li>
-        	<a href="{% url 'reservationlist' %}">{% trans 'Reservation list' %}</a>
+            <a href="{% url 'reservationlist' %}">{% trans 'Reservation list' %}</a>
         </li>
         {% if res_confirm %}
             <li>
@@ -24,12 +24,16 @@
         {% endif %}
     </ul>
     <div class="row">
-        <div class="span4">
-            {{ form_employee|as_bootstrap }}
-        </div>
-        <div class="span4">
-            {{ form_service|as_bootstrap }}
-        </div>
+        {% if form_employee.employees.field.choices.queryset.all|length > 0 %}
+            <div class="span4">
+                {{ form_employee|as_bootstrap }}
+            </div>
+        {% endif %}
+        {% if form_service.services.field.choices.queryset.all|length > 0 %}
+            <div class="span4">
+                {{ form_service|as_bootstrap }}
+            </div>
+        {% endif %}
     </div>
     {% if user.service_provider %}
         <div id='calendar'></div>
@@ -44,32 +48,33 @@
     </script><script>
     //just to enable syntax coloring in pycharm
     {% if minTime and maxTime %}
-        (function() {
+        (function () {
             var cal = $('#calendar');
             //var id = null;
             var defEvents = {
-                    url: '{% url 'reservations_calendar' %}',
-                    type: 'GET',
-                        data: {
-                            'service_provider_id': '{{ user.service_provider.id }}'
-                        }
+                url: '{% url 'reservations_calendar' %}',
+                type: 'GET',
+                data: {
+                    'service_provider_id': '{{ user.service_provider.id }}'
+                }
             };
-            $('#id_employees').change(function(){
+            $('#id_employees').change(function () {
                 var id = $(this).val();
                 var events = {
                     url: '/timetable/',
                     type: 'GET',
                     data: {
-                       'service_provider_id': '{{ user.service_provider.id }}',
-                       'employee_id': id,
-                       'past': 'true'
+                        'service_provider_id': '{{ user.service_provider.id }}',
+                        'employee_id': id,
+                        'service_id': $('#id_services').val(),
+                        'past': 'true'
                     }
                 };
-                if (id != ''){
-                   cal.fullCalendar('removeEvents');
-                   cal.fullCalendar('removeEventSource', defEvents);
-                   cal.fullCalendar('removeEventSource', events);
-                   cal.fullCalendar('addEventSource', events);
+                if (id != '') {
+                    cal.fullCalendar('removeEvents');
+                    cal.fullCalendar('removeEventSource', defEvents);
+                    cal.fullCalendar('removeEventSource', events);
+                    cal.fullCalendar('addEventSource', events);
                 }
                 else {
                     cal.fullCalendar('removeEvents');
@@ -77,122 +82,33 @@
                     cal.fullCalendar('addEventSource', defEvents);
                 }
             });
-            if ( $('#id_services').length ) {
-	            $('#id_services').change(function(){
-	                var id = $(this).val();
-	                var events = {
-	                    url: '/timetable/',
-	                    type: 'GET',
-	                    data: {
-	                       'service_provider_id': '{{ user.service_provider.id }}',
-	                       'service_id': id,
-	                       'past': 'true'
-	                    }
-	                };
-	                if (id != ''){
-	                   cal.fullCalendar('removeEvents');
-	                   cal.fullCalendar('removeEventSource', defEvents);
-	                   cal.fullCalendar('removeEventSource', events);
-	                   cal.fullCalendar('addEventSource', events);
-	                }
-	                else {
-	                    cal.fullCalendar('removeEvents');
-	                    cal.fullCalendar('removeEventSource', events);
-	                    cal.fullCalendar('addEventSource', defEvents);
-	                }
-            	})
-            };
 
-
-            var date = new Date(), selectedEvent = null;
-            function updateDate(ndate) {
-                /*cal.fullCalendar('removeEventSource', selectedEvent);
-                date = ndate;
-                var dateEnd = new Date(date);
-                //dateEnd.setMinutes(dateEnd.getMinutes() + {{ service.duration }});
-                selectedEvent = [{
-                    title: '{% trans 'Your reservation' %}',
-                    start: date,
-                    end: dateEnd
-                }];
-                cal.fullCalendar('addEventSource', selectedEvent);*/
-            }
-
-            function changeDate(ev) {
-                /*date.setFullYear(ev.localDate.getFullYear());
-                date.setMonth(ev.localDate.getMonth());
-                date.setDate(ev.localDate.getDate());
-                updateDate(date);
-                $('#calendar').fullCalendar('gotoDate', date);*/
-            }
-
-            function changeTime(ev) {
-                /*date.setHours(ev.localDate.getHours());
-                date.setMinutes(ev.localDate.getMinutes());
-                updateDate(date);
-                $('#calendar').fullCalendar('gotoDate', date);*/
-            }
-
-            function viewDisplay(view) {
-                /*var cur_date = new Date();
-                cur_date.setDate(date.getDate());
-                cur_date.setTime(date.getTime());
-                if (view.start <= new Date()) {
-                    $("#calendar .fc-button-prev").addClass('fc-state-disabled');
-                } else {
-                    $("#calendar .fc-button-prev").removeClass('fc-state-disabled');
-                }
-                if (view.name == 'agendaWeek') {
-                    if (date < view.start) {
-                        date.setDate(date.getDate() + 7);
+            $('#id_services').change(function () {
+                var id = $(this).val();
+                var events = {
+                    url: '/timetable/',
+                    type: 'GET',
+                    data: {
+                        'service_provider_id': '{{ user.service_provider.id }}',
+                        'service_id': id,
+                        'employee_id': $('#id_employees').val(),
+                        'past': 'true'
                     }
-                    if (date >= view.end) {
-                        date.setDate(date.getDate() - 7);
-                    }
-                } else {
-                    if (date < view.start) {
-                        date.setDate(date.getDate() + 1);
-                    }
-                    if (date >= view.end) {
-                        date.setDate(date.getDate() - 1);
-                    }
-                }
-                var dt = date-cur_date;
-                // so selection gets cleared on date change
-                if (dt >= 86400000 || dt < 0){
-                    cal.fullCalendar('removeEventSource', selectedEvent);
+                };
+                if (id != '') {
+                    cal.fullCalendar('removeEvents');
+                    cal.fullCalendar('removeEventSource', defEvents);
+                    cal.fullCalendar('removeEventSource', events);
+                    cal.fullCalendar('addEventSource', events);
                 }
                 else {
-                    updateDate(date);
+                    cal.fullCalendar('removeEvents');
+                    cal.fullCalendar('removeEventSource', events);
+                    cal.fullCalendar('addEventSource', defEvents);
                 }
-                datePicker.data('datetimepicker').setLocalDate(date);
-                timePicker.data('datetimepicker').setLocalDate(date);*/
-            }
+            });
 
-            function dayClick(ndate, allDay, jsEvent, view) {
-                /*updateDate(ndate);
-                $('#calendar').fullCalendar('gotoDate', date);
-                datePicker.data('datetimepicker').setLocalDate(date);
-                timePicker.data('datetimepicker').setLocalDate(date);*/
-            }
-
-            var now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-
-
-            //var timePicker = $('.time-field').parent('').datetimepicker({pickDate: false, pickSeconds: false, minuteStep: 15,
-            //    language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeTime);
-            //var datePicker = $('.date-field').parent('').datetimepicker({pickTime: false, startDate: now, language:
-            //        '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
-
-            //var dateDate = datePicker.data('datetimepicker').getLocalDate();
-            //var dateTime = timePicker.data('datetimepicker').getLocalDate();
-            /*date.setFullYear(dateDate.getFullYear());
-            date.setMonth(dateDate.getMonth());
-            date.setDate(dateDate.getDate());
-            date.setHours(dateTime.getHours());
-            date.setMinutes(dateTime.getMinutes());
-            date.setSeconds(0);*/
+            var date = new Date();
 
             cal.fullCalendar({
                 header: {
@@ -217,10 +133,6 @@
                 allDaySlot: false,
                 //height: 100000,
                 slotMinutes: 15,
-
-                /* callbacks */
-                viewDisplay: viewDisplay,
-                dayClick: dayClick,
 
                 /* translation */
                 buttonText: {
@@ -263,7 +175,7 @@
                 }
             });
 
-            $('#calendar-refresh').click(function() {
+            $('#calendar-refresh').click(function () {
                 cal.fullCalendar('refetchEvents');
             });
         })();
