@@ -56,6 +56,10 @@ $(document).ready(function () {
 		
 			var week_blck = $("#week_id_"+i);
 		
+			if(week_blck.find(".edit-time-block").length){
+				continue;
+			}
+		
 			$.each(time_blck_vals, function(j,v){
 				//console.log(j,v);
 				
