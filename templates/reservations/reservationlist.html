@@ -25,6 +25,81 @@
     </ul>
 
 
+	{% if reservations %}
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        {% trans 'Service' %}
+                    </th>
+                    <th>
+                        {% trans 'Customer' %}
+                    </th>
+                    <th>
+                        {% trans 'Date' %}
+                    </th>
+                    <th>
+                        {% trans 'Time' %}
+                    </th>
+                    <th>
+                        {% trans 'Confirmed' %}
+                    </th>
+                    <th>
+                        {% trans 'Denied' %}
+                    </th>
+                    <th>
+                        {% trans 'Employee' %}
+                    </th>
+                    <th>
+                        {% trans 'Action' %}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for reservation in reservations %}
+                    <tr>
+                        <td data-title="{% trans 'Service' %}">
+                            {{ reservation.service_name }}
+                        </td>
+                        <td data-title="{% trans 'Customer' %}">
+                            {{ reservation.user_fullname }}
+                        </td>
+                        <td data-title="{% trans 'Date' %}">
+                            {{ reservation.date }}
+                        </td>
+                        <td data-title="{% trans 'Time' %}">
+                            {{ reservation.time }}
+                        </td>
+                        <td data-title="{% trans 'Confirmed' %}">
+                            {{ reservation.is_confirmed }}
+                        </td>
+                        <td data-title="{% trans 'Denied' %}">
+                            {{ reservation.is_deny }}
+                        </td>
+                        <td data-title="{% trans 'Employee' %}">
+                            {{ reservation.employee }}
+                        </td>
+                        <td data-title="{% trans 'Actions' %}">
+                            <form method="POST" action="{% url 'managereservation' %}" style="display: inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="service" value="{{ reservation.id }}"/>
+                                <button class="btn btn-success" type="submit" name="action"
+                                        value="confirm">{% trans "Confirm" %}</button>
+                                <button class="btn btn-danger" type="submit" name="action"
+                                        value="deny">{% trans "Deny" %}</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {% trans 'You currently have no reservations to display.' %}
+    {% endif %}
+
 
 {% endblock %}
 

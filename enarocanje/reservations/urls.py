@@ -2,8 +2,8 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('enarocanje.reservations',
                        url(r'^myreservations$', 'views.myreservations', name='myreservations'),
-                       url(r'^reservationlist$', 'views.reservationList', name='reservationlist'),
-                       #url(r'^reservationlist$', 'views.reservation_list', name="reservation_list"),
+                       url(r'^reservationlist$', 'views.reservation_list', name='reservationlist'),
+                       url(r'^reservationlist/manage$', 'views.manage', name='managereservation'),
                        url(r'^myreservations/gcal/$', 'gcal.edit', name='gcal'),
                        url(r'^myreservations/gcal/callback$', 'gcal.callback', name='gcalcallback'),
 
