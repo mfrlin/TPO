@@ -202,7 +202,6 @@ class ListCustomerReservations(ListView):
 
     def get_queryset(self):
         try:
-            print(self.request.GET)
             user = Customer.objects.get(pk=self.kwargs.get('pk', -1)).user
         except:
             user = -1

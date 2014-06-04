@@ -17,7 +17,7 @@
                     {% trans 'Service Name' %}
                 </th>
                 <th>
-                    {% trans 'Show up' %}
+                    {% trans 'Showed up' %}
                 </th>
                 <th>
                     {% trans 'Employee' %}
@@ -38,7 +38,9 @@
                         {{ reservation.service_name }}
                     </td>
                     <td data-title="{% trans 'Show up' %}">
-                        {{ reservation.show_up }}
+                        <input type="checkbox" {% if reservation.show_up %}checked{% endif %}
+                               style="position: relative; left: 30px; top: -5px"
+                                id="{{ reservation.id }}">
                     </td>
                     <td data-title="{% trans 'Employee' %}">
                         {{ reservation.employee.name }}
@@ -59,4 +61,27 @@
     {% endif %}
 
 
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    </script><script>
+        (function () {
+            var cb = $("input:checkbox");
+            console.log(cb);
+            cb.change(function () {
+                if ($(this).is(":checked")) {
+                    console.log("True");
+                    console.log(this.id);
+                }
+                else{
+                    console.log("False");
+                    console.log(this.id);
+                }
+                //$('#textbox1').val($(this).is(':checked'));
+            })
+
+        })();
+    </script>
+    <script>
 {% endblock %}
