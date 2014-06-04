@@ -116,7 +116,6 @@ class User(AbstractUser):
     )
     phone = models.CharField(_('phone number'), max_length=100)
     language = models.CharField(_('language'), max_length=5, choices=settings.LANGUAGES, default='en')
-    #premium = models.BooleanField(default=False)
     coupons = models.IntegerField(default=0)
     reservations = models.IntegerField(default=0)
     service_provider = models.OneToOneField(ServiceProvider, null=True)
@@ -129,22 +128,6 @@ class User(AbstractUser):
 
     def referral_url(self):
         return '%s%s?referral=%d' % (settings.BASE_URL, reverse('account_signup'), self.id)
-
-    """Če stranka naroči nova storitev se števec rezerviranih storitev veča
-        Če stranka uporabi kupon, se tudi števec kuponov veča
-        Stranka je premium, če je plačala polno ceno na več kot 10% rezervacij
-        oz. Stranka ni premium če je uporabljala kupone na več kot 10% rezervacij
-    """
-    """def calculate_premium(self, new_reservation=False, coupon=False):
-        if new_reservation:
-            self.reservations += 1
-            if coupon:
-                self.coupons += 1
-        if self.coupons / self.reservations > 0.1:
-            self.premium = False
-        else:
-            self.premium = True
-        self.save()"""
 
 
 class ServiceProviderImage(models.Model):
