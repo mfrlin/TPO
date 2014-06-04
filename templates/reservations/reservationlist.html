@@ -3,6 +3,7 @@
 {% load url from future %}
 {% load i18n %}
 {% load bootstrap_toolkit %}
+{% load banana_tags %}
 
 {% block main_nav_reservations %}active{% endblock %}
 
@@ -25,7 +26,26 @@
     </ul>
 
 
-    {% if reservations %}
+    {% if object_list %}
+    	<ul class="nav nav-pills">
+            <li class="active"><a href="?sort_by=date&search_by={{ search_by }}">
+                {% trans 'Sort by date' %}</a>
+            </li>
+            <li class="active"><a href="?sort_by=customer&search_by={{ search_by }}">
+                {% trans 'Sort by customer' %}</a>
+            </li>
+            <li class="active"><a href="?sort_by=service&search_by={{ search_by }}">
+                {% trans 'Sort by service' %}</a>
+            </li>
+            <li class="active"><a href="?sort_by=employee&search_by={{ search_by }}">
+                {% trans 'Sort by employee' %}</a>
+            </li>
+        </ul>
+        <form method="GET" action="#">
+            <input type="text" name="search_by" id="search_by" value="{{ search_by }}">
+            <button class="btn" type="submit"
+                    style="position: relative;bottom: 6px; left: 12px">{% trans "Search" %}</button>
+        </form>
         <div>
             <table class="table">
                 <thead>
@@ -57,7 +77,7 @@
                 </thead>
                 <tbody>
 
-                {% for reservation in reservations %}
+                {% for reservation in object_list %}
                     <tr>
                         <td data-title="{% trans 'Service' %}">
                             {{ reservation.service_name }}
@@ -88,7 +108,17 @@
             </table>
         </div>
     {% else %}
-        {% trans 'You currently have no reservations to display.' %}
+        {% if search_by %}
+            <form method="GET" action="#">
+            <input type="text" name="search_by" id="search_by" value="{{ search_by }}">
+            <button class="btn" type="submit"
+                    style="position: relative;bottom: 6px; left: 12px">{% trans "Search" %}</button>
+            </form>
+            {% trans 'This query produced no results.' %}
+        {% else %}
+            {% trans 'You currently have no customers to display.' %}
+        {% endif %}
+
     {% endif %}
 
 

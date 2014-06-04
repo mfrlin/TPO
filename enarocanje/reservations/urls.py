@@ -1,8 +1,10 @@
 from django.conf.urls import patterns, url
+import views
 
 urlpatterns = patterns('enarocanje.reservations',
                        url(r'^myreservations$', 'views.myreservations', name='myreservations'),
-                       url(r'^reservationlist$', 'views.reservation_list', name='reservationlist'),
+                       url(r'^reservationlist/manage$', 'views.manage', name='managereservation'),
+                       url(r'^reservationlist$', views.ListReservationView.as_view(), name='reservationlist'),
                        url(r'^myreservations/gcal/$', 'gcal.edit', name='gcal'),
                        url(r'^myreservations/gcal/callback$', 'gcal.callback', name='gcalcallback'),
                        url(r'^services/(?P<id>\d+)$', 'views.reservation', name='service'),
