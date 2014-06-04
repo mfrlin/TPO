@@ -3,6 +3,7 @@ from django.views.generic import UpdateView, CreateView, ListView
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
+from django.shortcuts import HttpResponse
 
 from .models import Customer
 from .forms import CustomerForm, ExportListForm, UploadFileForm, ChoiceRowForm
@@ -85,8 +86,8 @@ def import_customers(request):
                     #print mapping[j],j,val
 
             if dasta['email'] is None or (
-                    dasta['email'] is not None and not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$",
-                                                            dasta['email'])):
+                        dasta['email'] is not None and not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$",
+                                                                    dasta['email'])):
                 msg = _("Invalid emails")
                 cc_failed += 1
                 continue
@@ -202,11 +203,16 @@ class ListCustomerReservations(ListView):
 
     def get_queryset(self):
         try:
-            print(self.request.GET)
             user = Customer.objects.get(pk=self.kwargs.get('pk', -1)).user
         except:
             user = -1
         return Reservation.objects.filter(user=user, service_provider=self.request.user.service_provider)
+
+    def get_context_data(self, **kwargs):
+        context = super(ListCustomerReservations, self).get_context_data(**kwargs)
+        customer = Customer.objects.get(id=self.kwargs.pop('pk')).__unicode__()
+        context['customer'] = customer
+        return context
 
 
 class EditCustomerView(UpdateView):
@@ -241,3 +247,14 @@ def managecustomer(request):
         if request.POST.get('action') == 'delete':
             customer.delete()
     return HttpResponseRedirect(reverse('mycustomers'))
+
+
+def showup(request):
+    res = Reservation.objects.get(id=request.GET.get('res_id'))
+    val = request.GET.get('value')
+    if val == 'True':
+        res.show_up = True
+    else:
+        res.show_up = False
+    res.save()
+    return HttpResponse('')

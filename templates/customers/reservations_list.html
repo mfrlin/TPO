@@ -8,7 +8,7 @@
 {% block content %}
 
     <h1>{% trans 'Customer Reservations' %}</h1>
-
+    <h3 style="padding-left: 10px">{{ customer }}</h3>
     {% if object_list %}
         <table class="table">
             <thead>
@@ -17,7 +17,7 @@
                     {% trans 'Service Name' %}
                 </th>
                 <th>
-                    {% trans 'Show up' %}
+                    {% trans 'Showed up' %}
                 </th>
                 <th>
                     {% trans 'Employee' %}
@@ -38,7 +38,9 @@
                         {{ reservation.service_name }}
                     </td>
                     <td data-title="{% trans 'Show up' %}">
-                        {{ reservation.show_up }}
+                        <input type="checkbox" {% if reservation.show_up %}checked{% endif %}
+                               style="position: relative; left: 30px; top: -5px"
+                                id="{{ reservation.id }}">
                     </td>
                     <td data-title="{% trans 'Employee' %}">
                         {{ reservation.employee.name }}
@@ -59,4 +61,27 @@
     {% endif %}
 
 
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    </script><script>
+        (function () {
+            var cb = $("input:checkbox");
+            console.log(cb);
+            cb.change(function () {
+                var check = '';
+                if ($(this).is(":checked")) {
+                    check = 'True';
+                }
+                else{
+                    check = 'False';
+                }
+                console.log(this.id);
+                $.get('/showup/',{'res_id': this.id, 'value': check});
+            })
+
+        })();
+    </script>
+    <script>
 {% endblock %}

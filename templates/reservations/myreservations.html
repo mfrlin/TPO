@@ -74,17 +74,21 @@
                         }
                     };
                     if (id != '') {
-                        cal.fullCalendar('removeEvents');
-                        cal.fullCalendar('removeEventSource', defEvents);
-                        cal.fullCalendar('removeEventSource', events);
-                        cal.fullCalendar('addEventSource', events);
+                            cal.fullCalendar('removeEventSource', defEvents);
+                            cal.fullCalendar('removeEventSource', events);
+                            cal.fullCalendar('addEventSource', events);
                     }
                     else {
-                        if ($('#id_services').val() == '') {
-                            cal.fullCalendar('removeEvents');
+                        if (s_id != ''){
+                            cal.fullCalendar('removeEventSource', defEvents);
+                            cal.fullCalendar('removeEventSource', events);
+                            cal.fullCalendar('addEventSource', events);
+                        }
+                        else {
                             cal.fullCalendar('removeEventSource', events);
                             cal.fullCalendar('addEventSource', defEvents);
                         }
+
                     }
                 });
 
@@ -105,15 +109,19 @@
                             'past': 'true'
                         }
                     };
+                    console.log(id);
                     if (id != '') {
-                        cal.fullCalendar('removeEvents');
                         cal.fullCalendar('removeEventSource', defEvents);
                         cal.fullCalendar('removeEventSource', events);
                         cal.fullCalendar('addEventSource', events);
                     }
                     else {
-                        if ($('#id_employees').val() == '') {
-                            cal.fullCalendar('removeEvents');
+                        if (emp_id != ''){
+                            cal.fullCalendar('removeEventSource', defEvents);
+                            cal.fullCalendar('removeEventSource', events);
+                            cal.fullCalendar('addEventSource', events);
+                        }
+                        else {
                             cal.fullCalendar('removeEventSource', events);
                             cal.fullCalendar('addEventSource', defEvents);
                         }

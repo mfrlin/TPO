@@ -3,6 +3,7 @@ import views
 from enarocanje.customers.views import managecustomer
 from enarocanje.customers.views import export_customers
 from enarocanje.customers.views import import_customers
+from enarocanje.customers.views import showup
 
 urlpatterns = patterns('enarocanje.customers',
                        url(r'^mycustomers$', views.ListCustomerView.as_view(), name='mycustomers'),
@@ -13,4 +14,5 @@ urlpatterns = patterns('enarocanje.customers',
                        url(r'^mycustomers/(?P<pk>\d+)/reservations$', views.ListCustomerReservations.as_view(),
                            name='customers-reservations'),
                        url(r'^mycustomers/manage$', managecustomer, name='managecustomer'),
+                       url(r'^showup/$', showup, name='showup')
                        )
