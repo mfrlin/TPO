@@ -28,6 +28,9 @@
                         <div id="des"></div><br>
                     </div>
                 {% endif %}
+                <div class="span1" style="float: right; position: relative; right: 30%; top: 30px">
+                    <input type="submit" class="btn btn-primary" value="{% trans "Make a reservation" %}">
+                </div>
             </div>
 
             <div id='calendar'></div>
@@ -222,7 +225,8 @@
                 },
 
                 /* sets the current view */
-                defaultView: (document.width >= 800) ? 'agendaWeek' : 'agendaDay',
+                //defaultView: (document.width >= 800) ? 'agendaWeek' : 'agendaDay',
+                defaultView: 'weekView',
 
                 /* sets the specific date */
                 year: date.getFullYear(),
