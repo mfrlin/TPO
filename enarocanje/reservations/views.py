@@ -297,27 +297,32 @@ class ListReservationView(ListView):
     template_name = 'reservations/reservationlist.html'
 
     def get_queryset(self):
+        
         provider = self.request.user.service_provider
-        sort_by = self.request.GET.get('sort_by', 'name')
+        sort_by = self.request.GET.get('sort_by', 'date')
         search_by = self.request.GET.get('search_by', '')
-        service = Q(service_name__iregex=search_by)
-        email = Q(email__iregex=search_by)
-        phone = Q(phone__regex=search_by)
+        
+        employee = Q(employee__surname__iregex=search_by)
+        
         if search_by:
-            query = Reservation.objects.filter(service | email | phone, service=provider)
+            query = Reservation.objects.filter(employee, service_provider=provider)
         else:
-            query = Reservation.objects.filter(service=provider)
-        if sort_by == 'name':
+            query = Reservation.objects.filter(service_provider=provider)
+        if sort_by == 'date':
+            return query.order_by('-date', '-time')
+        elif sort_by == 'customer':
             return query.extra(
-                select={'lower_name': 'lower(name)'}).order_by('lower_name')
-        else:
-            return query.order_by('-last_reservation')
+                select={'customer': 'user_fullname'}).order_by('customer')
+        elif sort_by == 'service':
+            return query.order_by('service_name')
+        elif sort_by == 'employee':
+            return query.order_by('-employee')
 
     def get_context_data(self, **kwargs):
-        res_confirm = self.request.user.service_provider.reservation_confirmation_needed
         context = super(ListReservationView, self).get_context_data(**kwargs)
         if self.request.GET.get('search_by'):
             context['search_by'] = self.request.GET.get('search_by')
+            context['res_confirm'] = self.request.user.service_provider.reservation_confirmation_needed
         return context
 
 
@@ -326,8 +331,6 @@ def reservation_list(request):
     
     reservations = Reservation.objects.filter(service_provider_id=request.user.service_provider_id)
     return render_to_response('reservations/reservationlist.html', locals(), context_instance=RequestContext(request))
-
-
 
 @for_service_providers
 def manage(request):
@@ -338,5 +341,5 @@ def manage(request):
     #         reservation.confirm_reservation()
     #     if request.POST.get('action') == 'deny':
     #         reservation.deny_reservation()
-    return HttpResponseRedirect(reverse(reservation_list))
+    return HttpResponseRedirect(reverse(ListReservationView))
 
