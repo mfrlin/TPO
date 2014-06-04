@@ -63,16 +63,16 @@
 
 									<div class="edit-time-block row-fluid">
 										<div class=" ">
-											<div class="input-append" style="display:inline-block;">
+											<div class="input-prepend t_ff" style="display:inline-block;">
 												<span class="add-on"><i class="icon-time"></i></span>
 												<input class="input-small time-field" style="width:170px" data-format="hh:mm" name="time_from_{{key}}" value="{{value.0|time:"H:i"}}" type="text" />
 											</div>
 											
-											<div class="input-append" style="display:inline-block;">
+											<div class="input-append t_ff" style="display:inline-block;">
 												<input class="input-small time-field" style="width:170px" data-format="hh:mm" name="time_to_{{key}}" value="{{value.1|time:"H:i"}}" type="text" />
 												<span class="add-on"><i class="icon-time"></i></span>
 												
-												<span class="add-on"></span>
+												<span class="add-on" style="border-color:white;background-color:white"></span>
 												
 												<a class="btn btn-danger remove_wblock"><i class="icon-remove"></i></a>
 											</div>
@@ -110,16 +110,16 @@
 	<script type="plain/x-tmpl" id="time_block_template">
 		<div class="edit-time-block row-fluid" id="XK_<%=seq_id%>">
 			<div class=" ">
-				<div class="input-append" style="display:inline-block;">
+				<div class="input-append t_ff" style="display:inline-block;">
 					<span class="add-on"><i class="icon-time"></i></span>
 					<input class="input-small time-field" style="width:170px" data-format="hh:mm" name="time_from_<%=key%>" value="<%=from%>"  type="text" />
 				</div>
 				
-				<div class="input-append" style="display:inline-block;">
+				<div class="input-append t_ff" style="display:inline-block;">
 					<input class="input-small time-field" style="width:170px" data-format="hh:mm" name="time_to_<%=key%>" value="<%=to%>" type="text" />
 					<span class="add-on"><i class="icon-time"></i></span>
 					
-					<span class="add-on"></span>
+					<span class="add-on" style="border-color:white;background-color:white"></span>
 					
 					<a class="btn btn-danger remove_wblock"><i class="icon-remove"></i></a>
 				</div>

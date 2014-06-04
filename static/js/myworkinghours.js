@@ -98,7 +98,7 @@ $(document).ready(function () {
     });
 
     var getIntTimeFromInput = function (inpt) {
-        var time_test = /^([0-9]{1,2}):([0-9]{1,2})$/;
+        var time_test = /^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$/;
 
         var match = time_test.exec(inpt.val());
 
@@ -276,9 +276,27 @@ $(document).ready(function () {
         timeBlockCheck(edit_time_block, inpt);
     };
 
+    var field_change_clbck_dp = function (a,b,c) {
+	
+        var inpt = $(this).find("input.time-field");
 
-    ctrls.on("change", "input.time-field", field_change_clbck);
+        var edit_time_block = inpt.closest(".edit-time-block");
+
+        timeBlockCheck(edit_time_block, inpt);
+    };
+	
+    //ctrls.on("change", "input.time-field", field_change_clbck);
     ctrls.on("blur", "input.time-field", field_change_clbck);
+    ctrls.on("focusin", "input.time-field", field_change_clbck);
+    ctrls.on("focusout", "input.time-field", field_change_clbck);
+    ctrls.on("keyup", "input.time-field", field_change_clbck);
+  
+    ctrls.on("change.dp", ".t_ff", "change.dp", field_change_clbck_dp);
+    ctrls.on("dp.change", ".t_ff", "dp.change", field_change_clbck_dp);
+    ctrls.on("dp.hide", ".t_ff", "dp.change", field_change_clbck_dp);
+    ctrls.on("hide.dp", ".t_ff", "dp.change", field_change_clbck_dp);
+    //ctrls.on("change.d", ".t_ff", "dp.change", field_change_clbck_dp);
+	
     //$("#data_ctrls").on("","input.time-field", field_change_clbck);
 
 });
