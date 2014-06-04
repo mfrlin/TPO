@@ -31,6 +31,37 @@
         <textarea name="newsletter" class="nl_content" required="true"
                   wrap="hard"></textarea>
         <br>
+        
+        <!-- Criteria -->
+        <table>
+	        <thead>
+	        	<tr>
+	        		<th>{% trans 'Number of coupons used' %}:</th>
+	        		<th>{% trans 'Number of reservations' %}:</th>
+	        	</tr>
+	        </thead>
+	        <tbody>
+	        	<tr>
+	        		<td>
+	        			<select name="coupons">
+	        				<option value="any" selected>Any</option>
+				        	<option value="low">0-20</option>
+				        	<option value="medium">21-40</option>
+				        	<option value="high">&gt;40</option>
+			        	</select>
+			        </td>
+			        <td>
+			        	<select name="reservations">
+			        		<option value="any" selected>Any</option>
+			        		<option value="low">0-20</option>
+			        		<option value="medium">21-40</option>
+			        		<option value="high">&gt;40</option>
+		        		</select>
+			        </td>
+	        	</tr>
+	        </tbody>
+        </table>
+        
         <input class="btn btn-success" type="submit" value="Send newsletter">
 
     </form>
