@@ -24,6 +24,8 @@ from django.utils.translation import ugettext_lazy as _
 
 import csv, re
 
+import os
+
 
 @for_service_providers
 def import_customers(request):
@@ -35,7 +37,11 @@ def import_customers(request):
         form = UploadFileForm(request.POST, request.FILES)
 
         if form.is_valid():
-
+            
+            #fileName, fileExtension = os.path.splitext(request.FILES.get('file').name)
+            
+            #print fileName, fileExtension
+            
             usrs2 = list(csv.reader(request.FILES.get('file'), delimiter=str(form.cleaned_data['delimiter'])[0],
                                     quotechar=str(form.cleaned_data['quote'])[0]))
             max_col_count = max(map(len, usrs2))

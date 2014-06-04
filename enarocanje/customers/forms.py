@@ -4,6 +4,7 @@ from django import forms
 from .models import Customer
 from django.forms import Form
 
+import os
 
 from enarocanje.common.widgets import BootstrapDateInput
 
@@ -32,7 +33,25 @@ class ExportListForm(forms.Form):
 class ChoiceRowForm(forms.Form):
     selected_list_id = forms.ChoiceField(choices=[(0,_("Name")),(1,_("Email")),(2,_("Phone number"))])
 
+
+
 class UploadFileForm(forms.Form):
     delimiter = forms.CharField(max_length=1, initial=',')
     quote = forms.CharField(max_length=1, initial='"')
     file  = forms.FileField(widget=forms.FileInput())
+    
+    def is_valid(self):
+        valid = super(UploadFileForm, self).is_valid()
+ 
+        # we're done now if not valid
+        if not valid:
+            return valid
+
+        fileName, fileExtension = os.path.splitext(self.cleaned_data['file'].name)
+        
+        if fileExtension.lower() == '.csv':
+            return True
+        else:
+            self._errors['file'] = [_('Invalid CSV file!')]
+            return False
+           
