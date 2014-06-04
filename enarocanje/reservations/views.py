@@ -297,7 +297,6 @@ class ListReservationView(ListView):
     template_name = 'reservations/reservationlist.html'
 
     def get_queryset(self):
-        
         provider = self.request.user.service_provider
         sort_by = self.request.GET.get('sort_by', 'date')
         search_by = self.request.GET.get('search_by', '')
@@ -316,7 +315,7 @@ class ListReservationView(ListView):
         elif sort_by == 'service':
             return query.order_by('service_name')
         elif sort_by == 'employee':
-            return query.order_by('-employee')
+            return query.order_by('employee')
 
     def get_context_data(self, **kwargs):
         context = super(ListReservationView, self).get_context_data(**kwargs)
