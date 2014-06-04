@@ -12,6 +12,9 @@
         <li>
             <a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
         </li>
+        <li>
+        	<a href="{% url 'reservationlist' %}">{% trans 'Reservation list' %}</a>
+        </li>
         {% if res_confirm == True %}
             <li class="active">
                 <a href="{% url 'myunconfirmedreservations' %}">{% trans 'Unconfirmed reservations' %}</a>
@@ -20,6 +23,7 @@
 
     </ul>
 
+    {% if unconfirmed %}
     <div id="no-more-tables">
         <table class="table">
             <thead>
@@ -80,4 +84,8 @@
         </form>
 
     </div>
+
+    {% else %}
+        {% trans "You currently have no unconfirmed reservations." %}
+    {% endif %}
 {% endblock %}

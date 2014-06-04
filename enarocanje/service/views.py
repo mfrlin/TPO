@@ -39,12 +39,12 @@ import enarocanje.common.config as config
 def async_file_upload(request, id):
     #print '='*10,"async_file_upload",'='*10
     service_provider = get_object_or_404(ServiceProvider, id=id)
-    
+
     status = 200
-    
+
     if request.user.service_provider_id != int(id):
         return HttpResponse("Not allowed", status=403)
-    
+
     name = request.FILES.getlist('image')[0].name
     size = request.FILES.getlist('image')[0].size
 
@@ -57,7 +57,7 @@ def async_file_upload(request, id):
         image = image_form.save(commit=False)
         image.service_provider_id = id
         image.save()
-        
+
         file['id'] = image.id
         file['url'] = image.image.url
     else:

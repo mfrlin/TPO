@@ -15,7 +15,7 @@
             <a href="{% url 'myreservations' %}">{% trans 'Reservations' %}</a>
         </li>
         <li>
-        	<a href="{% url 'reservationlist' %}">{% trans 'Reservation list' %}</a>
+            <a href="{% url 'reservationlist' %}">{% trans 'Reservation list' %}</a>
         </li>
         {% if res_confirm %}
             <li>
@@ -24,12 +24,16 @@
         {% endif %}
     </ul>
     <div class="row">
-        <div class="span4">
-            {{ form_employee|as_bootstrap }}
-        </div>
-        <div class="span4">
-            {{ form_service|as_bootstrap }}
-        </div>
+        {% if form_employee.employees.field.choices.queryset.all|length > 0 %}
+            <div class="span4">
+                {{ form_employee|as_bootstrap }}
+            </div>
+        {% endif %}
+        {% if form_service.services.field.choices.queryset.all|length > 0 %}
+            <div class="span4">
+                {{ form_service|as_bootstrap }}
+            </div>
+        {% endif %}
     </div>
     {% if user.service_provider %}
         <div id='calendar'></div>
@@ -42,231 +46,170 @@
 {% block javascript %}
     {{ block.super }}
     </script><script>
-    //just to enable syntax coloring in pycharm
-    {% if minTime and maxTime %}
-        (function() {
-            var cal = $('#calendar');
-            //var id = null;
-            var defEvents = {
+        {% if minTime and maxTime %}
+            (function () {
+                var cal = $('#calendar');
+                var defEvents = {
                     url: '{% url 'reservations_calendar' %}',
                     type: 'GET',
-                        data: {
-                            'service_provider_id': '{{ user.service_provider.id }}'
-                        }
-            };
-            $('#id_employees').change(function(){
-                var id = $(this).val();
-                var events = {
-                    url: '/timetable/',
-                    type: 'GET',
                     data: {
-                       'service_provider_id': '{{ user.service_provider.id }}',
-                       'employee_id': id,
-                       'past': 'true'
+                        'service_provider_id': '{{ user.service_provider.id }}'
                     }
                 };
-                if (id != ''){
-                   cal.fullCalendar('removeEvents');
-                   cal.fullCalendar('removeEventSource', defEvents);
-                   cal.fullCalendar('removeEventSource', events);
-                   cal.fullCalendar('addEventSource', events);
-                }
-                else {
-                    cal.fullCalendar('removeEvents');
-                    cal.fullCalendar('removeEventSource', events);
-                    cal.fullCalendar('addEventSource', defEvents);
-                }
-            });
-            if ( $('#id_services').length ) {
-	            $('#id_services').change(function(){
-	                var id = $(this).val();
-	                var events = {
-	                    url: '/timetable/',
-	                    type: 'GET',
-	                    data: {
-	                       'service_provider_id': '{{ user.service_provider.id }}',
-	                       'service_id': id,
-	                       'past': 'true'
-	                    }
-	                };
-	                if (id != ''){
-	                   cal.fullCalendar('removeEvents');
-	                   cal.fullCalendar('removeEventSource', defEvents);
-	                   cal.fullCalendar('removeEventSource', events);
-	                   cal.fullCalendar('addEventSource', events);
-	                }
-	                else {
-	                    cal.fullCalendar('removeEvents');
-	                    cal.fullCalendar('removeEventSource', events);
-	                    cal.fullCalendar('addEventSource', defEvents);
-	                }
-            	})
-            };
-
-
-            var date = new Date(), selectedEvent = null;
-            function updateDate(ndate) {
-                /*cal.fullCalendar('removeEventSource', selectedEvent);
-                date = ndate;
-                var dateEnd = new Date(date);
-                //dateEnd.setMinutes(dateEnd.getMinutes() + {{ service.duration }});
-                selectedEvent = [{
-                    title: '{% trans 'Your reservation' %}',
-                    start: date,
-                    end: dateEnd
-                }];
-                cal.fullCalendar('addEventSource', selectedEvent);*/
-            }
-
-            function changeDate(ev) {
-                /*date.setFullYear(ev.localDate.getFullYear());
-                date.setMonth(ev.localDate.getMonth());
-                date.setDate(ev.localDate.getDate());
-                updateDate(date);
-                $('#calendar').fullCalendar('gotoDate', date);*/
-            }
-
-            function changeTime(ev) {
-                /*date.setHours(ev.localDate.getHours());
-                date.setMinutes(ev.localDate.getMinutes());
-                updateDate(date);
-                $('#calendar').fullCalendar('gotoDate', date);*/
-            }
-
-            function viewDisplay(view) {
-                /*var cur_date = new Date();
-                cur_date.setDate(date.getDate());
-                cur_date.setTime(date.getTime());
-                if (view.start <= new Date()) {
-                    $("#calendar .fc-button-prev").addClass('fc-state-disabled');
-                } else {
-                    $("#calendar .fc-button-prev").removeClass('fc-state-disabled');
-                }
-                if (view.name == 'agendaWeek') {
-                    if (date < view.start) {
-                        date.setDate(date.getDate() + 7);
+                $('#id_employees').change(function () {
+                    var id = $(this).val();
+                    var s_id = $('#id_services').val();
+                    getIds('/util.getservices',
+                            {
+                                'employee_id': id
+                            }, id, '#id_services option');
+                    var events = {
+                        url: '/timetable/',
+                        type: 'GET',
+                        data: {
+                            'service_provider_id': '{{ user.service_provider.id }}',
+                            'employee_id': id,
+                            'service_id': s_id,
+                            'past': 'true'
+                        }
+                    };
+                    if (id != '') {
+                        cal.fullCalendar('removeEvents');
+                        cal.fullCalendar('removeEventSource', defEvents);
+                        cal.fullCalendar('removeEventSource', events);
+                        cal.fullCalendar('addEventSource', events);
                     }
-                    if (date >= view.end) {
-                        date.setDate(date.getDate() - 7);
+                    else {
+                        if ($('#id_services').val() == '') {
+                            cal.fullCalendar('removeEvents');
+                            cal.fullCalendar('removeEventSource', events);
+                            cal.fullCalendar('addEventSource', defEvents);
+                        }
                     }
-                } else {
-                    if (date < view.start) {
-                        date.setDate(date.getDate() + 1);
+                });
+
+                $('#id_services').change(function () {
+                    var id = $(this).val();
+                    var emp_id = $('#id_employees').val();
+                    getIds('/util.getemp',
+                            {
+                                'service_id': id
+                            }, id, '#id_employees option');
+                    var events = {
+                        url: '/timetable/',
+                        type: 'GET',
+                        data: {
+                            'service_provider_id': '{{ user.service_provider.id }}',
+                            'service_id': id,
+                            'employee_id': emp_id,
+                            'past': 'true'
+                        }
+                    };
+                    if (id != '') {
+                        cal.fullCalendar('removeEvents');
+                        cal.fullCalendar('removeEventSource', defEvents);
+                        cal.fullCalendar('removeEventSource', events);
+                        cal.fullCalendar('addEventSource', events);
                     }
-                    if (date >= view.end) {
-                        date.setDate(date.getDate() - 1);
+                    else {
+                        if ($('#id_employees').val() == '') {
+                            cal.fullCalendar('removeEvents');
+                            cal.fullCalendar('removeEventSource', events);
+                            cal.fullCalendar('addEventSource', defEvents);
+                        }
                     }
+                });
+
+                function getIds(url, params, id, selector) {
+                    $.get(url, params, function (data) {
+                                var d = $.parseJSON(data);
+                                $(selector).map(function () {
+                                    if ($(this).val() != '') {
+                                        var cur = parseInt($(this).val());
+                                        if (d.indexOf(cur) < 0 && id != '') {
+                                            $(this).css('background-color', '#DDDDDD');
+                                        }
+                                        else {
+                                            $(this).css('background-color', '');
+                                        }
+                                    }
+                                });
+                            }
+                    );
                 }
-                var dt = date-cur_date;
-                // so selection gets cleared on date change
-                if (dt >= 86400000 || dt < 0){
-                    cal.fullCalendar('removeEventSource', selectedEvent);
-                }
-                else {
-                    updateDate(date);
-                }
-                datePicker.data('datetimepicker').setLocalDate(date);
-                timePicker.data('datetimepicker').setLocalDate(date);*/
-            }
 
-            function dayClick(ndate, allDay, jsEvent, view) {
-                /*updateDate(ndate);
-                $('#calendar').fullCalendar('gotoDate', date);
-                datePicker.data('datetimepicker').setLocalDate(date);
-                timePicker.data('datetimepicker').setLocalDate(date);*/
-            }
+                var date = new Date();
 
-            var now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                cal.fullCalendar({
+                    header: {
+                        left: 'prev,next, today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
 
+                    /* sets the current view */
+                    defaultView: (document.width >= 800) ? 'agendaWeek' : 'agendaDay',
 
-            //var timePicker = $('.time-field').parent('').datetimepicker({pickDate: false, pickSeconds: false, minuteStep: 15,
-            //    language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeTime);
-            //var datePicker = $('.date-field').parent('').datetimepicker({pickTime: false, startDate: now, language:
-            //        '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
+                    /* sets the specific date */
+                    year: date.getFullYear(),
+                    month: date.getMonth(),
+                    date: date.getDate(),
 
-            //var dateDate = datePicker.data('datetimepicker').getLocalDate();
-            //var dateTime = timePicker.data('datetimepicker').getLocalDate();
-            /*date.setFullYear(dateDate.getFullYear());
-            date.setMonth(dateDate.getMonth());
-            date.setDate(dateDate.getDate());
-            date.setHours(dateTime.getHours());
-            date.setMinutes(dateTime.getMinutes());
-            date.setSeconds(0);*/
+                    minTime: '{{ minTime|date:"H:i" }}',
+                    maxTime: '{{ maxTime|time:"H:i" }}',
 
-            cal.fullCalendar({
-                header: {
-                    left: 'prev,next, today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
+                    editable: false,
+                    allDayDefault: false,
+                    allDaySlot: false,
+                    //height: 100000,
+                    slotMinutes: 15,
 
-                /* sets the current view */
-                defaultView: (document.width >= 800) ? 'agendaWeek' : 'agendaDay',
+                    /* translation */
+                    buttonText: {
+                        today: '{% trans 'today' %}',
+                        month: '{% trans 'month' %}',
+                        week: '{% trans 'week' %}',
+                        day: '{% trans 'day' %}'
+                    },
+                    monthNames: ['{% trans 'January' %}', '{% trans 'February' %}', '{% trans 'March' %}',
+                        '{% trans 'April' %}', '{% trans 'May' %}', '{% trans 'June' %}', '{% trans 'July' %}',
+                        '{% trans 'August' %}', '{% trans 'September' %}', '{% trans 'October' %}', '{% trans 'November' %}',
+                        '{% trans 'December' %}'],
+                    monthNamesSort: ['{% trans 'Jan' %}', '{% trans 'Feb' %}', '{% trans 'Mar' %}', '{% trans 'Apr' %}',
+                        '{% trans 'May' %}', '{% trans 'Jun' %}', '{% trans 'Jul' %}', '{% trans 'Aug' %}', '{% trans 'Sep' %}',
+                        '{% trans 'Oct' %}', '{% trans 'Nov' %}', '{% trans 'Dec' %}'],
+                    dayNames: ['{% trans 'Sunday' %}', '{% trans 'Monday' %}', '{% trans 'Tuesday' %}', '{% trans 'Wednesday' %}',
+                        '{% trans 'Thursday' %}', '{% trans 'Friday' %}', '{% trans 'Saturday' %}'],
+                    dayNamesShort: ['{% trans 'Sun' %}', '{% trans 'Mon' %}', '{% trans 'Tue' %}', '{% trans 'Wed' %}',
+                        '{% trans 'Thu' %}', '{% trans 'Fri' %}', '{% trans 'Sat' %}'],
+                    weekNumberTitle: '{% trans 'W' %}',
+                    allDayText: '{% trans 'all-day' %}',
+                    columnFormat: {
+                        month: 'ddd',
+                        week: 'ddd d.M.',
+                        day: 'dddd d.M.'
+                    },
+                    firstDay: 1,
+                    axisFormat: 'HH:mm',
+                    timeFormat: {
+                        agenda: 'H:mm{ - H:mm}'
+                    },
 
-                /* sets the specific date */
-                year: date.getFullYear(),
-                month: date.getMonth(),
-                date: date.getDate(),
-
-                minTime: '{{ minTime|date:"H:i" }}',
-                maxTime: '{{ maxTime|time:"H:i" }}',
-
-                editable: false,
-                allDayDefault: false,
-                allDaySlot: false,
-                //height: 100000,
-                slotMinutes: 15,
-
-                /* callbacks */
-                viewDisplay: viewDisplay,
-                dayClick: dayClick,
-
-                /* translation */
-                buttonText: {
-                    today: '{% trans 'today' %}',
-                    month: '{% trans 'month' %}',
-                    week: '{% trans 'week' %}',
-                    day: '{% trans 'day' %}'
-                },
-                monthNames: ['{% trans 'January' %}', '{% trans 'February' %}', '{% trans 'March' %}',
-                    '{% trans 'April' %}', '{% trans 'May' %}', '{% trans 'June' %}', '{% trans 'July' %}',
-                    '{% trans 'August' %}', '{% trans 'September' %}', '{% trans 'October' %}', '{% trans 'November' %}',
-                    '{% trans 'December' %}'],
-                monthNamesSort: ['{% trans 'Jan' %}', '{% trans 'Feb' %}', '{% trans 'Mar' %}', '{% trans 'Apr' %}',
-                    '{% trans 'May' %}', '{% trans 'Jun' %}', '{% trans 'Jul' %}', '{% trans 'Aug' %}', '{% trans 'Sep' %}',
-                    '{% trans 'Oct' %}', '{% trans 'Nov' %}', '{% trans 'Dec' %}'],
-                dayNames: ['{% trans 'Sunday' %}', '{% trans 'Monday' %}', '{% trans 'Tuesday' %}', '{% trans 'Wednesday' %}',
-                    '{% trans 'Thursday' %}', '{% trans 'Friday' %}', '{% trans 'Saturday' %}'],
-                dayNamesShort: ['{% trans 'Sun' %}', '{% trans 'Mon' %}', '{% trans 'Tue' %}', '{% trans 'Wed' %}',
-                    '{% trans 'Thu' %}', '{% trans 'Fri' %}', '{% trans 'Sat' %}'],
-                weekNumberTitle: '{% trans 'W' %}',
-                allDayText: '{% trans 'all-day' %}',
-                columnFormat: {
-                    month: 'ddd',
-                    week: 'ddd d.M.',
-                    day: 'dddd d.M.'
-                },
-                firstDay: 1,
-                axisFormat: 'HH:mm',
-                timeFormat: {
-                    agenda: 'H:mm{ - H:mm}'
-                },
-
-                /* events data */
-                events: {
-                    url: '{% url 'reservations_calendar' %}',
-                    type: 'GET',
-                    data: {
-                        'service_provider_id': '{{ user.service_provider_id }}'
+                    /* events data */
+                    events: {
+                        url: '{% url 'reservations_calendar' %}',
+                        type: 'GET',
+                        data: {
+                            'service_provider_id': '{{ user.service_provider_id }}'
+                        }
                     }
-                }
-            });
+                });
 
-            $('#calendar-refresh').click(function() {
-                cal.fullCalendar('refetchEvents');
-            });
-        })();
-        </script><script>
-    {% endif %}
+                $('#calendar-refresh').click(function () {
+                    cal.fullCalendar('refetchEvents');
+                });
+            })();
+            </script>
+            <script>
+        {% endif %}
 {% endblock %}
