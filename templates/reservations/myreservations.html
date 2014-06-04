@@ -46,139 +46,184 @@
 {% block javascript %}
     {{ block.super }}
     </script><script>
-    //just to enable syntax coloring in pycharm
-    {% if minTime and maxTime %}
-        (function () {
-            var cal = $('#calendar');
-            //var id = null;
-            var defEvents = {
-                url: '{% url 'reservations_calendar' %}',
-                type: 'GET',
-                data: {
-                    'service_provider_id': '{{ user.service_provider.id }}'
-                }
-            };
-            $('#id_employees').change(function () {
-                var id = $(this).val();
-                var events = {
-                    url: '/timetable/',
-                    type: 'GET',
-                    data: {
-                        'service_provider_id': '{{ user.service_provider.id }}',
-                        'employee_id': id,
-                        'service_id': $('#id_services').val(),
-                        'past': 'true'
-                    }
-                };
-                if (id != '') {
-                    cal.fullCalendar('removeEvents');
-                    cal.fullCalendar('removeEventSource', defEvents);
-                    cal.fullCalendar('removeEventSource', events);
-                    cal.fullCalendar('addEventSource', events);
-                }
-                else {
-                    cal.fullCalendar('removeEvents');
-                    cal.fullCalendar('removeEventSource', events);
-                    cal.fullCalendar('addEventSource', defEvents);
-                }
-            });
-
-            $('#id_services').change(function () {
-                var id = $(this).val();
-                var events = {
-                    url: '/timetable/',
-                    type: 'GET',
-                    data: {
-                        'service_provider_id': '{{ user.service_provider.id }}',
-                        'service_id': id,
-                        'employee_id': $('#id_employees').val(),
-                        'past': 'true'
-                    }
-                };
-                if (id != '') {
-                    cal.fullCalendar('removeEvents');
-                    cal.fullCalendar('removeEventSource', defEvents);
-                    cal.fullCalendar('removeEventSource', events);
-                    cal.fullCalendar('addEventSource', events);
-                }
-                else {
-                    cal.fullCalendar('removeEvents');
-                    cal.fullCalendar('removeEventSource', events);
-                    cal.fullCalendar('addEventSource', defEvents);
-                }
-            });
-
-            var date = new Date();
-
-            cal.fullCalendar({
-                header: {
-                    left: 'prev,next, today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-
-                /* sets the current view */
-                defaultView: (document.width >= 800) ? 'agendaWeek' : 'agendaDay',
-
-                /* sets the specific date */
-                year: date.getFullYear(),
-                month: date.getMonth(),
-                date: date.getDate(),
-
-                minTime: '{{ minTime|date:"H:i" }}',
-                maxTime: '{{ maxTime|time:"H:i" }}',
-
-                editable: false,
-                allDayDefault: false,
-                allDaySlot: false,
-                //height: 100000,
-                slotMinutes: 15,
-
-                /* translation */
-                buttonText: {
-                    today: '{% trans 'today' %}',
-                    month: '{% trans 'month' %}',
-                    week: '{% trans 'week' %}',
-                    day: '{% trans 'day' %}'
-                },
-                monthNames: ['{% trans 'January' %}', '{% trans 'February' %}', '{% trans 'March' %}',
-                    '{% trans 'April' %}', '{% trans 'May' %}', '{% trans 'June' %}', '{% trans 'July' %}',
-                    '{% trans 'August' %}', '{% trans 'September' %}', '{% trans 'October' %}', '{% trans 'November' %}',
-                    '{% trans 'December' %}'],
-                monthNamesSort: ['{% trans 'Jan' %}', '{% trans 'Feb' %}', '{% trans 'Mar' %}', '{% trans 'Apr' %}',
-                    '{% trans 'May' %}', '{% trans 'Jun' %}', '{% trans 'Jul' %}', '{% trans 'Aug' %}', '{% trans 'Sep' %}',
-                    '{% trans 'Oct' %}', '{% trans 'Nov' %}', '{% trans 'Dec' %}'],
-                dayNames: ['{% trans 'Sunday' %}', '{% trans 'Monday' %}', '{% trans 'Tuesday' %}', '{% trans 'Wednesday' %}',
-                    '{% trans 'Thursday' %}', '{% trans 'Friday' %}', '{% trans 'Saturday' %}'],
-                dayNamesShort: ['{% trans 'Sun' %}', '{% trans 'Mon' %}', '{% trans 'Tue' %}', '{% trans 'Wed' %}',
-                    '{% trans 'Thu' %}', '{% trans 'Fri' %}', '{% trans 'Sat' %}'],
-                weekNumberTitle: '{% trans 'W' %}',
-                allDayText: '{% trans 'all-day' %}',
-                columnFormat: {
-                    month: 'ddd',
-                    week: 'ddd d.M.',
-                    day: 'dddd d.M.'
-                },
-                firstDay: 1,
-                axisFormat: 'HH:mm',
-                timeFormat: {
-                    agenda: 'H:mm{ - H:mm}'
-                },
-
-                /* events data */
-                events: {
+        {% if minTime and maxTime %}
+            (function () {
+                var cal = $('#calendar');
+                var defEvents = {
                     url: '{% url 'reservations_calendar' %}',
                     type: 'GET',
                     data: {
-                        'service_provider_id': '{{ user.service_provider_id }}'
+                        'service_provider_id': '{{ user.service_provider.id }}'
                     }
-                }
-            });
+                };
+                $('#id_employees').change(function () {
+                    var id = $(this).val();
+                    var s_id = $('#id_services').val();
+                    getIds('/util.getservices',
+                            {
+                                'employee_id': id
+                            }, id, '#id_services option');
+                    var events = {
+                        url: '/timetable/',
+                        type: 'GET',
+                        data: {
+                            'service_provider_id': '{{ user.service_provider.id }}',
+                            'employee_id': id,
+                            'service_id': s_id,
+                            'past': 'true'
+                        }
+                    };
+                    /*cal.fullCalendar('removeEvents');
+                     cal.fullCalendar('removeEventSource', events);
+                     cal.fullCalendar('addEventSource', events);*/
+                    if (id != '') {
+                        cal.fullCalendar('removeEvents');
+                        cal.fullCalendar('removeEventSource', defEvents);
+                        cal.fullCalendar('removeEventSource', events);
+                        cal.fullCalendar('addEventSource', events);
+                    }
+                    else {
+                        if ($('#id_services').val() == '') {
+                            cal.fullCalendar('removeEvents');
+                            cal.fullCalendar('removeEventSource', events);
+                            cal.fullCalendar('addEventSource', defEvents);
+                        }
+                    }
+                });
 
-            $('#calendar-refresh').click(function () {
-                cal.fullCalendar('refetchEvents');
-            });
-        })();
-        </script><script>
-    {% endif %}
+                $('#id_services').change(function () {
+                    var id = $(this).val();
+                    var emp_id = $('#id_employees').val();
+                    getIds('/util.getemp',
+                            {
+                                'service_id': id
+                            }, id, '#id_employees option');
+                    var events = {
+                        url: '/timetable/',
+                        type: 'GET',
+                        data: {
+                            'service_provider_id': '{{ user.service_provider.id }}',
+                            'service_id': id,
+                            'employee_id': emp_id,
+                            'past': 'true'
+                        }
+                    };
+                    /*cal.fullCalendar('removeEvents');
+                     cal.fullCalendar('removeEventSource', events);
+                     cal.fullCalendar('addEventSource', events);*/
+                    if (id != '') {
+                        cal.fullCalendar('removeEvents');
+                        cal.fullCalendar('removeEventSource', defEvents);
+                        cal.fullCalendar('removeEventSource', events);
+                        cal.fullCalendar('addEventSource', events);
+                    }
+                    else {
+                        if ($('#id_employees').val() == '') {
+                            cal.fullCalendar('removeEvents');
+                            cal.fullCalendar('removeEventSource', events);
+                            cal.fullCalendar('addEventSource', defEvents);
+                        }
+                    }
+                });
+
+                function getIds(url, params, id, selector) {
+                    $.get(url, params, function (data) {
+                                var d = $.parseJSON(data);
+                                $(selector).map(function () {
+                                    if ($(this).val() != '') {
+                                        var cur = parseInt($(this).val());
+                                        if (d.indexOf(cur) < 0 && id != '') {
+                                            $(this).css('background-color', '#DDDDDD');
+                                        }
+                                        else {
+                                            $(this).css('background-color', '');
+                                        }
+                                    }
+                                });
+                            }
+                    );
+                }
+
+                function viewDisplay(view) {
+                    //cal.fullCalendar('removeEvents');
+                    //cal.fullCalendar('addEventSource', defEvents);
+                }
+
+                var date = new Date();
+
+                cal.fullCalendar({
+                    header: {
+                        left: 'prev,next, today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+
+                    /* sets the current view */
+                    defaultView: (document.width >= 800) ? 'agendaWeek' : 'agendaDay',
+
+                    /* sets the specific date */
+                    year: date.getFullYear(),
+                    month: date.getMonth(),
+                    date: date.getDate(),
+
+                    minTime: '{{ minTime|date:"H:i" }}',
+                    maxTime: '{{ maxTime|time:"H:i" }}',
+
+                    editable: false,
+                    allDayDefault: false,
+                    allDaySlot: false,
+                    //height: 100000,
+                    slotMinutes: 15,
+
+                    /* callbacks */
+                    viewDisplay: viewDisplay,
+
+                    /* translation */
+                    buttonText: {
+                        today: '{% trans 'today' %}',
+                        month: '{% trans 'month' %}',
+                        week: '{% trans 'week' %}',
+                        day: '{% trans 'day' %}'
+                    },
+                    monthNames: ['{% trans 'January' %}', '{% trans 'February' %}', '{% trans 'March' %}',
+                        '{% trans 'April' %}', '{% trans 'May' %}', '{% trans 'June' %}', '{% trans 'July' %}',
+                        '{% trans 'August' %}', '{% trans 'September' %}', '{% trans 'October' %}', '{% trans 'November' %}',
+                        '{% trans 'December' %}'],
+                    monthNamesSort: ['{% trans 'Jan' %}', '{% trans 'Feb' %}', '{% trans 'Mar' %}', '{% trans 'Apr' %}',
+                        '{% trans 'May' %}', '{% trans 'Jun' %}', '{% trans 'Jul' %}', '{% trans 'Aug' %}', '{% trans 'Sep' %}',
+                        '{% trans 'Oct' %}', '{% trans 'Nov' %}', '{% trans 'Dec' %}'],
+                    dayNames: ['{% trans 'Sunday' %}', '{% trans 'Monday' %}', '{% trans 'Tuesday' %}', '{% trans 'Wednesday' %}',
+                        '{% trans 'Thursday' %}', '{% trans 'Friday' %}', '{% trans 'Saturday' %}'],
+                    dayNamesShort: ['{% trans 'Sun' %}', '{% trans 'Mon' %}', '{% trans 'Tue' %}', '{% trans 'Wed' %}',
+                        '{% trans 'Thu' %}', '{% trans 'Fri' %}', '{% trans 'Sat' %}'],
+                    weekNumberTitle: '{% trans 'W' %}',
+                    allDayText: '{% trans 'all-day' %}',
+                    columnFormat: {
+                        month: 'ddd',
+                        week: 'ddd d.M.',
+                        day: 'dddd d.M.'
+                    },
+                    firstDay: 1,
+                    axisFormat: 'HH:mm',
+                    timeFormat: {
+                        agenda: 'H:mm{ - H:mm}'
+                    },
+
+                    /* events data */
+                    events: {
+                        url: '{% url 'reservations_calendar' %}',
+                        type: 'GET',
+                        data: {
+                            'service_provider_id': '{{ user.service_provider_id }}'
+                        }
+                    }
+                });
+
+                $('#calendar-refresh').click(function () {
+                    cal.fullCalendar('refetchEvents');
+                });
+            })();
+            </script>
+            <script>
+        {% endif %}
 {% endblock %}

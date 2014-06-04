@@ -4,13 +4,13 @@ import json
 from django.http import Http404, HttpResponse
 from django.utils.translation import ugettext_lazy as _, ugettext
 
-import random
 from enarocanje.service.models import Service
 from enarocanje.accountext.models import ServiceProvider
 from enarocanje.reservations.models import Reservation
 from enarocanje.workinghours.models import Absence, WorkingHours, EmployeeWorkingHours
 from enarocanje.employees.models import Employee
-from enarocanje.common.timeutils import is_overlapping
+from enarocanje.employees.forms import EmployeeChoiceForm
+from enarocanje.service.forms import ServiceChoiceForm
 
 EVENT_TITLE_CLOSED = _('Closed')
 EVENT_TITLE_CLOSED_WHOLE_DAY = _('Closed on this day')
@@ -67,19 +67,6 @@ def getMinMaxTime(provider):
 
 def getEvents(service, provider, start, end):
     events = []
-    now = datetime.datetime.now()
-    # if start.date() < now.date() or end.date() < now.date():
-    #     print start.date()
-    #     print end.date()
-    #     print now.date()
-    #     return [
-    #         {
-    #             'title': ugettext('In the PAST!'),
-    #             'start': encodeDatetime(start),
-    #             'end': encodeDatetime(end),
-    #             'color': '#444444'
-    #         }
-    #     ]
 
     # Get reservation events
     events.extend(getReservations(service, provider, start, end))
@@ -236,10 +223,10 @@ def getWorkingHours(service, provider, date, past):
     if employees:
         if first_arrive == datetime.time(23, 59) and last_gone == datetime.time(0):
             return [{
-                        'title': ugettext('No employees scheduled but we are still open. Huh.'),
-                        'start': encodeDatetime(date),
-                        'end': encodeDatetime(date + datetime.timedelta(days=1)),
-                        'color': EVENT_CLOSED_COLOR
+                    'title': ugettext('No employees scheduled but we are still open. Huh.'),
+                    'start': encodeDatetime(date),
+                    'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                    'color': EVENT_CLOSED_COLOR
                     }]
             # events.append({
             #     'title': ugettext('No employees scheduled but we are still open. Huh.'),
@@ -270,7 +257,6 @@ def getWorkingHours(service, provider, date, past):
 def getEmployeeTimetable(request):
     service = None
     emp = None
-    emp_id = request.GET.get('employee_id')
     sp_id = request.GET.get('service_provider_id')
     sp = ServiceProvider.objects.get(id=sp_id)
     emp_id = request.GET.get('employee_id')
@@ -284,13 +270,36 @@ def getEmployeeTimetable(request):
     end = datetime.datetime.fromtimestamp(int(request.GET.get('end')))
 
     if not emp_id and not s_id:
-        return get_all_reservations(None, sp, start, end)
+        return HttpResponse(json.dumps(get_all_reservations(None, sp, start, end)))
+    if s_id and not emp_id:
+        return getServiceEvents(service, sp, start, end)
 
     past = True
     if request.GET.get('past') == 'true':
         past = False
 
     return HttpResponse(json.dumps(getEmpEvents(sp, emp, service, start, end, past)))
+
+
+def getServiceEvents(service, provider, start, end):
+    events = []
+    reservations = Reservation.objects.filter(service=service, date__gte=start, date__lte=end)
+
+    for date in daterange(start.date(), end.date()):
+        events.extend(getWorkingHours(service, provider, date, False))
+
+    for reservation in reservations:
+        text = EVENT_TITLE_RESERVED
+        if reservation.employee:
+            text += _(' at ') + reservation.employee.__unicode__()
+        dt = datetime.datetime.combine(reservation.date, reservation.time)
+        events.append({
+            'title': ugettext(text),
+            'start': encodeDatetime(dt),
+            'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
+            'color': EVENT_RESERVED_COLOR
+        })
+    return HttpResponse(json.dumps(events))
 
 
 def getEmpEvents(provider, employee, service, start, end, past):
@@ -408,12 +417,11 @@ def get_all_reservations(service, provider, start, end):
             text += _(' at ') + reservation.employee.__unicode__()
         events.append({
             'title': ugettext(text),
-            'url': '/',
+            #'url': '/',
             'start': encodeDatetime(dt),
             'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
             'color': EVENT_RESERVED_COLOR
         })
-
     return events
 
 
@@ -466,6 +474,22 @@ def findEventByColor(events, color):
             return l
         else:
             return None
+
+
+def getEmployeesForService(request):
+
+    if not request.GET.get('service_id'):
+        return HttpResponse(json.dumps([]))
+    service_id = request.GET.get('service_id')
+    service = Service.objects.get(id=service_id)
+    employees = Employee.objects.filter(id__in=service.employees.all()).values_list('id', flat=True)
+    return HttpResponse(json.dumps(list(employees)))
+
+
+def getServicesForEmployee(request):
+    emp_id = request.GET.get('employee_id')
+    services = Service.objects.filter(employees__in=emp_id).values_list('id', flat=True)
+    return HttpResponse(json.dumps(list(services)))
 
 
 
