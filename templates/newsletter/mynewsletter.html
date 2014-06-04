@@ -7,7 +7,16 @@
 {% block main_nav_mynewsletter %}active{% endblock %}
 
 {% block content %}
-
+	
+	<ul class="nav nav-tabs">
+        <li class="active">
+            <a href="{% url 'mynewsletter' %}">{% trans 'Send a newsletter' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'newsletterlist' %}">{% trans 'List of newsletter sent' %}</a>
+        </li>
+    </ul>
+	
     <h1>{% trans 'Send a newsletter' %}</h1>
 
     <form action="{% url 'sendnewsletter' %}" method="POST">

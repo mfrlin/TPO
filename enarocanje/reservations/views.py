@@ -322,7 +322,7 @@ class ListReservationView(ListView):
         context = super(ListReservationView, self).get_context_data(**kwargs)
         if self.request.GET.get('search_by'):
             context['search_by'] = self.request.GET.get('search_by')
-            context['res_confirm'] = self.request.user.service_provider.reservation_confirmation_needed
+        context['res_confirm'] = self.request.user.service_provider.reservation_confirmation_needed
         return context
 
 
