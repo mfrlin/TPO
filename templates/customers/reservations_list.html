@@ -8,7 +8,7 @@
 {% block content %}
 
     <h1>{% trans 'Customer Reservations' %}</h1>
-
+    <h3 style="padding-left: 10px">{{ customer }}</h3>
     {% if object_list %}
         <table class="table">
             <thead>
@@ -70,15 +70,15 @@
             var cb = $("input:checkbox");
             console.log(cb);
             cb.change(function () {
+                var check = '';
                 if ($(this).is(":checked")) {
-                    console.log("True");
-                    console.log(this.id);
+                    check = 'True';
                 }
                 else{
-                    console.log("False");
-                    console.log(this.id);
+                    check = 'False';
                 }
-                //$('#textbox1').val($(this).is(':checked'));
+                console.log(this.id);
+                $.get('/showup/',{'res_id': this.id, 'value': check});
             })
 
         })();
