@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from models import Newsletter
 from django.views.generic import ListView
+import sys
 
 class ListNewsletterView(ListView):
     model = Newsletter
@@ -27,7 +28,44 @@ def send(request):
         subject = request.POST['subject']
         message = request.POST['newsletter']
         provider = ServiceProvider.objects.get(name=request.user.service_provider.name)
-        subscribers = provider.subscribers.all()
+        
+        # inform the subscribers, according to some criteria
+        number_of_coupons = request.POST['coupons']
+        number_of_reservations = request.POST['reservations']
+        
+        if number_of_coupons == "low":
+            low_coupons = 0
+            high_coupons = 20
+        elif number_of_coupons == "medium":
+            low_coupons = 21
+            high_coupons = 40
+        elif number_of_coupons == "high":
+            low_coupons = 41
+            high_coupons = sys.maxint
+        
+        if number_of_reservations == "low":
+            low_reservations = 0
+            high_reservations = 20
+        elif number_of_reservations == "medium":
+            low_reservations = 21
+            high_reservations = 40
+        elif number_of_reservations == "high":
+            low_reservations = 41
+            high_reservations = sys.maxint
+        
+        if number_of_coupons == "any" and number_of_reservations == "any":
+            subscribers = provider.subscribers.all()
+        elif number_of_coupons == "any":
+            subscribers = provider.subscribers.filter(
+                reservations__range=(low_reservations, high_reservations))
+        elif number_of_reservations == "any":
+            subscribers = provider.subscribers.filter(
+                coupons__range=(low_coupons, high_coupons))
+        else:
+            subscribers = provider.subscribers.filter(
+                reservations__range=(low_reservations, high_reservations),
+                coupons__range=(low_coupons, high_coupons))
+        
         emails = [user.email for user in subscribers]
         try:
             send_mail(subject, message, request.user.email,
