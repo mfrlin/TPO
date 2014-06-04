@@ -42,7 +42,7 @@ from enarocanje.service.forms import ServiceChoiceForm
 
 def reservation(request, id):
     service = get_object_or_404(Service, id=id)
-    
+
     chosen_employee = None
     emp_size = 0
     if not service.is_active():
@@ -50,23 +50,21 @@ def reservation(request, id):
     minTime, maxTime = getMinMaxTime(service.service_provider)
 
     #step2 = request.session['_step'] if '_step' in request.session
-    step2 = request.GET.get('step',None)
+    step2 = request.GET.get('step', None)
 
     # POST
     step = request.POST.get('step', None)
-    
+
     data = None
     if step:
         try:
             data = pickle.loads(base64.b64decode(request.POST.get('data')))  # Serializes an object from request
-           
         except:
             raise Http404
     elif step2:
         step = step2
-        
         if 'reservation_data' in request.session:
-            data = request.session['reservation_data'] 
+            data = request.session['reservation_data']
         else:
             step = None
 
@@ -75,9 +73,7 @@ def reservation(request, id):
         form = ReservationForm(request, workingHours=None, service=service)
         data = {'service_provider_id': service.service_provider_id, 'service_id': service.id}
         return render_to_response('reservations/reservation.html', locals(), context_instance=RequestContext(request))
-    
-    
-    
+
     workingHours = WorkingHours.objects.filter(service_provider_id=service.service_provider_id)
 
     #formNonRegisteredUser = NonRegisteredUserForm(prefix='nonRegBtn')
@@ -111,24 +107,23 @@ def reservation(request, id):
     if step == '2':
         if data.get('date') is None or data.get('time') is None:
             raise Http404
-    
+
         # print request.POST
 
 
         if 'signupBtn' in request.POST:
             signupForm = SignupForm(request.POST, prefix='signupBtn')
-            
+
             if signupForm.is_valid():
                 userr = signupForm.save(request)
-                
+
                 data['user_id'] = userr.id
                 data['name'] = userr.get_full_name()
                 data['phone'] = userr.phone
                 data['email'] = userr.email
-                
+
                 return render_to_response('reservations/confirmation.html', locals(),
                                           context_instance=RequestContext(request))
-
 
         if 'loginBtn' in request.POST:
             loginForm = LoginForm(request.POST, prefix='loginBtn')
@@ -138,14 +133,13 @@ def reservation(request, id):
                 data['name'] = loginForm.user.get_full_name()
                 data['phone'] = loginForm.user.phone
                 data['email'] = loginForm.user.email
-               
+
                 request.session['reservation_data'] = data
-                
-                
-                return loginForm.login(request, redirect_url=reverse('reservation',args=[service.id])+"?step=2a")
+
+                return loginForm.login(request, redirect_url=reverse('reservation', args=[service.id]) + "?step=2a")
 
         if 'nonRegBtn' in request.POST:
-  
+
             formNonRegisteredUser = NonRegisteredUserForm(request.POST)
             print formNonRegisteredUser
             print formNonRegisteredUser.is_valid()
@@ -160,9 +154,8 @@ def reservation(request, id):
 
     if step == '2a':
         if request.user.is_authenticated():
-    
             return render_to_response('reservations/confirmation.html', locals(),
-                                          context_instance=RequestContext(request))
+                                      context_instance=RequestContext(request))
 
     if step == '3':
         # Confirmation
@@ -199,6 +192,7 @@ def reservation(request, id):
             reserve.service_name = service.name
             reserve.service_duration = service.duration
             reserve.service_price = service.discounted_price()
+            reserve.show_up = False
             if chosen_employee is not None and chosen_employee != '':
                 reserve.employee = chosen_employee
             else:
@@ -210,7 +204,8 @@ def reservation(request, id):
                     free_emp = list(service.employees.all())
                     free_emp_editable = list(service.employees.all())
                     for emp in free_emp:
-                        emp_time = EmployeeWorkingHours.objects.get(employee=emp.id).get_for_day(emp, reserve.date.weekday())
+                        emp_time = EmployeeWorkingHours.objects.get(employee=emp.id).get_for_day(emp,
+                                                                                                 reserve.date.weekday())
                         if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
                                                                                                    reserve.date.weekday()):
                             free_emp_editable.remove(emp)
@@ -223,7 +218,7 @@ def reservation(request, id):
                         if r.active_during(reserveDt):
                             if r.employee in free_emp:
                                 free_emp_editable.remove(r.employee)
-                        # choose random employee
+                                # choose random employee
                     if free_emp_editable:
                         random_employee = free_emp_editable[random.randint(0, len(free_emp_editable) - 1)]
                         reserve.employee = random_employee
@@ -296,17 +291,18 @@ def myreservations(request):
 
 @for_service_providers
 def reservation_list(request):
-    # TODO list of reservations
-    reservations = Reservation.objects.filter(service_provider=request.user.service_provider)
+    res_confirm = request.user.service_provider.reservation_confirmation_needed
+    reservations = Reservation.objects.filter(service_provider_id=request.user.service_provider_id)
     return render_to_response('reservations/reservationlist.html', locals(), context_instance=RequestContext(request))
+
 
 @for_service_providers
 def manage(request):
-    if request.method == 'POST':
-        reservation = get_object_or_404(Reservation, service_provider=request.user.service_provider,
-                                     id=request.POST.get('service'))
-        if request.POST.get('action') == 'confirm':
-            reservation.confirm_reservation()
-        if request.POST.get('action') == 'deny':
-            reservation.deny_reservation()
+    # if request.method == 'POST':
+    #     reservation = get_object_or_404(Reservation, service_provider=request.user.service_provider,
+    #                                     id=request.POST.get('service'))
+    #     if request.POST.get('action') == 'confirm':
+    #         reservation.confirm_reservation()
+    #     if request.POST.get('action') == 'deny':
+    #         reservation.deny_reservation()
     return HttpResponseRedirect(reverse(reservation_list))

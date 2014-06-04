@@ -46,6 +46,7 @@ def add(request):
                 h.time_to = datetime.time(21, 0)
                 h.week_days = [1, 2, 3, 4, 5]
 
+            h.save()
             return HttpResponseRedirect(reverse(myemployees))
     else:
         form = EmployeeForm()
