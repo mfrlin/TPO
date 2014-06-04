@@ -40,7 +40,7 @@ def add(request):
             if spwh:
                 h.time_from = spwh.time_from
                 h.time_to = spwh.time_to
-                h.week_days = spwh.week_days
+                h.week_days = [1, 2, 3, 4, 5]
             else:
                 h.time_from = datetime.time(9, 0)
                 h.time_to = datetime.time(21, 0)
