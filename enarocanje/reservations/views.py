@@ -207,7 +207,7 @@ def reservation(request, id):
                     free_emp = list(service.employees.all())
                     free_emp_editable = list(service.employees.all())
                     for emp in free_emp:
-                        emp_time = EmployeeWorkingHours.objects.filter(employee=emp.id).get_for_day(emp,
+                        emp_time = EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
                                                                                                     reserve.date.weekday())
                         if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
                                                                                                    reserve.date.weekday()):
