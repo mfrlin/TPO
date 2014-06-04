@@ -207,8 +207,8 @@ def reservation(request, id):
                     free_emp = list(service.employees.all())
                     free_emp_editable = list(service.employees.all())
                     for emp in free_emp:
-                        emp_time = EmployeeWorkingHours.objects.get(employee=emp.id).get_for_day(emp,
-                                                                                                 reserve.date.weekday())
+                        emp_time = EmployeeWorkingHours.objects.filter(employee=emp.id).get_for_day(emp,
+                                                                                                    reserve.date.weekday())
                         if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
                                                                                                    reserve.date.weekday()):
                             free_emp_editable.remove(emp)
@@ -300,9 +300,9 @@ class ListReservationView(ListView):
         provider = self.request.user.service_provider
         sort_by = self.request.GET.get('sort_by', 'date')
         search_by = self.request.GET.get('search_by', '')
-        
+
         employee = Q(employee__surname__iregex=search_by)
-        
+
         if search_by:
             query = Reservation.objects.filter(employee, service_provider=provider)
         else:
@@ -327,9 +327,9 @@ class ListReservationView(ListView):
 
 @for_service_providers
 def reservation_list(request):
-    
     reservations = Reservation.objects.filter(service_provider_id=request.user.service_provider_id)
     return render_to_response('reservations/reservationlist.html', locals(), context_instance=RequestContext(request))
+
 
 @for_service_providers
 def manage(request):
