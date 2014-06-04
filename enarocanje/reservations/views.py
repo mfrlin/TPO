@@ -18,6 +18,8 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from allauth.account.forms import LoginForm, SignupForm
+from django.views.generic import ListView
+from django.db.models import Q
 
 from enarocanje.accountext.decorators import for_service_providers
 from enarocanje.accountext.models import User
@@ -34,6 +36,7 @@ from enarocanje.common.timeutils import is_overlapping
 from enarocanje.workinghours.models import EmployeeWorkingHours
 from enarocanje.employees.forms import EmployeeChoiceForm
 from enarocanje.service.forms import ServiceChoiceForm
+
 
 #from allauth.account.auth_backends import
 
@@ -294,11 +297,40 @@ def myreservations(request):
     return render_to_response('reservations/myreservations.html', locals(), context_instance=RequestContext(request))
 
 
+class ListReservationView(ListView):
+    model = Reservation
+    template_name = 'reservations/reservationlist.html'
+
+    def get_queryset(self):
+        provider = self.request.user.service_provider
+        sort_by = self.request.GET.get('sort_by', 'name')
+        search_by = self.request.GET.get('search_by', '')
+        service = Q(service_name__iregex=search_by)
+        email = Q(email__iregex=search_by)
+        phone = Q(phone__regex=search_by)
+        if search_by:
+            query = Reservation.objects.filter(service | email | phone, service=provider)
+        else:
+            query = Reservation.objects.filter(service=provider)
+        if sort_by == 'name':
+            return query.extra(
+                select={'lower_name': 'lower(name)'}).order_by('lower_name')
+        else:
+            return query.order_by('-last_reservation')
+
+    def get_context_data(self, **kwargs):
+        context = super(ListReservationView, self).get_context_data(**kwargs)
+        if self.request.GET.get('search_by'):
+            context['search_by'] = self.request.GET.get('search_by')
+        return context
+
+"""
 @for_service_providers
 def reservation_list(request):
-    # TODO list of reservations
     reservations = Reservation.objects.filter(service_provider=request.user.service_provider)
     return render_to_response('reservations/reservationlist.html', locals(), context_instance=RequestContext(request))
+"""
+
 
 @for_service_providers
 def manage(request):
@@ -310,3 +342,4 @@ def manage(request):
         if request.POST.get('action') == 'deny':
             reservation.deny_reservation()
     return HttpResponseRedirect(reverse(reservation_list))
+
