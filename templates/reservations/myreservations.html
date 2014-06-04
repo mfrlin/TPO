@@ -73,9 +73,6 @@
                             'past': 'true'
                         }
                     };
-                    /*cal.fullCalendar('removeEvents');
-                     cal.fullCalendar('removeEventSource', events);
-                     cal.fullCalendar('addEventSource', events);*/
                     if (id != '') {
                         cal.fullCalendar('removeEvents');
                         cal.fullCalendar('removeEventSource', defEvents);
@@ -108,9 +105,6 @@
                             'past': 'true'
                         }
                     };
-                    /*cal.fullCalendar('removeEvents');
-                     cal.fullCalendar('removeEventSource', events);
-                     cal.fullCalendar('addEventSource', events);*/
                     if (id != '') {
                         cal.fullCalendar('removeEvents');
                         cal.fullCalendar('removeEventSource', defEvents);
@@ -144,11 +138,6 @@
                     );
                 }
 
-                function viewDisplay(view) {
-                    //cal.fullCalendar('removeEvents');
-                    //cal.fullCalendar('addEventSource', defEvents);
-                }
-
                 var date = new Date();
 
                 cal.fullCalendar({
@@ -174,9 +163,6 @@
                     allDaySlot: false,
                     //height: 100000,
                     slotMinutes: 15,
-
-                    /* callbacks */
-                    viewDisplay: viewDisplay,
 
                     /* translation */
                     buttonText: {

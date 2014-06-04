@@ -409,7 +409,7 @@ def get_all_reservations(service, provider, start, end):
     for date in daterange(start.date(), end.date()):
         events.extend(getWorkingHours(service, provider, date, False))
 
-    today_res = Reservation.objects.filter(date__gte=start, date__lt=end)
+    today_res = Reservation.objects.filter(date__gte=start, date__lt=end, service_provider=provider)
     for reservation in today_res:
         dt = datetime.datetime.combine(reservation.date, reservation.time)
         text = EVENT_TITLE_RESERVED
