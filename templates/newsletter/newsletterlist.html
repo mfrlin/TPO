@@ -1,0 +1,62 @@
+{% extends 'main.html' %}
+
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+{% block main_nav_mynewsletter %}active{% endblock %}
+
+{% block content %}
+	
+	<ul class="nav nav-tabs">
+        <li>
+            <a href="{% url 'mynewsletter' %}">{% trans 'Send a newsletter' %}</a>
+        </li>
+        <li class="active">
+            <a href="{% url 'newsletterlist' %}">{% trans 'List of newsletter sent' %}</a>
+        </li>
+    </ul>
+	
+    <h1>{% trans 'List of newsletter sent' %}</h1>
+
+	{% if object_list %}
+    	
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        {% trans 'Date sent' %}
+                    </th>
+                    <th>
+                        {% trans 'Subject' %}
+                    </th>
+                    <th>
+                        {% trans 'Number of sent newsletters' %}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for newsletter in object_list %}
+                    <tr>
+                        <td data-title="{% trans 'Date' %}">
+                            {{ newsletter.date_sent }}
+                        </td>
+                        <td data-title="{% trans 'Subject' %}">
+                            {{ newsletter.subject }}
+                        </td>
+                        <td data-title="{% trans 'Number of sent newsletters' %}">
+                            {{ newsletter.number_of_subscribers }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+    	{% trans 'You have not sent any newsletters yet to your subscribers.' %}
+    {% endif %}
+    
+
+{% endblock %}
