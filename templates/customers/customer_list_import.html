@@ -95,12 +95,15 @@
 	<form method="POST" action="{% url 'import_customers' %}"  enctype="multipart/form-data">
 		{% csrf_token %}
 		<div class="form-actions">
-			<p>{% trans "You can only import CSV(Comma Separated Values) files!" %}</p>
+			
 			<a data-toggle="collapse" data-parent="#custom_settings" href="#custom_settings">{% trans "Advanced settings" %}</a>
 			<div class="collapse" id="custom_settings">
+				<p>CVS settings: </p>
 				{{form.delimiter | as_bootstrap }}
 				{{form.quote | as_bootstrap }}
 			</div>
+			
+			<p>{% trans "Supported files: csv, xls" %}</p>
 			{{form.file | as_bootstrap }}
 			<button class="btn btn-primary" type="submit" name="action" value="upload" >{% trans "Upload" %}</button>
 		</div>

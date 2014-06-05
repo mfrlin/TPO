@@ -49,9 +49,9 @@ class UploadFileForm(forms.Form):
 
         fileName, fileExtension = os.path.splitext(self.cleaned_data['file'].name)
         
-        if fileExtension.lower() == '.csv':
+        if fileExtension.lower() in ['.csv','.xls']:
             return True
         else:
-            self._errors['file'] = [_('Invalid CSV file!')]
+            self._errors['file'] = [_('Invalid CSV/XLS file!')]
             return False
            

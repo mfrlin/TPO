@@ -15,16 +15,20 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from django.db.models import Q
-
-import mailchimp
+from django.utils.translation import ugettext_lazy as _
 
 from banana_py import Bananas_OAuth
 
-from django.utils.translation import ugettext_lazy as _
 
-import csv, re
 
+import csv
+import xlrd
+
+import re
 import os
+
+import mailchimp
+
 
 
 @for_service_providers
@@ -38,13 +42,23 @@ def import_customers(request):
 
         if form.is_valid():
             
-            #fileName, fileExtension = os.path.splitext(request.FILES.get('file').name)
+            fileName, fileExtension = os.path.splitext(request.FILES.get('file').name)
             
-            #print fileName, fileExtension
-            
-            usrs2 = list(csv.reader(request.FILES.get('file'), delimiter=str(form.cleaned_data['delimiter'])[0],
+            if fileExtension.lower() == '.csv':
+                usrs2 = list(csv.reader(request.FILES.get('file'), delimiter=str(form.cleaned_data['delimiter'])[0],
                                     quotechar=str(form.cleaned_data['quote'])[0]))
-            max_col_count = max(map(len, usrs2))
+                                    
+                max_col_count = max(map(len, usrs2))
+                
+            elif fileExtension.lower() == '.xls':
+                
+                book = xlrd.open_workbook(file_contents=request.FILES.get('file').read())
+                
+                sheet = book.sheet_by_index(0)
+
+                usrs2 = [[sheet.cell_value(row, col) for col in range(sheet.ncols)] for row in range(sheet.nrows) ]
+                
+                max_col_count = sheet.ncols
 
             usrs = []
             for v in usrs2:
