@@ -80,7 +80,7 @@ def reservation(request, id):
     workingHours = WorkingHours.objects.filter(service_provider_id=service.service_provider_id)
 
     #formNonRegisteredUser = NonRegisteredUserForm(prefix='nonRegBtn')
-    formNonRegisteredUser = NonRegisteredUserForm()
+    formNonRegisteredUser = NonRegisteredUserForm(provider=service.service_provider)
     loginForm = LoginForm(prefix='loginBtn')
     signupForm = SignupForm(prefix='signupBtn')
 
@@ -113,7 +113,6 @@ def reservation(request, id):
 
         # print request.POST
 
-
         if 'signupBtn' in request.POST:
             signupForm = SignupForm(request.POST, prefix='signupBtn')
 
@@ -143,16 +142,13 @@ def reservation(request, id):
 
         if 'nonRegBtn' in request.POST:
 
-            formNonRegisteredUser = NonRegisteredUserForm(request.POST)
-            print formNonRegisteredUser
-            print formNonRegisteredUser.is_valid()
+            formNonRegisteredUser = NonRegisteredUserForm(request.POST, provider=service.service_provider)
             if formNonRegisteredUser.is_valid():
                 data['name'] = formNonRegisteredUser.cleaned_data['name']
                 data['phone'] = formNonRegisteredUser.cleaned_data['phone']
                 data['email'] = formNonRegisteredUser.cleaned_data['email']
                 return render_to_response('reservations/confirmation.html', locals(),
                                           context_instance=RequestContext(request))
-
         return render_to_response('reservations/userinfo.html', locals(), context_instance=RequestContext(request))
 
     if step == '2a':
@@ -208,7 +204,7 @@ def reservation(request, id):
                     free_emp_editable = list(service.employees.all())
                     for emp in free_emp:
                         emp_time = EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
-                                                                                                    reserve.date.weekday())
+                                                                                                       reserve.date.weekday())
                         if not EmployeeWorkingHours.objects.filter(employee=emp.id)[0].get_for_day(emp,
                                                                                                    reserve.date.weekday()):
                             free_emp_editable.remove(emp)
