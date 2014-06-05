@@ -10,6 +10,7 @@ from enarocanje.coupon.models import Coupon
 from enarocanje.reservations.models import Reservation
 from enarocanje.workinghours.models import WorkingHours, Absence
 from enarocanje.employees.models import Employee
+from enarocanje.customers.models import Customer
 
 
 def getDefaultReservationDate():
@@ -156,6 +157,17 @@ class NonRegisteredUserForm(forms.Form):
     name = forms.CharField(max_length=60, label=_('Name'), required=True)
     phone = forms.CharField(max_length=100, label=_('Phone Number'), required=True)
     email = forms.CharField(max_length=30, label=_('Email address'), required=True)
+
+    def clean_email(self):
+        provider = self.provider
+        email = self.cleaned_data.get('email')
+        if Customer.objects.filter(email=email, service=provider):
+            raise ValidationError(_('Your mail is already registered. Sign in or use another mail.'))
+        return email
+
+    def __init__(self, *args, **kwargs):
+        self.provider = kwargs.pop('provider')
+        super(NonRegisteredUserForm, self).__init__(*args, **kwargs)
 
 
 class GCalSettings(forms.Form):

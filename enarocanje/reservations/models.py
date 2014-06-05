@@ -98,7 +98,7 @@ def customer_handler(sender, instance, **kwargs):
         if c:
             c = c[0]
         else:
-            c = Customer()
+            c = Customer(service=instance.service_provider)
             c.provider = instance.service_provider
             c.name = instance.user_fullname
             c.phone = instance.user_phone

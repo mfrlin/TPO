@@ -20,7 +20,6 @@ from django.utils.translation import ugettext_lazy as _
 from banana_py import Bananas_OAuth
 
 
-
 import csv
 import xlrd
 
@@ -69,7 +68,6 @@ def import_customers(request):
                 usrs.append(v)
 
             row_count = len(usrs)
-
 
     elif request.POST.get('action') == 'import':
         form = UploadFileForm()
