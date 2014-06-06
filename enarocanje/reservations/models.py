@@ -62,7 +62,7 @@ class Reservation(models.Model):
     def confirm_reservation(self):
         self.is_confirmed = True
         self.save()
-        
+
     def deny_reservation(self):
         self.is_deny = True
         self.save()
@@ -112,8 +112,8 @@ post_save.connect(customer_handler, sender=Reservation)
 
 
 def reservation_handler(sender, instance, **kwargs):
-    
-    
+
+
     dt = datetime.datetime.combine(instance.date, instance.time)
     reminder = False
     try:
