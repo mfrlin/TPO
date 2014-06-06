@@ -221,6 +221,7 @@ def reservation(request, id):
                         reserve.employee = random_employee
 
             # Save
+            reserve.user.notification_type = 'email'
             reserve.save()
             # saving coupon is_valid
             coupons = Coupon.objects.filter(service=service.id)
@@ -243,13 +244,13 @@ def reservation(request, id):
                                                       {'reservation': reserve, 'link': user_page_link})
                 message1 = (subject, renderedToCustomer, None, [email_to1])
                 message2 = (subject, renderedToProvider, None, [email_to2])
-                #send_mass_mail((message1, message2), fail_silently=True)
+                send_mass_mail((message1, message2), fail_silently=True)
             else:
                 subject = _('Confirmation of service reservation')
                 renderedToCustomer = render_to_string('emails/reservation_customer.html',
                                                       {'reservation': reserve, 'link': user_page_link})
-                #send_mail(subject, renderedToCustomer, email_to2, [email_to1],
-                #          fail_silently=False)
+                send_mail(subject, renderedToCustomer, email_to2, [email_to1],
+                          fail_silently=False)
 
             start = datetime.datetime.combine(reserve.date, reserve.time)
             gcal_params = urllib.urlencode({
