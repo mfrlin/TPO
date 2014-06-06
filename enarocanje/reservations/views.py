@@ -324,15 +324,3 @@ def reservation_list(request):
     reservations = Reservation.objects.filter(service_provider_id=request.user.service_provider_id)
     return render_to_response('reservations/reservationlist.html', locals(), context_instance=RequestContext(request))
 
-
-@for_service_providers
-def manage(request):
-    # if request.method == 'POST':
-    #     reservation = get_object_or_404(Reservation, service_provider=request.user.service_provider,
-    #                                     id=request.POST.get('service'))
-    #     if request.POST.get('action') == 'confirm':
-    #         reservation.confirm_reservation()
-    #     if request.POST.get('action') == 'deny':
-    #         reservation.deny_reservation()
-    return HttpResponseRedirect(reverse(ListReservationView))
-
