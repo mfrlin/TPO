@@ -80,39 +80,50 @@ class Reservation(models.Model):
         unique_together = ('service_provider', 'gcalid')
 
 
-def customer_handler(sender, instance, **kwargs):
+def customer_handler(sender, instance, created, **kwargs):
+    print sender, instance, "USER_ID", instance.user.id, "CREATED:", created
     date = datetime.datetime.combine(instance.date, instance.time)
     if instance.user:
-        c, created = Customer.objects.get_or_create(user_id=instance.user.id, last_reservation=date,
-                                                    service_id=instance.service_provider.id)
-        if created:
-            c.provider = instance.service_provider
-            c.name = instance.user_fullname
-            c.phone = instance.user_phone
-            c.email = instance.user_email
-            c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
+        print "TRYING by user_id"
+        #lets try to find customer by user_id
+        c = Customer.objects.filter(user_id=instance.user.id)
+    
+    if not c:
+        print "TRYING by service.id and user_email"
+        #lets try to find him by email and service provider
+        c = Customer.objects.filter(service_id=instance.service_provider.id, email=instance.user_email)
+    
+    
+    if not c:
+        print "CREATING"
+        #no other options create him/her
+        c_obj = Customer(service_id=instance.service_provider.id, email=instance.user_email)
+        c_obj.provider = instance.service_provider #UNIQUE
+        c_obj.email = instance.user_email          #UNIQUE
+        c_obj.name = instance.user_fullname
+        c_obj.phone = instance.user_phone
+        
+        
+        c=[c_obj]
+
+    c = c[0]
+
+    if(instance.user and not c.user):
+        c.user = instance.user
+    
+    if created:
+        c.last_reservation = date
         c.num_reservations += 1
-        c.save()
-    else:
-        c = Customer.objects.filter(name=instance.user_fullname)
-        if c:
-            c = c[0]
-        else:
-            c = Customer(service=instance.service_provider)
-            c.provider = instance.service_provider
-            c.name = instance.user_fullname
-            c.phone = instance.user_phone
-            c.email = instance.user_email
-    c.last_reservation = datetime.datetime.combine(instance.date, instance.time)
-    c.num_reservations += 1
+        
     c.save()
+
 
 
 post_save.connect(customer_handler, sender=Reservation)
 
 
 def reservation_handler(sender, instance, **kwargs):
-    
+    return
     
     dt = datetime.datetime.combine(instance.date, instance.time)
     reminder = False
