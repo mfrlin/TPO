@@ -110,7 +110,6 @@ def reservation(request, id):
     if step == '2':
         if data.get('date') is None or data.get('time') is None:
             raise Http404
-
         # print request.POST
 
         if 'signupBtn' in request.POST:
@@ -130,14 +129,13 @@ def reservation(request, id):
         if 'loginBtn' in request.POST:
             loginForm = LoginForm(request.POST, prefix='loginBtn')
 
-            if loginForm.is_valid(): #
+            if loginForm.is_valid():
                 data['user_id'] = loginForm.user.id
                 data['name'] = loginForm.user.get_full_name()
                 data['phone'] = loginForm.user.phone
                 data['email'] = loginForm.user.email
 
                 request.session['reservation_data'] = data
-
                 return loginForm.login(request, redirect_url=reverse('reservation', args=[service.id]) + "?step=2a")
 
         if 'nonRegBtn' in request.POST:
@@ -245,13 +243,13 @@ def reservation(request, id):
                                                       {'reservation': reserve, 'link': user_page_link})
                 message1 = (subject, renderedToCustomer, None, [email_to1])
                 message2 = (subject, renderedToProvider, None, [email_to2])
-                send_mass_mail((message1, message2), fail_silently=True)
+                #send_mass_mail((message1, message2), fail_silently=True)
             else:
                 subject = _('Confirmation of service reservation')
                 renderedToCustomer = render_to_string('emails/reservation_customer.html',
                                                       {'reservation': reserve, 'link': user_page_link})
-                send_mail(subject, renderedToCustomer, email_to2, [email_to1],
-                          fail_silently=False)
+                #send_mail(subject, renderedToCustomer, email_to2, [email_to1],
+                #          fail_silently=False)
 
             start = datetime.datetime.combine(reserve.date, reserve.time)
             gcal_params = urllib.urlencode({
@@ -325,16 +323,4 @@ class ListReservationView(ListView):
 def reservation_list(request):
     reservations = Reservation.objects.filter(service_provider_id=request.user.service_provider_id)
     return render_to_response('reservations/reservationlist.html', locals(), context_instance=RequestContext(request))
-
-
-@for_service_providers
-def manage(request):
-    # if request.method == 'POST':
-    #     reservation = get_object_or_404(Reservation, service_provider=request.user.service_provider,
-    #                                     id=request.POST.get('service'))
-    #     if request.POST.get('action') == 'confirm':
-    #         reservation.confirm_reservation()
-    #     if request.POST.get('action') == 'deny':
-    #         reservation.deny_reservation()
-    return HttpResponseRedirect(reverse(ListReservationView))
 

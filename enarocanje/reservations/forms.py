@@ -131,7 +131,7 @@ class ReservationForm(forms.Form):
                 slots -= 1
             if slots == 0:
                 raise ValidationError(_('Sorry, your reservation is overlapping with another reservation.'))
-
+        print data
         return data
 
     def clean_employees(self):

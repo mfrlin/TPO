@@ -68,11 +68,10 @@ def getMinMaxTime(provider):
 def getEvents(service, provider, start, end):
     events = []
 
-    # Get reservation events
-    events.extend(getReservations(service, provider, start, end))
-
-    # Get working hours events
     for date in daterange(start.date(), end.date()):
+        start = datetime.datetime.combine(date, datetime.time(0))
+        end = datetime.datetime.combine(date+datetime.timedelta(days=1), datetime.time(0))
+        events.extend(getReservations(service, provider, start, end))
         events.extend(getWorkingHours(service, provider, date, True))
 
     return events
