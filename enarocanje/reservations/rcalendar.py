@@ -80,61 +80,43 @@ def getEvents(service, provider, start, end):
 def getReservations(service, provider, start, end):
     events = []
     working_employees = []
+    if service.employees.all():
+        for emp in service.employees.all():
+            if EmployeeWorkingHours.get_for_day(emp, start.date().weekday()) is not None:
+                working_employees.append(emp)
+        today_res = Reservation.objects.filter(date__gte=start, date__lt=end)
+        if list(service.employees.all()).__len__() > 1:
+            today_res = today_res.filter(employee__in=working_employees)
+        active_during_termin = dict()
+        for r in today_res:
+            start = datetime.datetime.combine(start.date(), r.time)
+            end = start + datetime.timedelta(minutes=r.service_duration)
+            while start < end:
+                if r.active_during(start):
+                    if not start in active_during_termin:
+                        active_during_termin[start] = 1
+                    else:
+                        active_during_termin[start] += 1
 
-    for emp in service.employees.all():
-        if EmployeeWorkingHours.get_for_day(emp, start.date().weekday()) is not None:
-            working_employees.append(emp)
-            # remains here for testing purposes
-            #reservations = Reservation.objects.filter(date__gte=start, date__lt=end,
-            #                                          employee__in=service.employees.all())
-            # for reservation in reservations:
-            #     dt = datetime.datetime.combine(reservation.date, reservation.time)
-            #     if reservation.employee:
-            #         emp = reservation.employee.__unicode__()
-            #     else:
-            #         emp = 'NONE'
-            #     events.append({
-            #         'title': ugettext(EVENT_TITLE_RESERVED + " at " + emp),
-            #         'start': encodeDatetime(dt),
-            #         'end': encodeDatetime(dt + datetime.timedelta(minutes=reservation.service_duration)),
-            #         'color': EVENT_RESERVED_COLOR
-            #     })
-    today_res = Reservation.objects.filter(date__gte=start, date__lt=end, employee__in=working_employees)
-    active_during_termin = dict()
-    for r in today_res:
-        start = datetime.datetime.combine(start.date(), r.time)
-        end = start + datetime.timedelta(minutes=r.service_duration)
-        while start < end:
-            if r.active_during(start):
-                if not start in active_during_termin:
-                    active_during_termin[start] = 1
-                else:
-                    active_during_termin[start] += 1
+                start += datetime.timedelta(minutes=15)
 
-            start += datetime.timedelta(minutes=15)
+        overlaps = []
+        currently_working = working_employees
+        for term in active_during_termin.keys():
+            cur_emp = list(working_employees).__len__()
+            for emp in currently_working:
+                cwh = EmployeeWorkingHours.get_for_day(emp, start.weekday())
+                if term + datetime.timedelta(minutes=service.duration) > datetime.datetime.combine(start.date(),
+                                                                                                   cwh.time_to):
+                    cur_emp -= 1
 
-    overlaps = []
-    currently_working = working_employees
-    for term in active_during_termin.keys():
-        cur_emp = list(working_employees).__len__()
-        for emp in currently_working:
-            cwh = EmployeeWorkingHours.get_for_day(emp, start.weekday())
-            if term + datetime.timedelta(minutes=service.duration) > datetime.datetime.combine(start.date(),
-                                                                                               cwh.time_to):
-                cur_emp -= 1
+            if active_during_termin[term] >= cur_emp:
+                overlaps.append(term)
 
-        if active_during_termin[term] >= cur_emp:
-            overlaps.append(term)
-            # testing purposes
-
-            # events.append({
-            #     'title': ugettext(EVENT_TITLE_RESERVED),
-            #     'start': encodeDatetime(term),
-            #     'end': encodeDatetime(term + datetime.timedelta(minutes=15)),
-            #     'color': '#FF0000'
-            # })
-    if overlaps:
-        events.extend(group_events(overlaps))
+        if overlaps:
+            events.extend(group_events(overlaps))
+    else:
+        events.extend(get_all_reservations(service, provider, start, end))
 
     return events
 
@@ -213,12 +195,6 @@ def getWorkingHours(service, provider, date, past):
                 last_gone = cwh.time_to
             if cwh.time_from < first_arrive:
                 first_arrive = cwh.time_from
-                # events.append({
-                #     'title': ugettext('Employee stops work'),
-                #     'start': encodeDatetime(datetime.datetime.combine(date, cwh.time_to)),
-                #     'end': encodeDatetime(datetime.datetime.combine(date, workinghrs.time_to)),
-                #     'color': EVENT_PAUSE_COLOR
-                # })
     if employees:
         if first_arrive == datetime.time(23, 59) and last_gone == datetime.time(0):
             return [{
@@ -227,12 +203,6 @@ def getWorkingHours(service, provider, date, past):
                     'end': encodeDatetime(date + datetime.timedelta(days=1)),
                     'color': EVENT_CLOSED_COLOR
                     }]
-            # events.append({
-            #     'title': ugettext('No employees scheduled but we are still open. Huh.'),
-            #     'start': encodeDatetime(date),
-            #     'end': encodeDatetime(date + datetime.timedelta(days=1)),
-            #     'color': EVENT_CLOSED_COLOR
-            # })
         else:
             if first_arrive > workinghrs.time_from:
                 events.append({
