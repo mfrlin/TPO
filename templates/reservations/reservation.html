@@ -292,6 +292,10 @@
                     if (isOverlapping(event)){
                         revertFunc();
                     }
+                    else {
+                        timePicker.data('datetimepicker').setLocalDate(date);
+                        datePicker.data('datetimepicker').setLocalDate(date);
+                    }
                 }
             });
 
