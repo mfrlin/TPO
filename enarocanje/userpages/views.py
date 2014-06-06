@@ -81,13 +81,7 @@ def userpage_main(request, user_link):
                               'services': []}
             page.append(paged_category)
 
-        #print paged_category
-        #print page
-
         paged_category = page[-1]
-
-        #print paged_category
-        #print service.category_id
 
         paged_category['services'].append(service)
 
@@ -139,10 +133,6 @@ def userpage_main(request, user_link):
 
         working_hours_blocks.append((k, DAYS_OF_WEEK_DICT[str(k)], tuples))
 
-
-    #for i in working_hours_blocks:
-    #    print i
-    #absence = Absence.objects.filter(Q(date_to__gte=datetime.date.today()) | Q(date_to__isnull=True))
 
     lat = selected_provider.lat
     lng = selected_provider.lng

@@ -51,7 +51,6 @@ class Service(models.Model):
     def discounted_price(self):
         discount = self.get_discount()
         if discount:
-            #so 99% and similar discounts don't return too many decimal places
             n = round(self.price - discount.discount * self.price / 100, 2)
             if n % 1 == 0:
                 return int(n)
@@ -64,7 +63,6 @@ class Service(models.Model):
         discount = self.get_discount()
         if discount:
             if self.discounted_price() == 0.00:
-                #return u'Free (%s -%d%%)' % (ugettext(_('with')), discount.discount)
                 return _("Free")
             else:
                 return u'%.02f\u20ac (%s -%d%%)' % (self.discounted_price(), ugettext(_('with')), discount.discount)

@@ -17,5 +17,3 @@ class Customer(models.Model):
 
     class Meta:
         unique_together = ("service", "email")
-
-

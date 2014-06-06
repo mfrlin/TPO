@@ -51,7 +51,6 @@ class ServiceProviderForm(ModelForm):
 
     def save(self, *args, **kwargs):
         if self.instance and self.instance.timezone != self.old_timezone:
-            #print 'reset'
             # reset gcal sync on timezone change
             self.instance = reset_sync(self.instance)
             r = super(ServiceProviderForm, self).save(*args, **kwargs)

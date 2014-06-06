@@ -1,17 +1,13 @@
 import csv
-import itertools
-import os
-import tempfile
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 
 from enarocanje.accountext.decorators import for_service_providers
-from enarocanje.service.models import Service
 from forms import CouponForm, CsvForm
 from models import Coupon
 
@@ -38,7 +34,7 @@ def add(request):
     else:
         # on get request create empty form
         form = CouponForm(provider=request.user.service_provider)
-    # render form - new (get request) or invalid with error messages (post request)
+        # render form - new (get request) or invalid with error messages (post request)
     return render_to_response('coupon/add.html', locals(), context_instance=RequestContext(request))
 
 
@@ -70,11 +66,11 @@ def csv_upload(request):
                 for i, row in enumerate(csvf):
                     if not row:
                         continue
-                    # Parse the row using form
+                        # Parse the row using form
                     cf = CouponForm({
-                                    'number': row[0],
-                                    'valid': row[1],
-                                    'service': form.cleaned_data['service'].id,
+                                        'number': row[0],
+                                        'valid': row[1],
+                                        'service': form.cleaned_data['service'].id,
                                     }, provider=request.user.service_provider)
                     # Check if it is valid
                     if cf.is_valid():
@@ -95,7 +91,7 @@ def csv_upload(request):
                 # Save created coupons
                 for coupon in coupons:
                     coupon.save()
-                # Check ok and fail counters
+                    # Check ok and fail counters
                 msg_end = u'.'
                 if header:
                     msg_end = u', ' + _('first row skipped') + u'.'

@@ -41,8 +41,8 @@ def javascript_time_format(python_time_format):
 
 class BootstrapDateInput(forms.DateInput):
     bootstrap = {
-    'append': mark_safe('<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>'),
-    'prepend': None,
+        'append': mark_safe('<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>'),
+        'prepend': None,
     }
 
     def __init__(self, attrs=None, format=None):
@@ -60,8 +60,8 @@ class BootstrapDateInput(forms.DateInput):
 
 class BootstrapDateTimeInput(forms.DateTimeInput):
     bootstrap = {
-    'append': mark_safe('<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>'),
-    'prepend': None,
+        'append': mark_safe('<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>'),
+        'prepend': None,
     }
 
     def __init__(self, attrs=None, format=None):
@@ -79,8 +79,8 @@ class BootstrapDateTimeInput(forms.DateTimeInput):
 
 class BootstrapTimeInput(forms.TimeInput):
     bootstrap = {
-    'append': mark_safe('<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>'),
-    'prepend': None,
+        'append': mark_safe('<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>'),
+        'prepend': None,
     }
 
     def __init__(self, attrs=None, format=None):
@@ -104,10 +104,10 @@ class ClearableImageInput(forms.ClearableFileInput):
     # NOTE: not required for django 1.5.2+
     def render(self, name, value, attrs=None):
         substitutions = {
-        'initial_text': self.initial_text,
-        'input_text': self.input_text,
-        'clear_template': '',
-        'clear_checkbox_label': self.clear_checkbox_label,
+            'initial_text': self.initial_text,
+            'input_text': self.input_text,
+            'clear_template': '',
+            'clear_checkbox_label': self.clear_checkbox_label,
         }
         template = '%(input)s'
         substitutions['input'] = super(forms.ClearableFileInput, self).render(name, value, attrs)

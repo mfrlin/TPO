@@ -81,41 +81,30 @@ class Reservation(models.Model):
 
 
 def customer_handler(sender, instance, created, **kwargs):
-    #print sender, instance, "USER_ID", instance.user.id, "CREATED:", created
     date = datetime.datetime.combine(instance.date, instance.time)
     c = None
     if instance.user:
-        #print "TRYING by user_id"
-        #lets try to find customer by user_id
         c = Customer.objects.filter(user_id=instance.user.id)
     if not c:
-        #print "TRYING by service.id and user_email"
-        #lets try to find him by email and service provider
         c = Customer.objects.filter(service_id=instance.service_provider.id, email=instance.user_email)
-    
     if not c:
-        #print "CREATING"
-        #no other options create him/her
         c_obj = Customer(service_id=instance.service_provider.id, email=instance.user_email)
-        c_obj.provider = instance.service_provider #UNIQUE
-        c_obj.email = instance.user_email          #UNIQUE
+        c_obj.provider = instance.service_provider
+        c_obj.email = instance.user_email
         c_obj.name = instance.user_fullname
         c_obj.phone = instance.user_phone
-        
-        
-        c=[c_obj]
+        c = [c_obj]
 
     c = c[0]
 
-    if(instance.user and not c.user):
+    if instance.user and not c.user:
         c.user = instance.user
-    
+
     if created:
         c.last_reservation = date
         c.num_reservations += 1
-        
-    c.save()
 
+    c.save()
 
 
 post_save.connect(customer_handler, sender=Reservation)

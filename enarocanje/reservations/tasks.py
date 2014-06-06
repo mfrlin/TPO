@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
 from enarocanje.accountext.models import User
-from enarocanje.accountext.models import ServiceProvider
 
 from celery import shared_task
 

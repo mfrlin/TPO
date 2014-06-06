@@ -24,14 +24,9 @@ $(document).ready(function () {
 
         var week_id = $(this).attr("week_id");
 
-        //console.log(time_block_template({"key":week_id}));
-
-        var block_div = $(this).before(time_block_template({"seq_id": sq_id, "key": week_id, "from":"", "to":""}));
+        var block_div = $(this).before(time_block_template({"seq_id": sq_id, "key": week_id, "from": "", "to": ""}));
 
         timeFields($("#XK_" + sq_id));
-        //timeFields(block_div);
-
-        //console.log(block_div);
 
         sq_id++;
 
@@ -43,42 +38,35 @@ $(document).ready(function () {
 
         var week_id = $(this).attr("week_id");
 
-		
-		//console.log($(this).closest(".week_times"));
+        var time_blck_vals = timeBlockValues($(this).closest(".week_times"));
 
-		var time_blck_vals = timeBlockValues($(this).closest(".week_times"));
+        for (var i = 1; i <= 7; i++) {
+            if (i == week_id) {
+                continue;
+            }
 
-		//console.log();
-		for(var i=1;i<=7;i++){
-			if(i==week_id){
-				continue;
-			}
-		
-			var week_blck = $("#week_id_"+i);
-		
-			if(week_blck.find(".edit-time-block").length){
-				continue;
-			}
-		
-			$.each(time_blck_vals, function(j,v){
-				//console.log(j,v);
-				
-				var data = time_block_template({"seq_id": sq_id, "key": i, "from":v[0], "to":v[1]});
-				
-				week_blck.prepend(data);
-				
-				sq_id++;
-			});
-			
-		}
+            var week_blck = $("#week_id_" + i);
+
+            if (week_blck.find(".edit-time-block").length) {
+                continue;
+            }
+
+            $.each(time_blck_vals, function (j, v) {
+
+                var data = time_block_template({"seq_id": sq_id, "key": i, "from": v[0], "to": v[1]});
+
+                week_blck.prepend(data);
+
+                sq_id++;
+            });
+
+        }
 
     });
 
 
     ctrls.on("click", "a.remove_wblock", function (e) {
         e.preventDefault();
-
-        //console.log($(this).parent());
 
         $(this).closest(".edit-time-block").remove();
     });
@@ -102,10 +90,7 @@ $(document).ready(function () {
 
         var match = time_test.exec(inpt.val());
 
-        //console.log(match);
-
         if (match) {
-            //console.log(parseInt(match[1],10) , parseInt(match[2]),10);
             return parseInt(match[1], 10) * 100 + parseInt(match[2], 10);
         } else {
             return null;
@@ -141,7 +126,6 @@ $(document).ready(function () {
         });
 
         if (!sl) {
-            //console.log("not gud", timeblockx);
             return false;
         }
 
@@ -152,8 +136,6 @@ $(document).ready(function () {
             }
             //(StartA <= EndB)  and  (EndA >= StartB)
             if (overlapCheck(time_blocks[i], sl)) {
-                //console.log(time_blocks[i],sl);
-                //displayTimeBlockError(time_blocks[j]);
                 status = false;
             }
 
@@ -162,28 +144,25 @@ $(document).ready(function () {
         return status;
     };
 
-	var timeBlockValue = function (edit_time_block){
-		var inputs = edit_time_block.find("input.time-field");
-	
+    var timeBlockValue = function (edit_time_block) {
+        var inputs = edit_time_block.find("input.time-field");
+
         var f_input = $(inputs.get(0));
         var s_input = $(inputs.get(1));
-		
-		
-		
-		return [f_input.val(),s_input.val()];
-	}
-	
-	var timeBlockValues = function(week_block){
-		vals = []
-		
-		//console.log(week_block.find(".edit-time-block"));
-		week_block.find(".edit-time-block").each(function(i,v){
-			//console.log(v);
-			vals.push(timeBlockValue($(v)));
-		});
-		
-		return vals;
-	}
+
+
+        return [f_input.val(), s_input.val()];
+    };
+
+    var timeBlockValues = function (week_block) {
+        var vals = [];
+
+        week_block.find(".edit-time-block").each(function (i, v) {
+            vals.push(timeBlockValue($(v)));
+        });
+
+        return vals;
+    };
 
     var timeBlockCheck = function (edit_time_block, input) {
         var error_block = edit_time_block.find(".error_container");
@@ -265,7 +244,6 @@ $(document).ready(function () {
         var edit_time_block = $(".edit-time-block");
 
         edit_time_block.each(function (i, v) {
-            //console.log("INP",v);
             timeBlockCheck($(v), null);
         });
     };
@@ -276,27 +254,22 @@ $(document).ready(function () {
         timeBlockCheck(edit_time_block, inpt);
     };
 
-    var field_change_clbck_dp = function (a,b,c) {
-	
+    var field_change_clbck_dp = function (a, b, c) {
+
         var inpt = $(this).find("input.time-field");
 
         var edit_time_block = inpt.closest(".edit-time-block");
 
         timeBlockCheck(edit_time_block, inpt);
     };
-	
-    //ctrls.on("change", "input.time-field", field_change_clbck);
+
     ctrls.on("blur", "input.time-field", field_change_clbck);
     ctrls.on("focusin", "input.time-field", field_change_clbck);
     ctrls.on("focusout", "input.time-field", field_change_clbck);
     ctrls.on("keyup", "input.time-field", field_change_clbck);
-  
+
     ctrls.on("change.dp", ".t_ff", "change.dp", field_change_clbck_dp);
     ctrls.on("dp.change", ".t_ff", "dp.change", field_change_clbck_dp);
     ctrls.on("dp.hide", ".t_ff", "dp.change", field_change_clbck_dp);
     ctrls.on("hide.dp", ".t_ff", "dp.change", field_change_clbck_dp);
-    //ctrls.on("change.d", ".t_ff", "dp.change", field_change_clbck_dp);
-	
-    //$("#data_ctrls").on("","input.time-field", field_change_clbck);
-
 });

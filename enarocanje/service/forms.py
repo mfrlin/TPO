@@ -25,7 +25,6 @@ class DiscountForm(ModelForm):
 
     class Meta:
         model = Discount
-        # all fields except service
         exclude = ('service', )
 
 
@@ -49,7 +48,6 @@ class ServiceForm(ModelForm):
 
     class Meta:
         model = Service
-        # all fields except service_provider (you can only create your own services)
         exclude = ('service_provider',)
 
     def __init__(self, *args, **kwargs):
@@ -60,8 +58,6 @@ class ServiceForm(ModelForm):
         self.fields['duration'].label = _('Duration (in minutes)')
         self.fields['price'].label = _('Price (in EUR)')
         self.fields['employees'] = self.employees
-
-        # self.fields['discount'].label = _('Discount (%)')
 
 
 DiscountFormSet = inlineformset_factory(Service, Discount, form=DiscountForm, formset=DiscountBaseFormSet, extra=1)

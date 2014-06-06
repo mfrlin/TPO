@@ -3,7 +3,6 @@ import os, sys
 import datetime, random
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
-
 from django.core.management import execute_from_command_line
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "enarocanje.settings")
@@ -35,10 +34,7 @@ def fillDatabase():
                    phone='435345', language='en', notification_type=1)
         obj.save()
 
-
     # Provider categories
-    #cat = ["Nega obraza", "Nega telesa", "Frizerski salon", "Kozmeticni salon"]
-    #generic = ["", "massage_salon", "hairdresser_salon", "cosmetic_salon"]
     cat = ["Nega telesa", "Frizerski salon", "Kozmetični salon"]
     generic = ["massage_salon", "hairdresser_salon", "cosmetic_salon"]
     for i in range(1, len(cat) + 1):
@@ -151,9 +147,7 @@ for app in SocialApp.objects.all():
     app.sites.add(site)
     app.save()
 
-
-
-#execute_from_command_line(sys.argv)
+execute_from_command_line(sys.argv)
 
 
 

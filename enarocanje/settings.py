@@ -164,7 +164,6 @@ INSTALLED_APPS = (
     'enarocanje.mynewsletter',
     'enarocanje.customers',
     'certifi',
-    
 )
 
 # A sample logging configuration. The only tangible logging
@@ -226,10 +225,8 @@ DEFAULT_FROM_EMAIL = 'info@eorderservice.com'
 
 MAILCHIMP_CLIENT_ID = '664322933601'
 MAILCHIMP_CLIENT_SECRET = '74119706a17d36b316d7ceae09217cfa'
-MAILCHIMP_REDIRECT_URI = PJ_BASE_URL+'/bananas/ripe/'
-MAILCHIMP_COMPLETE_URI = PJ_BASE_URL+'/mycustomers/export'
-
-#print MAILCHIMP_REDIRECT_URI
+MAILCHIMP_REDIRECT_URI = PJ_BASE_URL + '/bananas/ripe/'
+MAILCHIMP_COMPLETE_URI = PJ_BASE_URL + '/mycustomers/export'
 
 try:
     from local_settings import *

@@ -19,7 +19,7 @@ urlpatterns = patterns('',
                        url(r'^', include('enarocanje.reservations.urls')),
                        url(r'^', include('enarocanje.coupon.urls')),
                        url(r'^', include('enarocanje.employees.urls')),
-                       
+
                        #banana
                        url(r'^', include('banana_py.urls')),
 
@@ -42,4 +42,4 @@ if settings.DEBUG:
     urlpatterns += patterns('',
                             (r'^media/(?P<path>.*)$', 'django.views.static.serve',
                              {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
-    )
+                            )
