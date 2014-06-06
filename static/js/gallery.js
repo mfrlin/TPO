@@ -62,11 +62,9 @@ $(document).ready(function () {
             },
             progressall: function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
-                //console.log(progress);
                 $('#uploadprogress').css('width', progress + '%');
             }
         }).on('fileuploadadd',function (e, data) {
-                //console.log("!",data, data.files.length);
                 var added_count = 0;
                 $.each(data.files, function (index, file) {
                     var reg = /jpe?g|png|JPE?G|PNG/;
@@ -94,15 +92,13 @@ $(document).ready(function () {
                         e.preventDefault();
 
                         data.abort();
-                        if ($('.fluid-row.clearfix').length == 1){
+                        if ($('.fluid-row.clearfix').length == 1) {
                             row.remove();
                             $('.span12.well.well-small.white-bg.clearfix').hide();
                         }
-                        else{
+                        else {
                             row.remove();
                         }
-                        //console.log($('.fluid-row.clearfix').length);
-
                     });
 
                     control_upload.on('click', function (e) {
@@ -122,20 +118,15 @@ $(document).ready(function () {
                     $("#uploaded_files_list").show();
                 }
 
-                if (added_count == 0){
+                if (added_count == 0) {
                     $("uploaded_files_list").hide();
                 }
 
             }).on('fileuploadsubmit',function (e, data) {
-                //console.log("submited", e, data);
-
                 data.context_row.find("a.file-control.submit").attr('disabled', true);
 
             }).on('fileuploaddone',function (e, data) {
-                //console.log("done", e, data);
                 $.each(data.result.files, function (index, file) {
-                    //console.log("\tfiel", file)
-
                     if ('error' in file) {
                         data.context_row.find('span.caption-name')
                             .html('<span class="label label-important" >' + gettext("Error") + '</span> <span class="">'
@@ -161,15 +152,11 @@ $(document).ready(function () {
 
 
             }).on('fileuploadprogress',function (e, data) {
-                //console.log("done", e, data);
-
                 var progress = parseInt(data.loaded / data.total * 100, 10);
 
                 data.context_row.find('span.caption-name')
                     .html('<span class="label label-info" >' + progress + '%</span> ' + data.files[0].name);
             }).on('fileuploadfail', function (e, data) {
-                //console.log("fileuploadfail", e, data);
-
                 data.context_row.find('span.caption-name')
                     .html('<span class="label label-important" >{% trans "Error" %}</span> <span class="">'
                         + data.files[0].name + ' Something went horribly wrong. Error message: ' + data.errorThrown + '</span>');
@@ -186,7 +173,6 @@ $(document).ready(function () {
 
     if (navigator.getUserMedia) {
         $("#take_photo_camera").show();
-        //console.log("Camera supported");
     } else {
         $("#take_photo_camera").hide();
         console.log("Camera unsupported");

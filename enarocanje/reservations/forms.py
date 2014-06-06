@@ -7,7 +7,6 @@ from django.utils.translation import ugettext_lazy as _
 from enarocanje.common.timeutils import is_overlapping
 from enarocanje.common.widgets import BootstrapDateInput, BootstrapTimeInput
 from enarocanje.coupon.models import Coupon
-from enarocanje.reservations.models import Reservation
 from enarocanje.workinghours.models import WorkingHours, Absence
 from enarocanje.employees.models import Employee
 from enarocanje.customers.models import Customer
@@ -115,24 +114,6 @@ class ReservationForm(forms.Form):
             if is_overlapping(start.time(), end.time(), wrkBr.time_from, wrkBr.time_to):
                 raise ValidationError(_('Sorry, the service isn\'t available at specified time.'))
 
-        """ removed check because frontend takes care of it """
-        # Check reservations
-        # reservations = Reservation.objects.filter(service_provider=service_provider,
-        # date=self.cleaned_data.get('date'))
-        # # if employee is chosen, only check against his reservations
-        # if self.clean_employees() != '':
-        #     reservations = reservations.filter(employee=self.clean_employees().id)
-        #     slots = 1
-        # else:
-        #     slots = list(self.service.employees.all()).__len__()
-        #     if slots == 0:
-        #         slots = 1
-        # for res in reservations:
-        #     resDt = datetime.datetime.combine(res.date, res.time)
-        #     if is_overlapping(start, end, resDt, resDt + datetime.timedelta(minutes=res.service_duration)):
-        #         slots -= 1
-        #     if slots == 0:
-        #         raise ValidationError(_('Sorry, your reservation is overlapping with another reservation.'))
         return data
 
     def clean_employees(self):

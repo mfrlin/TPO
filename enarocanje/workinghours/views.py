@@ -78,12 +78,6 @@ def myworkinghours(request):
                 error_msg.append(_("Fatal error: got malformed data, blocks are overlaping!"))
                 break
 
-            #hour_blocks = map(lambda x: convert_time_block_h_to_int(x), hour_blocks)
-
-            #print hour_blocks
-            #if not hour_blocks:
-            #    error_msg.append(_("Some fields in %s are empty"%(unicode(name),)) )
-
             if len(hour_blocks):
 
                 breaks = []
@@ -99,8 +93,6 @@ def myworkinghours(request):
 
                 days_wbl[key] = (working_hours, breaks)
 
-                #print "BREAKS:", breaks, "Working hours:", working_hours
-
         if not funct_error:
             workinghours = request.user.service_provider.working_hours.all()
             for wh in workinghours:
@@ -111,13 +103,6 @@ def myworkinghours(request):
 
             for key, value in days_wbl.items():
                 working_hours, breaks = value
-
-                #initial_vals = {'time_from':working_hours[0], 'time_to':working_hours[1], 'week_days':str(key)}
-
-                #form = WorkingHoursForm(initial=initial_vals, provider=request.user.service_provider)
-                #form['time_from'] = working_hours[0]
-                #form['time_to'] = working_hours[1]
-                #form['week_days'] = str(key);
 
                 wh_ent = WorkingHours()
                 wh_ent.service_provider = request.user.service_provider
@@ -168,64 +153,7 @@ def myworkinghours(request):
 
         working_hours_blocks[k] = tuples
 
-    #print working_hours_blocks
-    #print days_of_week_dict_int
-
     return render_to_response('workinghours/myworkinghours.html', locals(), context_instance=RequestContext(request))
-
-
-"""
-@for_service_providers
-def add(request):
-    if request.method == 'POST':
-        form = WorkingHoursForm(request.POST, provider=request.user.service_provider)
-        form_valid = form.is_valid()
-        formset = WorkingHoursFormSet(request.POST)
-        # formset forms need to know working hours for validation
-        for fs_form in formset:
-            fs_form.wh_time_from = form.cleaned_data.get('time_from')
-            fs_form.wh_time_to = form.cleaned_data.get('time_to')
-        formset_valid = formset.is_valid()
-        # even if form fails validaton, formset should be still validated
-        formset_valid = formset.is_valid()
-        if form_valid and formset_valid:
-            service = form.save(commit=False)
-            service.service_provider = request.user.service_provider
-            service.save()
-            formset.instance = service
-            formset.save()
-            return HttpResponseRedirect(reverse(myworkinghours))
-    else:
-        initial = {}
-        if not request.user.service_provider.working_hours.exists():
-            initial['week_days'] = '1,2,3,4,5'
-        form = WorkingHoursForm(initial=initial, provider=request.user.service_provider)
-        formset = WorkingHoursFormSet()
-    return render_to_response('workinghours/add.html', locals(), context_instance=RequestContext(request))
-
-
-@for_service_providers
-def edit(request, id):
-    workinghours = get_object_or_404(WorkingHours, service_provider=request.user.service_provider, id=id)
-    if request.method == 'POST':
-        form = WorkingHoursForm(request.POST, instance=workinghours, provider=request.user.service_provider)
-        form_valid = form.is_valid()
-        formset = WorkingHoursFormSet(request.POST, instance=workinghours)
-        # formset forms need to know working hours for validation
-        for fs_form in formset:
-            fs_form.wh_time_from = form.cleaned_data.get('time_from')
-            fs_form.wh_time_to = form.cleaned_data.get('time_to')
-        formset_valid = formset.is_valid()
-        # even if form fails validaton, formset should be still validated
-        if form_valid and formset_valid:
-            form.save()
-            formset.save()
-            return HttpResponseRedirect(reverse(myworkinghours))
-    else:
-        form = WorkingHoursForm(instance=workinghours, provider=request.user.service_provider)
-        formset = WorkingHoursFormSet(instance=workinghours)
-    return render_to_response('workinghours/edit.html', locals(), context_instance=RequestContext(request))
-"""
 
 
 @for_service_providers

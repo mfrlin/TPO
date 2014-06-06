@@ -1,6 +1,7 @@
 from django.db import models
 from enarocanje.accountext.models import ServiceProvider
 
+
 class Newsletter(models.Model):
     provider = models.ForeignKey(ServiceProvider)
     date_sent = models.DateTimeField('date sent')

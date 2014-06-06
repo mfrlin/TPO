@@ -57,7 +57,6 @@ def account_profile(request):
             if form.is_valid() and service_provider_form.is_valid():
                 form.save(request.user)
                 data = service_provider_form.cleaned_data
-                print data['userpage_link']
                 service_provider_form.save()
                 request.session['django_language'] = request.user.language
                 return HttpResponseRedirect('')

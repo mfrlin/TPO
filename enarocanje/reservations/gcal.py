@@ -102,16 +102,16 @@ def convert_to_gcal_event(reservation):
                          reservation.service_provider.get_timezone())
 
     return {
-    'summary': '%s (%s)' % (reservation.user_fullname, reservation.service_name),
-    'location': reservation.service_provider.full_address(),
-    'start': {
-    'dateTime': start.isoformat('T'),
-    },
-    'end': {
-    'dateTime': (start + datetime.timedelta(minutes=reservation.service_duration)).isoformat('T'),
-    },
-    'attendees': [
-    ],
+        'summary': '%s (%s)' % (reservation.user_fullname, reservation.service_name),
+        'location': reservation.service_provider.full_address(),
+        'start': {
+            'dateTime': start.isoformat('T'),
+        },
+        'end': {
+            'dateTime': (start + datetime.timedelta(minutes=reservation.service_duration)).isoformat('T'),
+        },
+        'attendees': [
+        ],
     }
 
 
@@ -170,11 +170,11 @@ def sync(service_provider):
                 continue
 
             fields = {
-            'date': start.date(),
-            'time': start.time(),
-            'service_name': event['summary'],
-            'service_duration': (end - start).total_seconds() // 60,
-            'isfromgcal': True,
+                'date': start.date(),
+                'time': start.time(),
+                'service_name': event['summary'],
+                'service_duration': (end - start).total_seconds() // 60,
+                'isfromgcal': True,
             }
 
             reservation, created = Reservation.objects.get_or_create(service_provider=service_provider,

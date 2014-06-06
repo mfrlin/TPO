@@ -18,7 +18,7 @@ urlpatterns = patterns('enarocanje.service.views',
 
                        url(r'^gallery/(?P<id>\d+)$', 'view_gallery', name='gallery'),
                        url(r'^gallery/(?P<id>\d+)/upload$', 'async_file_upload', name='async_file_upload'),
-                       
-                       
+
+
                        url(r'^subscribe/$', 'subscribe', name='subscribe'),
-)
+                       )

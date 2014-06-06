@@ -37,7 +37,6 @@ import enarocanje.common.config as config
 
 @for_service_providers
 def async_file_upload(request, id):
-    #print '='*10,"async_file_upload",'='*10
     service_provider = get_object_or_404(ServiceProvider, id=id)
 
     status = 200
@@ -109,7 +108,6 @@ def view_gallery(request, id):
     gallery = ServiceProviderImage.objects.filter(service_provider_id=id)
     # ServiceProviderImage.objects.all().delete()
     edit_gallery = False
-    # print "id, provID", id, request.user.service_provider_id
     if hasattr(request.user, 'service_provider_id'):
         if str(id) == str(request.user.service_provider_id):
             edit_gallery = True
@@ -187,7 +185,7 @@ def myservices(request):
             services = [service for service in services if service.is_active()]
         elif filter_form.cleaned_data['active'] == 'inactive':
             services = [service for service in services if not service.is_active()]
-        # locals() returns a dictionary of variables in the local scope (request and services in this case)
+            # locals() returns a dictionary of variables in the local scope (request and services in this case)
     return render_to_response('service/myservices.html', locals(), context_instance=RequestContext(request))
 
 # Add a new service
@@ -489,30 +487,30 @@ def browse_services(request):
         if cat:
             for x in Category.objects.filter(id=cat): # iz vsake kategorije
                 services.extend([y.service
-                 for y in Reservation.objects.filter(service__category=x)
-                .order_by('-date', '-time')
-                ][:3]) # 3 nazadnje rezerviranih storitev
+                                 for y in Reservation.objects.filter(service__category=x)
+                    .order_by('-date', '-time')
+                                ][:3]) # 3 nazadnje rezerviranih storitev
         else:
             for x in Category.objects.all(): # iz vsake kategorije
                 services.extend([y.service
-                 for y in Reservation.objects.filter(service__category=x)
-                .order_by('-date', '-time')
-                ][:3]) # 3 nazadnje rezerviranih storitev
+                                 for y in Reservation.objects.filter(service__category=x)
+                    .order_by('-date', '-time')
+                                ][:3]) # 3 nazadnje rezerviranih storitev
 
     elif sor == 'myres':
         services = []
         if cat and request.user.is_authenticated():
             for x in Category.objects.filter(id=cat): # iz vsake kategorije
                 services.extend([y.service
-                 for y in Reservation.objects.filter(service__category=x, user=request.user)
-                .order_by('-date', '-time')
-                ][:3]) # 3 nazadnje rezerviranih storitev
+                                 for y in Reservation.objects.filter(service__category=x, user=request.user)
+                    .order_by('-date', '-time')
+                                ][:3]) # 3 nazadnje rezerviranih storitev
         elif request.user.is_authenticated():
             for x in Category.objects.all(): # iz vsake kategorije
                 services.extend([y.service
-                 for y in Reservation.objects.filter(service__category=x, user=request.user)
-                .order_by('-date', '-time')
-                ][:3]) # 3 nazadnje rezerviranih storitev
+                                 for y in Reservation.objects.filter(service__category=x, user=request.user)
+                    .order_by('-date', '-time')
+                                ][:3]) # 3 nazadnje rezerviranih storitev
 
     if disc:
         services = [service for service in services if
@@ -614,4 +612,4 @@ def subscribe(request):
     provider = ServiceProvider.objects.get(id=provider_id)
     provider.subscribers.add(user)
 
-    return render_to_response('newsletter/subscribe.html', locals(), context_instance=RequestContext(request),)
+    return render_to_response('newsletter/subscribe.html', locals(), context_instance=RequestContext(request), )

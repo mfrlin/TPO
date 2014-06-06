@@ -20,7 +20,6 @@ class CustomerForm(forms.ModelForm):
 class CustomerChoiceForm(Form):
     def __init__(self, *args, **kwargs):
         qs = Customer.objects.filter(service=kwargs.pop('provider'))
-        print qs
         self.customers = forms.ModelChoiceField(queryset=qs, required=False,
                                                 empty_label=_('all'))
         super(CustomerChoiceForm, self).__init__(*args, **kwargs)

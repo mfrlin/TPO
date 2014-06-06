@@ -9,8 +9,6 @@ from enarocanje.accountext.models import ServiceProvider
 from enarocanje.reservations.models import Reservation
 from enarocanje.workinghours.models import Absence, WorkingHours, EmployeeWorkingHours
 from enarocanje.employees.models import Employee
-from enarocanje.employees.forms import EmployeeChoiceForm
-from enarocanje.service.forms import ServiceChoiceForm
 
 EVENT_TITLE_CLOSED = _('Closed')
 EVENT_TITLE_CLOSED_WHOLE_DAY = _('Closed on this day')
@@ -70,7 +68,7 @@ def getEvents(service, provider, start, end):
 
     for date in daterange(start.date(), end.date()):
         start = datetime.datetime.combine(date, datetime.time(0))
-        end = datetime.datetime.combine(date+datetime.timedelta(days=1), datetime.time(0))
+        end = datetime.datetime.combine(date + datetime.timedelta(days=1), datetime.time(0))
         events.extend(getReservations(service, provider, start, end))
         events.extend(getWorkingHours(service, provider, date, True))
 
@@ -198,10 +196,10 @@ def getWorkingHours(service, provider, date, past):
     if employees:
         if first_arrive == datetime.time(23, 59) and last_gone == datetime.time(0):
             return [{
-                    'title': ugettext('No employees scheduled but we are still open. Huh.'),
-                    'start': encodeDatetime(date),
-                    'end': encodeDatetime(date + datetime.timedelta(days=1)),
-                    'color': EVENT_CLOSED_COLOR
+                        'title': ugettext('No employees scheduled but we are still open. Huh.'),
+                        'start': encodeDatetime(date),
+                        'end': encodeDatetime(date + datetime.timedelta(days=1)),
+                        'color': EVENT_CLOSED_COLOR
                     }]
         else:
             if first_arrive > workinghrs.time_from:
@@ -446,7 +444,6 @@ def findEventByColor(events, color):
 
 
 def getEmployeesForService(request):
-
     if not request.GET.get('service_id'):
         return HttpResponse(json.dumps([]))
     service_id = request.GET.get('service_id')
@@ -459,8 +456,3 @@ def getServicesForEmployee(request):
     emp_id = request.GET.get('employee_id')
     services = Service.objects.filter(employees__in=emp_id).values_list('id', flat=True)
     return HttpResponse(json.dumps(list(services)))
-
-
-
-
-

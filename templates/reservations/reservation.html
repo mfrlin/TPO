@@ -25,7 +25,8 @@
                 {% if form.employees.field.choices.queryset.all|length > 1 %}
                     <div class="span4">
                         {{ form.employees|as_bootstrap }}
-                        <div id="des"></div><br>
+                        <div id="des"></div>
+                        <br>
                     </div>
                 {% endif %}
                 <div class="span1" style="float: right; position: relative; right: 30%; top: 30px">
@@ -50,39 +51,38 @@
 {% block javascript %}
     {{ block.super }}
     </script><script>
-    //just to enable syntax coloring in pycharm
     {% if minTime and maxTime %}
-        (function() {
+        (function () {
             var cal = $('#calendar');
             var id = null;
             var defEvents = {
-                    url: '{% url 'calendarjson' %}',
-                    type: 'GET',
-                        data: {
-                            'service_provider_id': '{{ service.service_provider_id }}',
-                            'service_id': '{{ service.id }}'
-                        }
+                url: '{% url 'calendarjson' %}',
+                type: 'GET',
+                data: {
+                    'service_provider_id': '{{ service.service_provider_id }}',
+                    'service_id': '{{ service.id }}'
+                }
             };
-            $('#id_employees').change(function(){
+            $('#id_employees').change(function () {
                 id = $(this).val();
                 var events = {
                     url: '/timetable/',
                     type: 'GET',
                     data: {
-                       'service_provider_id': '{{ service.service_provider_id }}',
-                       'employee_id': id
+                        'service_provider_id': '{{ service.service_provider_id }}',
+                        'employee_id': id
                     }
                 };
-                if (id != ''){
-                    var desc = $.get('/desc/',{'employee_id': id},
-                        function(data){
-                            $('#des').text(data);
-                        }
+                if (id != '') {
+                    var desc = $.get('/desc/', {'employee_id': id},
+                            function (data) {
+                                $('#des').text(data);
+                            }
                     );
-                   cal.fullCalendar('removeEvents');
-                   cal.fullCalendar('removeEventSource', defEvents);
-                   cal.fullCalendar('removeEventSource', events);
-                   cal.fullCalendar('addEventSource', events);
+                    cal.fullCalendar('removeEvents');
+                    cal.fullCalendar('removeEventSource', defEvents);
+                    cal.fullCalendar('removeEventSource', events);
+                    cal.fullCalendar('addEventSource', events);
                 }
                 else {
                     $('#des').text('');
@@ -93,26 +93,30 @@
             });
 
             var date = new Date(), selectedEvent = null;
+
             function updateDate(ndate) {
                 cal.fullCalendar('removeEventSource', selectedEvent);
                 date = ndate;
                 var dateEnd = new Date(date);
                 dateEnd.setMinutes(dateEnd.getMinutes() + {{ service.duration }});
-                selectedEvent = [{
-                    title: '{% trans 'Your reservation' %}',
-                    start: date,
-                    end: dateEnd,
-                    editable: true
-                }];
-                /*selectedEvent = {events:[
+                selectedEvent = [
                     {
-                    title: '{% trans 'Your reservation' %}',
-                    start: date,
-                    end: dateEnd
-                }
-                ],
-                    editable: true
-                };*/
+                        title: '{% trans 'Your reservation' %}',
+                        start: date,
+                        end: dateEnd,
+                        editable: true
+                    }
+                ];
+                /*selectedEvent = {events:[
+                 {
+                 title: '
+                {% trans 'Your reservation' %}',
+                 start: date,
+                 end: dateEnd
+                 }
+                 ],
+                 editable: true
+                 };*/
                 cal.fullCalendar('addEventSource', selectedEvent);
             }
 
@@ -124,17 +128,17 @@
                 $('#calendar').fullCalendar('gotoDate', date);
             }
 
-            function isOverlapping(event){
+            function isOverlapping(event) {
                 var array = cal.fullCalendar('clientEvents');
-                for(i in array){
-                    if(array[i].title != event.title){
-                        if(!(array[i].start >= event.end || array[i].end <= event.start)){
+                for (i in array) {
+                    if (array[i].title != event.title) {
+                        if (!(array[i].start >= event.end || array[i].end <= event.start)) {
                             return true;
                         }
                     }
                 }
-            return false;
-}
+                return false;
+            }
 
             function changeTime(ev) {
                 date.setHours(ev.localDate.getHours());
@@ -166,7 +170,6 @@
                 }
                 datePicker.data('datetimepicker').setLocalDate(date);
                 timePicker.data('datetimepicker').setLocalDate(date);
-                //console.log(cal.fullCalendar('clientEvents'));
             }
 
             function dayClick(ndate, allDay, jsEvent, view) {
@@ -175,23 +178,20 @@
                 ndate_dur.setMinutes(ndate_dur.getMinutes() + {{ service.duration }});
                 var ev = cal.fullCalendar('clientEvents');
                 var overlap = false;
-                ev.forEach(function(entry){
-                    if (entry['color']){
-                        if (ndate >= entry.start && ndate_dur < entry.end){
-                            //console.log("if 1");
+                ev.forEach(function (entry) {
+                    if (entry['color']) {
+                        if (ndate >= entry.start && ndate_dur < entry.end) {
                             overlap = true;
                         }
-                        else if (ndate >= entry.start && ndate < entry.end){
-                            //console.log("if 2");
+                        else if (ndate >= entry.start && ndate < entry.end) {
                             overlap = true;
                         }
-                        else if (ndate_dur > entry.start && ndate < entry.start){
-                            //console.log("if 3");
+                        else if (ndate_dur > entry.start && ndate < entry.start) {
                             overlap = true;
                         }
                     }
                 });
-                if (ndate > cur_date && !overlap){
+                if (ndate > cur_date && !overlap) {
                     updateDate(ndate);
                     $('#calendar').fullCalendar('gotoDate', date);
                     datePicker.data('datetimepicker').setLocalDate(date);
@@ -205,8 +205,7 @@
 
             var timePicker = $('.time-field').parent('').datetimepicker({pickDate: false, pickSeconds: false, minuteStep: 15,
                 language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeTime);
-            var datePicker = $('.date-field').parent('').datetimepicker({pickTime: false, startDate: now, language:
-                    '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
+            var datePicker = $('.date-field').parent('').datetimepicker({pickTime: false, startDate: now, language: '{{ request.LANGUAGE_CODE }}'}).on('changeDate', changeDate);
 
             var dateDate = datePicker.data('datetimepicker').getLocalDate();
             var dateTime = timePicker.data('datetimepicker').getLocalDate();
@@ -288,8 +287,8 @@
                         'service_id': '{{ service.id }}'
                     }
                 },
-                eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
-                    if (isOverlapping(event)){
+                eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                    if (isOverlapping(event)) {
                         revertFunc();
                     }
                     else {
@@ -299,10 +298,11 @@
                 }
             });
 
-            $('#calendar-refresh').click(function() {
+            $('#calendar-refresh').click(function () {
                 cal.fullCalendar('refetchEvents');
             });
         })();
-        </script><script>
+        </script>
+        <script>
     {% endif %}
 {% endblock %}

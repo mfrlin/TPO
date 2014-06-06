@@ -2,9 +2,8 @@ from django.forms import ModelForm, Form, ModelMultipleChoiceField, Textarea, Te
 from enarocanje.common.widgets import ClearableImageInput
 import django.forms as forms
 from django.utils.translation import ugettext_lazy as _
-from enarocanje.accountext.models import ServiceProvider
-from enarocanje.service.models import Service
 
+from enarocanje.service.models import Service
 from enarocanje.employees.models import Employee
 
 

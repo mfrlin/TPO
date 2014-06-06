@@ -32,4 +32,3 @@ class Command(BaseCommand):
 
         # Send emails
         send_mass_mail(messages, fail_silently=True)
-        print len(messages), 'emails sent.'

@@ -110,7 +110,6 @@ def reservation(request, id):
     if step == '2':
         if data.get('date') is None or data.get('time') is None:
             raise Http404
-        # print request.POST
 
         if 'signupBtn' in request.POST:
             signupForm = SignupForm(request.POST, prefix='signupBtn')

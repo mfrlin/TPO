@@ -19,7 +19,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from banana_py import Bananas_OAuth
 
-
 import csv
 import xlrd
 
@@ -27,7 +26,6 @@ import re
 import os
 
 import mailchimp
-
 
 
 @for_service_providers
@@ -40,23 +38,23 @@ def import_customers(request):
         form = UploadFileForm(request.POST, request.FILES)
 
         if form.is_valid():
-            
+
             fileName, fileExtension = os.path.splitext(request.FILES.get('file').name)
-            
+
             if fileExtension.lower() == '.csv':
                 usrs2 = list(csv.reader(request.FILES.get('file'), delimiter=str(form.cleaned_data['delimiter'])[0],
-                                    quotechar=str(form.cleaned_data['quote'])[0]))
-                                    
+                                        quotechar=str(form.cleaned_data['quote'])[0]))
+
                 max_col_count = max(map(len, usrs2))
-                
+
             elif fileExtension.lower() == '.xls':
-                
+
                 book = xlrd.open_workbook(file_contents=request.FILES.get('file').read())
-                
+
                 sheet = book.sheet_by_index(0)
 
-                usrs2 = [[sheet.cell_value(row, col) for col in range(sheet.ncols)] for row in range(sheet.nrows) ]
-                
+                usrs2 = [[sheet.cell_value(row, col) for col in range(sheet.ncols)] for row in range(sheet.nrows)]
+
                 max_col_count = sheet.ncols
 
             usrs = []
@@ -100,8 +98,6 @@ def import_customers(request):
                     dasta['email'] = val
                 elif mapping[j] == '2':
                     dasta['phone'] = val
-
-                    #print mapping[j],j,val
 
             if dasta['email'] is None or (
                         dasta['email'] is not None and not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$",
@@ -154,7 +150,6 @@ def export_customers(request):
     try:
         mc_.helper.ping()
     except mailchimp.Error:
-        print "Invalid API key"
 
         return HttpResponseRedirect(reverse('mycustomers'))
 

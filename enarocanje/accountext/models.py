@@ -53,10 +53,10 @@ class ServiceProvider(models.Model):
 
     visit_us = models.TextField(_('Visit us'), null=True, blank=True)
     description = models.TextField(_('description'), null=True, blank=True)
-    
+
     userpage_link = models.CharField(_('User link'), max_length=40, validators=[validate_slug],
                                      unique=True, null=True)
-    
+
     reservation_confirmation_needed = models.NullBooleanField(null=True, blank=True)
 
     lat = models.FloatField(null=True)
@@ -135,6 +135,5 @@ class ServiceProviderImage(models.Model):
                               blank=False)
     image_width = models.PositiveIntegerField(null=True)
     image_height = models.PositiveIntegerField(null=True)
-    #delete_image = models.BooleanField()
-    delete_image = models.BooleanField(default=False)  # temporary fix
+    delete_image = models.BooleanField(default=False)
     service_provider = models.ForeignKey(ServiceProvider, null=False)
